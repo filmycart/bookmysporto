@@ -18,12 +18,12 @@
 								<h4 class="footer-title">Contact us</h4>
 								<div class="footer-address-blk">
 									<div class="footer-call">
-										<span>Toll free Customer Care</span>
-										<p>+017 123 456 78</p>
+										<!-- <span>Toll free Customer Care</span> -->
+										<p>+918105460391</p>
 									</div>
 									<div class="footer-call">
-										<span>Need Live Suppot</span>
-										<p>dreamsports@example.com</p>
+										<!-- <span>Need Live Suppot</span> -->
+										<p>contact@sportyfy.in</p>
 									</div>
 								</div>
 								<div class="social-icon">
@@ -51,20 +51,17 @@
 								<h4 class="footer-title">Quick Links</h4>
 								<ul>
 									<li>
-										<a href="about-us.html">About us</a>
+										<a href="index.php?pg-nm=about-us">About us</a>
 									</li>
 									<li>
-										<a href="services.html">Services</a>
+										<a href="index.php?pg-nm=contact-us">Contact us</a>
 									</li>
 									<li>
-										<a href="events.html">Events</a>
+										<a href="index.php?pg-nm=services">Services</a>
 									</li>
 									<li>
-										<a href="blog-grid.html">Blogs</a>
-									</li>
-									<li>
-										<a href="contact-us.html">Contact us</a>
-									</li>
+										<a href="index.php?pg-nm=events">Events</a>
+									</li>									
 								</ul>
 							</div>
 							<!-- /Footer Widget -->
@@ -75,82 +72,13 @@
 								<h4 class="footer-title">Support</h4>
 								<ul>
 									<li>
-										<a href="contact-us.html">Contact Us</a>
+										<a href="index.php?pg-nm=faq">Faq</a>
 									</li>
 									<li>
-										<a href="faq.html">Faq</a>
+										<a href="index.php?pg-nm=privacy">Privacy Policy</a>
 									</li>
 									<li>
-										<a href="privacy-policy.html">Privacy Policy</a>
-									</li>
-									<li>
-										<a href="terms-condition.html">Terms & Conditions</a>
-									</li>
-									<li>
-										<a href="pricing.html">Pricing</a>
-									</li>
-								</ul>
-							</div>
-							<!-- /Footer Widget -->
-						</div>
-						<div class="col-lg-2 col-md-6">
-							<!-- Footer Widget -->
-							<div class="footer-widget footer-menu">
-								<h4 class="footer-title">Other Links</h4>
-								<ul>
-									<li>
-										<a href="coaches-grid.html">Coaches</a>
-									</li>
-									<li>
-										<a href="listing-grid.html">Sports Venue</a>
-									</li>
-									<li>
-										<a href="coach-details.html">Join As Coach</a>
-									</li>
-									<li>
-										<a href="coaches-map.html">Add Venue</a>
-									</li>
-									<li>
-										<a href="my-profile.html">My Account</a>
-									</li>
-								</ul>
-							</div>
-							<!-- /Footer Widget -->
-						</div>
-						<div class="col-lg-2 col-md-6">
-							<!-- Footer Widget -->
-							<div class="footer-widget footer-menu">
-								<h4 class="footer-title">Our Locations</h4>
-								<ul>
-									<li>
-										<a href="javascript:void(0);">Germany</a>
-									</li>
-									<li>
-										<a href="javascript:void(0);">Russia</a>
-									</li>
-									<li>
-										<a href="javascript:void(0);">France</a>
-									</li>
-									<li>
-										<a href="javascript:void(0);">UK</a>
-									</li>
-									<li>
-										<a href="javascript:void(0);">Colombia</a>
-									</li>
-								</ul>
-							</div>
-							<!-- /Footer Widget -->
-						</div>
-						<div class="col-lg-2 col-md-6">
-							<!-- Footer Widget -->
-							<div class="footer-widget footer-menu">
-								<h4 class="footer-title">Download</h4>
-								<ul>
-									<li>
-										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/icon-apple.svg" alt="Apple"></a>
-									</li>
-									<li>
-										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/google-icon.svg" alt="Google"></a>
+										<a href="index.php?pg-nm=terms">Terms & Conditions</a>
 									</li>
 								</ul>
 							</div>
@@ -169,12 +97,12 @@
 						<div class="row align-items-center">
 							<div class="col-md-6">
 								<div class="copyright-text">
-									<p class="mb-0">&copy; 2023 DreamSports  - All rights reserved.</p>
+									<p class="mb-0">&copy; 2025 Sportify  - All rights reserved.</p>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<!-- Copyright Menu -->
-								<div class="dropdown-blk">
+<!-- 								<div class="dropdown-blk">
 									<ul class="navbar-nav selection-list">
 										<li class="nav-item dropdown">
 											<div class="lang-select">
@@ -196,7 +124,7 @@
 											</div>	
 										</li>
 									</ul>
-								</div>
+								</div> -->
 								<!-- /Copyright Menu -->
 							</div>
 						</div>

@@ -1,6 +1,7 @@
 		<?php
-			include("includes/header.php");
+			include("includes/page_header.php");
 		?>
+
 		<!-- Breadcrumb -->
 		<div class="breadcrumb breadcrumb-list mb-0">
 			<span class="primary-right-round"></span>
@@ -899,5 +900,5 @@
 		<!-- /Page Content -->
 
 		<?php
-			include("includes/footer.php");
+			include("includes/page_footer.php");
 		?>
