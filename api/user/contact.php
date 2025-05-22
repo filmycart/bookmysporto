@@ -5,6 +5,7 @@
     $send_mail = false;
 
     if(Helper::is_post()) {
+        
         $api_token = Helper::post_val("api_token");
 
         if($api_token) {
@@ -25,7 +26,7 @@
                     if($errors->is_empty()) {
                         $contact->id = $contact->save();
                         if(!empty($contact->id)) {
-                            $response->create(200, "Contact Created Successfully.", $contact->response()->to_valid_array());
+                            $response->create(200, "Contact Submitted Successfully.", $contact->response()->to_valid_array());
                         }else $response->create(201, "Something Went Wrong", null);                    
                     } else $response->create(201, "Invalid Contact", null);
                 }else $response->create(201, "Invalid Parameter", null);
