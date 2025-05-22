@@ -59,7 +59,8 @@
 		    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 		    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
 		    <script>
-		        $(document).ready(function() {
+		        $.noConflict();
+					jQuery( document ).ready(function( $ ) {
 		            //validate the register form when it is submitted
 		            $.validator.addMethod(
 		                "mobileValidation",
@@ -85,6 +86,11 @@
 		                        maxlength: 25/*,
 		                        mobileValidation: $("#contactPhone").val()*/
 		                    },
+		                    contactSubject: {
+		                        required: true,
+		                        minlength: 10,
+		                        maxlength: 100
+		                    },
 		                    contactMessage: {
 		                        required: true,
 		                        minlength: 25,
@@ -106,13 +112,16 @@
 		                        required: "Please enter your Phone Number.",
 		                        minlength: "Please enter minimum 10 digits for Phone Number."
 		                    },
+		                    contactSubject: {
+		                        required: "Please enter your Subject.",
+		                        minlength: "Please enter minimum 10 for Subject.",
+		                        maxlength: "Please enter minimum 100 for Subject."
+		                    },
 		                    contactMessage: {
 		                        required: "Please enter your Message.",
 		                        minlength: "Please enter minimum 25 for Message.",
 		                        maxlength: "Please enter minimum 100 for Message."
 		                    },
-		                    /*,
-		                    agree: "Please accept our policy"*/
 		                },
 		                // Make sure the form is submitted to the destination defined
 		                // in the "action" attribute of the form when valid
@@ -120,7 +129,7 @@
 		                  //form.submit();
 		                  $.ajax({
 		                     type: "POST",
-		                     url: "frontendapi/api/user/contact.php",
+		                     url: "./api/user/contact.php",
 		                     data: $(form).serialize(),
 		                     success: function (resp) {
 		                        console.log(resp);
@@ -147,36 +156,33 @@
 				<div class="container">
 					<h2 class="text-center mb-40">Reach out to us and let's smash your inquiries
 					</h2>
-					<form id="contactForm" name="contactForm" class="contact-us" method="POST">
+					<form id="contactForm" name="contactForm" class="contact-us" method="POST" action="">
 						<input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
 						<div class="row">
 							<div class="col-12 col-sm-12 col-md-6 mb-3">
-								<label for="first-name" class="form-label">First Name</label>
-	  							<input type="text" class="form-control" name="contactName" id="contactName" placeholder="Enter First Name">
+								<label for="first-name" class="form-label">Name</label>
+	  							<input type="text" class="form-control" name="contactName" id="contactName" placeholder="Enter Name">
 							</div>
 							<div class="col-12 col-sm-12 col-md-6 mb-3">
-								<label for="last-name" class="form-label">Last Name</label>
-	  							<input type="text" class="form-control" id="last-name" placeholder="Enter Last Name">
+								<label for="last-name" class="form-label">E-Mail</label>
+	  							<input type="email" class="form-control" name="contactEmail" id="contactEmail" placeholder="Enter E-Mail">
 							</div>
 							<div class="col-12 col-sm-12 col-md-6 mb-3">
-								<label for="e-mail" class="form-label">Email</label>
-	  							<input type="text" class="form-control" id="e-mail" placeholder="Enter Email Address">
+								<label for="e-mail" class="form-label">Phone</label>
+	  							<input type="text" class="form-control" name="contactPhone" id="contactPhone" placeholder="Enter Phone Number">
 							</div>
-							<div class="col-12 col-sm-12 col-md-6 mb-3">
-								<label for="phone" class="form-label">Phone Number</label>
-	  							<input type="text" class="form-control" id="phone" placeholder="Enter Phone Number">
-							</div>
-						</div>
-						<div class="row">
 							<div class="col mb-3">
 								<label for="subject" class="form-label">Subject</label>
-	  							<input type="text" class="form-control" id="subject" placeholder="Enter Subject">
+	  							<input type="text" class="form-control" name="contactSubject" id="contactSubject" placeholder="Enter Subject">
 							</div>
 						</div>
 						<div>
 							<label for="comments" class="form-label">Comments</label>
-							<textarea class="form-control" id="comments" rows="3" placeholder="Enter Comments"></textarea>
+							<textarea class="form-control" name="contactMessage" id="contactMessage" rows="3" placeholder="Enter Message"></textarea>
 						</div>
+						<div class="row">
+							&nbsp;	
+						</div>		
 						<button type="submit" class="btn btn-secondary d-flex align-items-center">Submit<i class="feather-arrow-right-circle ms-2"></i></button>
 					</form>
 				</div>
