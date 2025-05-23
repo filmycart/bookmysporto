@@ -10,14 +10,14 @@ if(Helper::is_post()){
     if($api_token){
         $setting = new Setting();
         $setting = $setting->where(["api_token" => $api_token])->one();
-
-        if(!empty($setting)){
-            if(isset($_POST["usr_name"]) && isset($_POST["usr_phone_number"]) && isset($_POST["type"])) {
+        
+        if(!empty($setting)) {
+            if(isset($_POST["userName"]) && isset($_POST["userPhoneNumber"]) && isset($_POST["userType"])) {
                 $user = new User();
-                $user->mobile = Helper::post_val("usr_phone_number");
-                $user->username = Helper::post_val("usr_phone_number");
-                $user->name = Helper::post_val("usr_name");
-                $user->type = Helper::post_val("type");
+                $user->mobile = Helper::post_val("userPhoneNumber");
+                $user->username = Helper::post_val("userPhoneNumber");
+                $user->name = Helper::post_val("userName");
+                $user->type = Helper::post_val("userType");
 
                 if($user->type == NUMBER_USER){
                     $user->validate_with(["mobile", "username"]);

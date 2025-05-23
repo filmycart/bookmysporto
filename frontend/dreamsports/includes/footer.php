@@ -23,7 +23,7 @@
 									</div>
 									<div class="footer-call">
 										<!-- <span>Need Live Suppot</span> -->
-										<p>contact@sportyfy.in</p>
+										<p>contact@filmycart.in</p>
 									</div>
 								</div>
 								<div class="social-icon">
