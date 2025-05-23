@@ -19,11 +19,11 @@
 								<div class="footer-address-blk">
 									<div class="footer-call">
 										<!--<span>Toll free Customer Care</span>-->
-										<p>+017 123 456 78</p>
+										<p>+918105460391</p>
 									</div>
 									<div class="footer-call">
 										<!--<span>Need Live Suppot</span>-->
-										<p>dreamsports@example.com</p>
+										<p>contact@filmycart.in</p>
 									</div>
 								</div>
 								<div class="social-icon">

@@ -108,9 +108,12 @@
 					<ul class="nav header-navbar-rht">
 						<li class="nav-item">
 							<div class="nav-link btn btn-white log-register">
-								<a href="index.php?pg-nm=login"><span><i class="feather-users"></i></span>Login</a> / <a href="index.php?pg-nm=register">Register</a>
+                                <a href="#" data-toggle="modal" data-target="#register-form-modal" onclick="registerForm()"><span><i class="feather-users"></i></span>Register</a>
 							</div>
 						</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link btn btn-secondary" data-toggle="modal" data-target="#login-form-modal" onclick="loginForm()"><span><i class="feather-users"></i></span>Login</a>
+                        </li>
 						<!-- <li class="nav-item">
 							<a class="nav-link btn btn-secondary" href="add-court.html"><span><i class="feather-check-circle"></i></span>List Your Court</a>
 						</li> -->
@@ -119,3 +122,292 @@
 			</div>
 		</header>
 		<!-- /Header -->
+		<script type="text/javascript">
+			function registerForm() {
+                $('#register-form-modal').modal('show');
+                $('#register-modal-title-text').text('Register');
+            }
+
+            function registerFormClose() {
+                $("#register-form-modal").modal('hide');
+            }
+
+            function loginForm() {
+                $('#login-form-modal').modal('show');
+                $('#login-modal-title-text').text('Login');
+            }
+
+            function loginFormClose() {
+                $("#login-form-modal").modal('hide');
+            }
+	    </script>
+	    <div class="modal fade" id="register-form-modal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+<!--                 <div class="modal-header">
+                  <h4 class="modal-title"><span id="register-modal-title-text"></span></h4>
+                  <button type="button" class="close" onclick="registerFormClose()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div> -->
+                <div class="modal-body">
+                    <script src="<?=$frontendAssetUrl?>assets/js/jquery.js"></script>
+                    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+                    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
+                    <script>
+                        $.noConflict();
+                            jQuery( document ).ready(function( $ ) {
+
+                            //validate the register form when it is submitted
+                            $.validator.addMethod(
+                                "mobileValidation",
+                                function(value, element) {
+                                    return !/^\d{8}$|^\d{10}$/.test(value) ? false : true;
+                                },
+                                "Mobile number invalid"
+                            );
+                            
+                            //validate signup form on keyup and submit
+                            $("#userRegisterForm").validate({
+                                rules: {
+                                    userName: {
+                                        required: true,
+                                        minlength: 5
+                                    },
+                                    userPhoneNumber: {
+                                        required: true,
+                                        minlength: 10,
+                                        maxlength: 25,
+                                        mobileValidation: $("#userPhoneNumber").val()
+                                    }
+                                },
+                                messages: {
+                                    userName: {
+                                        required: "Please enter your Name.",
+                                        minlength: "Please enter minimum 5 character for Name."
+                                    },
+                                    userPhoneNumber: {
+                                        required: "Please enter your Phone Number.",
+                                        minlength: "Please enter minimum 10 character for Phone Number.",
+                                        maxlength: "Please enter minimum 25 character for Phone Number."
+                                    }
+                                },
+                                // Make sure the form is submitted to the destination defined
+                                // in the "action" attribute of the form when valid
+                                submitHandler: function(form) {
+                                  //form.submit();
+                                  $.ajax({
+                                     type: "POST",
+                                     url: "./api/user/register.php",
+                                     data: $(form).serialize(),
+                                     success: function (resp) {
+                                        console.log(resp);
+                                         $(form).html("<div id='message'></div>");
+                                         $('#message').html("<h2>"+resp.message+"</h2>")
+                                             //.append("<p></p>")
+                                             .hide()
+                                             .fadeIn(1500, function () {
+                                             //$('#message').append("<img id='checkmark' src='images/ok.png' />");
+                                         });
+                                     }
+                                 });
+                                 return false; // required to block normal submit since you used ajax
+                                }
+                            });
+                        });
+                    </script>
+                    <style>
+                        form label.error {
+                            color: #c00;
+                        }
+
+                        .modal-header .close {
+                            margin-left: 88%;
+                            margin-top: -2px;
+                            border:0px solid #fff;
+                            background-color: #fff;
+                        }
+
+                        .hideModalDiv {
+                            dispaly:none;
+                        }
+
+                        .spinner {
+                            width:25px;
+                            height:25px;
+                        }
+
+                        .eventFormMainDiv {
+                            float:left;
+                            width:100%;
+                            border:0px solid red;
+                        }
+
+                        .eventFormRow {
+                            float:left;
+                            width:100%;
+                            border:0px solid red;
+                        }
+
+                        .eventFormCol {    
+                            float:left;
+                            width:48%;
+                            border:0px solid red;
+                        }
+
+                        .eventFormSpacerDiv { 
+                             float:left;
+                             width:1%;
+                        }
+                        .bootstrap-select > .dropdown-toggle {
+                            height: 38px ;
+                        }
+
+                        .multiselect-container>li>a>label {
+                            margin: 0;
+                            height: 100%;
+                            cursor: pointer;
+                            font-weight: 400;
+                            padding: 3px 20px 3px 10px;
+                        }
+
+                        .multiselect-container {
+                            position: absolute;
+                            list-style-type: none;
+                            margin: 0;
+                            padding: 0;
+                            min-width: 100% !important;
+                        }
+
+                        span.has-error {  
+                            color: red;  
+                        }  
+                    </style>
+                    <div class="content map-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <div class="map-list-blk">
+                                        left
+                                    </div>
+                                </div>
+                                <div class="col-xl-5 map-right">
+                                    <form id="userRegisterForm" name="userRegisterForm" method="POST" enctype="multipart/form-data" action="./././api/user/register.php">
+                                        <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+                                        <input type="hidden" class="form-control" name="userType" id="userType" value="4">
+                                        <div class="row">
+                                            <label for="first-name" class="form-label">Name</label>
+                                            <input type="text" class="form-control" name="userName" id="userName" placeholder="Enter Name">
+                                        </div>
+                                        <div class="row">   
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
+                                        </div>    
+                                        <div class="row">
+                                            <button type="submit" id="userRegisterSubmit" name="userRegisterSubmit" class="btn btn-primary">Save</button>
+                                        </div>    
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                    
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- /.card-header -->
+    <div class="modal fade" id="login-form-modal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title"><span id="login-modal-title-text"></span></h4>  
+                  <button type="button" class="close" onclick="loginFormClose()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>                  
+                </div>
+                <div class="modal-body">
+                    <style>
+                        .hideModalDiv {
+                            dispaly:none;
+                        }
+
+                        .spinner {
+                            width:25px;
+                            height:25px;
+                        }
+
+                        .eventFormMainDiv {
+                            float:left;
+                            width:100%;
+                            border:0px solid red;
+                        }
+
+                        .eventFormRow {
+                            float:left;
+                            width:100%;
+                            border:0px solid red;
+                        }
+
+                        .eventFormCol {    
+                            float:left;
+                            width:48%;
+                            border:0px solid red;
+                        }
+
+                        .eventFormSpacerDiv { 
+                             float:left;
+                             width:1%;
+                        }
+                        .bootstrap-select > .dropdown-toggle {
+                            height: 38px ;
+                        }
+
+                        .multiselect-container>li>a>label {
+                            margin: 0;
+                            height: 100%;
+                            cursor: pointer;
+                            font-weight: 400;
+                            padding: 3px 20px 3px 10px;
+                        }
+
+                        .multiselect-container {
+                            position: absolute;
+                            list-style-type: none;
+                            margin: 0;
+                            padding: 0;
+                            min-width: 100% !important;
+                        }
+
+                        span.has-error {  
+                            color: red;  
+                        }  
+                    </style>
+                    <form id="userLoginForm" name="userLoginForm" method="POST" enctype="multipart/form-data" action="./././api/user/login.php">
+                        <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+                        <input type="hidden" class="form-control" name="userType" id="userType" value="4">
+                        <div class="venueFormMainDiv" id="modal-div"> 
+                            <div class="venueFormRow">
+                                <div class="eventFormCol">
+                                    <label>Phone Number</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <input type="text" id="userPhoneNumber" name="userPhoneNumber" class="form-control" data-target="#userPhoneNumber" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer right-content-between">
+                              <button type="submit" id="userLoginSubmit" name="userLoginSubmit" class="btn btn-primary">Save</button>
+                            </div>  
+                        </div>
+                    </form>        
+                </div>                    
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- /.card-header -->
