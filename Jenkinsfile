@@ -9,7 +9,8 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git credentialsId: 'fmc_git_repo', url: 'git@github.com:filmycart/sportifyv2.git', branch: 'dev'
+                //git credentialsId: 'fmc_git_repo', url: 'git@github.com:filmycart/sportifyv2.git', branch: 'dev'
+                git credentialsId: 'fmc_git_repo', url: 'https://github.com/filmycart/sportifyv2.git', branch: 'dev'
             }
         }
 
