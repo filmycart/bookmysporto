@@ -6,37 +6,81 @@
         $pgName = $_GET['pg-nm'];
     }
 
-/*    echo $pgName;
-    exit;
-*/
-    $templateName = 'dreamsports';
-    if((isset($config['frontend']['template'])) && (!empty($config['frontend']['template']))) {
-        $templateName = $config['frontend']['template'];  
+    $config_admin_address = "";
+    if((isset($config['config']['admin_address'])) && (!empty($config['config']['admin_address']))) {
+        $config_admin_address = $config['config']['admin_address'];
     }
 
-    switch ($pgName) {
-      case 'home':
-        include_once('frontend/'.$templateName.'/home.php');
-        break;
-      case 'about':
-        include_once('frontend/'.$templateName.'/about-us.php');
-        break;  
-      case 'login':
-        include_once('frontend/'.$templateName.'/login.php');
-        break;  
-      case 'register':
-        include_once('frontend/'.$templateName.'/register.php');
-        break;
-      case 'contact':
-        include_once('frontend/'.$templateName.'/contact.php');
-        break;
-      case 'logout':
-        include_once('frontendapi/'.$templateName.'/logout.php');
-        break; 
-      case 'send-sms':
-        include_once('frontendapi/'.$templateName.'/send-sms.php');
-        break;        
-      default:
-        include_once('frontend/'.$templateName.'/home.php');
+    $configArray = '';
+    if((isset($config['config']['site_config'])) && (!empty($config['config']['site_config']))) {
+        $configArray = $config['config']['site_config'];  
+    }
+
+    $frontendAssetUrl = '';
+    if((isset($configArray['frontend_asset_url'])) && (!empty($configArray['frontend_asset_url']))) {
+        $frontendAssetUrl = $configArray['frontend_asset_url'];  
+    }
+
+    $siteTitle = "";
+    if((isset($configArray['title'])) && (!empty($configArray['title']))) {
+        $siteTitle = $configArray['title'];
+    }
+
+    $siteTagLine = "";
+    if((isset($configArray['tag_line'])) && (!empty($configArray['tag_line']))) {
+        $siteTagLine = $configArray['tag_line'];
+    }
+
+    $templateName = 'dreamsports';
+    if((isset($configArray['frontend_template'])) && (!empty($configArray['frontend_template']))) {
+        $templateName = $configArray['frontend_template'];  
+    }
+
+    $siteAuthor = "";
+    if((isset($configArray['author'])) && (!empty($configArray['author']))) {
+        $siteAuthor = $configArray['author'];
+    }
+
+    $pgHomeActive = "";
+    $pgAboutActive = "";
+    $pgContactActive = "";
+    $pgLoginActive = "";
+    $pgRegisterActive = "";
+
+    if(!empty($pgName)) {
+      switch ($pgName) {
+        case 'home':
+          $pgHomeActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/home.php');
+          break;
+        case 'about-us':
+          $pgAboutActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/about-us.php');
+          break;
+        case 'login':
+          $pgLoginActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/login.php');
+          break;  
+        case 'register':
+          $pgRegisterActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/register.php');
+          break;
+        case 'contact-us':
+          $pgContactActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/contact-us.php');
+          break;
+        case 'logout':
+          include_once('frontendapi/'.$templateName.'/logout.php');
+          break; 
+        case 'send-sms':
+          include_once('frontendapi/'.$templateName.'/send-sms.php');
+          break;        
+        default:
+          include_once('frontend/'.$templateName.'/home.php');
+          $pgHomeActive = 'class="active"';
+      }
+    } else {
+        $pgHomeActive = 'class="active"';
+        include_once('frontend/'.$templateName.'/home.php');      
     }
 ?>
