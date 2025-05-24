@@ -14,13 +14,13 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        /*stage('Install Dependencies') {
             steps {
                 sh 'composer install --no-interaction --prefer-dist'
             }
         }
 
-       /* stage('Run Tests') {
+        stage('Run Tests') {
             steps {
                 sh 'vendor/bin/phpunit tests' // assumes PHPUnit is installed via composer
             }
@@ -29,9 +29,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['Nachiyar@1984']) {
-                    sh """
+                    /*sh """
                         rsync -avz --delete ./ root@97.74.90.174:/var/www/dev.sportify
                         ssh root@97.74.90.174 'cd /var/www/dev.sportify && composer install --no-dev --optimize-autoloader'
+                    """*/
+
+                    sh """
+                        rsync -avz --delete ./ root@97.74.90.174:/var/www/dev.sportify
+                        ssh root@97.74.90.174 'cd /var/www/dev.sportify && ls'
                     """
                 }
             }
