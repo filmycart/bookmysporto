@@ -1,41 +1,27 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Building...'
-                // Example for Java: sh './gradlew build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                // Example for Java: sh './gradlew test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Example: sh './deploy.sh'
-            }
-        }
+    environment {
+        VPS_HOST = '97.74.90.174'
+        VPS_USER = 'root'
+        GIT_BRANCH = 'dev'
+        REPO_URL = 'git@github.com:filmycart/sportifyv2.git'
     }
 
-    post {
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
+    stages {
+        stage('SSH to VPS and Pull Git Branch') {
+            steps {
+                sshagent (credentials: ['Nachiyar@1984']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+                        cd /var/www/dev.sportify
+                        git fetch origin
+                        git checkout ${GIT_BRANCH}
+                        git pull origin ${GIT_BRANCH}
+                    EOF
+                    """
+                }
+            }
         }
     }
 }
