@@ -29,7 +29,7 @@ if(Helper::is_post()){
                             $user->id = $user->save();
                             if(!empty($user->id)) {
 
-                                 $curl = curl_init();
+                                /*$curl = curl_init();
                                 curl_setopt_array($curl, array(
                                 CURLOPT_URL => 'https://api.infobip.com/sms/2/text/advanced',
                                 CURLOPT_RETURNTRANSFER => true,
@@ -52,7 +52,7 @@ if(Helper::is_post()){
                                 
                                 echo $smsresponse;
                                 exit;
-                                
+                                */
 
                                 /*
                                     https://www.fast2sms.com/dev/bulkV2?authorization=XTtWLw39b8qZckUH7gSmRAKMYuGle5zNDpaxfni16PrCF4hQV2jS6nFwyQHgZ5mr2oCcKW3xP1BbXNiR&route=q&message=test123&flash=0&numbers=&schedule_time=
