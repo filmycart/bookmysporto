@@ -97,12 +97,29 @@
 							</li>		
 							<li <?=$pgAboutActive?>><a href="index.php?pg-nm=about-us">About Us</a></li>
 							<li <?=$pgContactActive?>><a href="index.php?pg-nm=contact-us">Contact Us</a></li>
-							<li class="login-link">
-								<a href="#" onclick="registerForm()">Sign Up</a>
-							</li>
-							<li class="login-link">
-								<a href="#" onclick="loginForm()">Sign In</a>
-							</li>
+
+                            <?php
+                                if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+                            ?>
+                                    <li class="login-link">
+                                        <a class="dropdown-item" href="index.php?pg-nm=my-profile">My Profile</a>
+                                    </li>
+                                    <li class="login-link">
+                                        <a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a>
+                                    </li>
+
+                            <?php        
+                                } else {
+                            ?>
+                                    <li class="login-link">
+                                        <a href="#" onclick="registerForm()">Sign Up</a>
+                                    </li>
+                                    <li class="login-link">
+                                        <a href="#" onclick="loginForm()">Sign In</a>
+                                    </li>
+                            <?php
+                                }
+                            ?>							
 						</ul>
 					</div>
                     <?php
@@ -125,7 +142,6 @@
                                                 <a href="user-profile.html" class="text-profile mb-0">Go to Profile</a>
                                             </div>
                                         </div>
-                                        <!-- <p><a class="dropdown-item" href="index.php?pg-nm=settings">Settings</a></p> -->
                                         <p><a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a></p>
                                     </div>
                                 </li>
@@ -259,9 +275,13 @@
                                 $('#haveanaccountlogin').hide();
                                 $('#message').html(resp.message);
 
-                                setTimeout(function () {
+                                if(resp.status_code == 201) {
+                                    setTimeout(function () {
+                                       window.location.href='index.php';
+                                    }, 1500);
+                                } else {
                                     window.location.href='index.php';
-                                }, 1500);
+                                }                                
                             }
                         });
                         return false; // required to block normal submit since you used ajax
