@@ -15,7 +15,7 @@
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@dreamguystech">
 	<meta name="twitter:title" content="DreamSports -  Booking Coaches, Venue for tournaments, Court Rental template">
-	<meta name="twitter:image" content="assets/img/meta-image.jpg">
+	<meta name="twitter:image" content="<?=$frontendAssetUrl?>assets/img/meta-image.jpg">
 	<meta name="twitter:image:alt" content="DreamSports">
 
 	<meta property="og:url" content="https://dreamsports.dreamguystech.com/">
@@ -98,32 +98,58 @@
 							<li <?=$pgAboutActive?>><a href="index.php?pg-nm=about-us">About Us</a></li>
 							<li <?=$pgContactActive?>><a href="index.php?pg-nm=contact-us">Contact Us</a></li>
 							<li class="login-link">
-								<a href="index.php?pg-nm=register">Sign Up</a>
+								<a href="#" onclick="registerForm()">Sign Up</a>
 							</li>
 							<li class="login-link">
-								<a href="index.php?pg-nm=login">Sign In</a>
+								<a href="#" onclick="loginForm()">Sign In</a>
 							</li>
-						</ul>							
+						</ul>
 					</div>
-					<ul class="nav header-navbar-rht">
-						<li class="nav-item">
-							<div class="nav-link btn btn-white log-register">
-                                <a href="#" data-toggle="modal" data-target="#register-form-modal" onclick="registerForm()"><span><i class="feather-users"></i></span>Register</a>
-							</div>
-						</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link btn btn-secondary" data-toggle="modal" data-target="#login-form-modal" onclick="loginForm()"><span><i class="feather-users"></i></span>Login</a>
-                        </li>
-						<!-- <li class="nav-item">
-							<a class="nav-link btn btn-secondary" href="add-court.html"><span><i class="feather-check-circle"></i></span>List Your Court</a>
-						</li> -->
-					</ul>
+                    <?php
+                        if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+                    ?>                    
+                            <ul class="nav header-navbar-rht">
+                                <li class="nav-item dropdown has-arrow logged-item">
+                                    <a href="#" class="dropdown-toggle nav-link show" data-bs-toggle="dropdown" aria-expanded="true">
+                                        <span class="user-img">
+                                            <img class="rounded-circle" src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" width="31" alt="Darren Elder">
+                                        </span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end show" data-bs-popper="static">
+                                        <div class="user-header">
+                                            <div class="avatar avatar-sm">
+                                                <img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" height="50" width="50" alt="User" class="avatar-img rounded-circle">
+                                            </div>
+                                            <div class="user-text">
+                                                <h6><?=(!empty($_SESSION['userName'])?$_SESSION['userName']:'')?></h6>
+                                                <a href="user-profile.html" class="text-profile mb-0">Go to Profile</a>
+                                            </div>
+                                        </div>
+                                        <!-- <p><a class="dropdown-item" href="index.php?pg-nm=settings">Settings</a></p> -->
+                                        <p><a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a></p>
+                                    </div>
+                                </li>
+                            </ul>
+                    <?php        
+                        } else {
+                    ?>
+                            <ul class="nav header-navbar-rht">
+                                <li class="nav-item">
+                                    <div class="nav-link btn btn-white log-register">
+                                        <a href="#" data-toggle="modal" data-target="#register-form-modal" onclick="registerForm()"><span><i class="feather-users"></i></span>Login/Register</a>
+                                    </div>
+                                </li>
+                            </ul>        
+                    <?php
+                        }
+                    ?>					
 				</nav>
 			</div>
 		</header>
 		<!-- /Header -->
 		<script type="text/javascript">
 			function registerForm() {
+                $("#login-form-modal").modal('hide');
                 $('#register-form-modal').modal('show');
                 $('#register-modal-title-text').text('Register');
             }
@@ -133,6 +159,7 @@
             }
 
             function loginForm() {
+                $("#register-form-modal").modal('hide');
                 $('#login-form-modal').modal('show');
                 $('#login-modal-title-text').text('Login');
             }
@@ -184,33 +211,23 @@
                     // Make sure the form is submitted to the destination defined
                     // in the "action" attribute of the form when valid
                     submitHandler: function(form) {
-                        //form.submit();
                         $.ajax({
                             type: "POST",
                             url: "./api/user/register.php",
                             data: $(form).serialize(),
                             success: function (resp) {
-                                console.log("resp",resp);
-                                //setTimeout(function() {
-                                    $(form).html("<div id='message'></div>");
-                                    $('#message').html("<h6>"+resp.message+"</h6>")
-                                    //.append("<p></p>")
-                                    .hide()
-                                    .fadeIn(2500, function () {
-                                        //$('#message').append("<img id='checkmark' src='images/ok.png' />");
-                                        window.location.href='index.php';
-                                    });
-                                    //window.location.href='index.php';
-                                    //registerFormClose();
-                                    //$("#register-form-modal").modal('hide').fadeOut();
-                                //}, 2000); // Delay of 2 seconds (2000 milliseconds)
+                                $(form).html("<div id='message'></div><div class='row'>&nbsp;</div>");
+                                $('#haveanaccount').hide();
+                                $('#message').html(resp.message);
 
+                                setTimeout(function () {
+                                    window.location.href='index.php';
+                                }, 1500);
                             }
                         });
                         return false; // required to block normal submit since you used ajax
                     }
                 });
-
 
                 $("#userLoginForm").validate({
                     rules: {
@@ -237,20 +254,14 @@
                             url: "./api/user/login.php",
                             data: $(form).serialize(),
                             success: function (resp) {
-                                console.log("resp",resp);
-                                //setTimeout(function() {
-                                    $(form).html("<div id='message'></div>");
-                                    $('#message').html("<h6>"+resp.message+"</h6>")
-                                    //.append("<p></p>")
-                                    .hide()
-                                    .fadeIn(2500, function () {
-                                        //$('#message').append("<img id='checkmark' src='images/ok.png' />");
-                                        window.location.href='index.php';
-                                    });
-                                    //window.location.href='index.php';
-                                    //registerFormClose();
-                                    //$("#register-form-modal").modal('hide').fadeOut();
-                                //}, 2000); // Delay of 2 seconds (2000 milliseconds)
+                                console.log(resp);
+                                $(form).html("<div id='message'></div><div class='row'>&nbsp;</div>");
+                                $('#haveanaccountlogin').hide();
+                                $('#message').html(resp.message);
+
+                                setTimeout(function () {
+                                    window.location.href='index.php';
+                                }, 1500);
                             }
                         });
                         return false; // required to block normal submit since you used ajax
@@ -259,8 +270,19 @@
             });
         </script>
         <style>
-            form label.error {
-                color: #c00;
+            .nav {
+                --bs-nav-link-padding-x: 1rem;
+                --bs-nav-link-padding-y: 0.5rem;
+                --bs-nav-link-font-weight: ;
+                --bs-nav-link-color: var(--bs-link-color);
+                --bs-nav-link-hover-color: var(--bs-link-hover-color);
+                --bs-nav-link-disabled-color: var(--bs-secondary-color) rgba(33, 37, 41, 0.75);
+                display: flex;
+                flex-wrap: wrap;
+                padding-left: 0;
+                margin-bottom: 0;
+                list-style: none;
+                font-size: 12px;
             }
 
             .modal-header .close {
@@ -329,7 +351,12 @@
             }
 
             span.has-error {  
-                color: red;  
+                color: red;                
+            }
+
+            form label.error {
+                color: #c00;
+                font-size: 12px;
             }
 
             form input.form-control, form textarea.form-control {
@@ -338,6 +365,7 @@
                 background: #ffffff;
                 /*opacity: 0.6;*/
                 border: 1px solid #e9e5e5;
+                font-size: 12px;
             }           
 
             form input.form-control:focus, form textarea.form-control:focus {
@@ -356,76 +384,155 @@
 
             .modal-body {
                 border-radius: 10px !important;
-                background-image: url("<?=$frontendAssetUrl?>assets/img/register_with_bg.jpg");
+                /*background-image: url("<?=$frontendAssetUrl?>assets/img/register_with_bg.jpg");*/
                 background-repeat:no-repeat;
-                background-size: 52%;
-                background-position: left;
+                background-size: 100%;
+                background-position: inherit;
                 width:100%;
                 height:100%;
             }
 
-            /*@media (min-width: 992px) {
+            @media (min-width: 992px) {
                 .modal-lg, .modal-xl {
-                    --bs-modal-height: 700px;
-                    --bs-modal-width: 700px;
+                    --bs-modal-height: 300px;
+                    --bs-modal-width: 350px;
                 }
-            }*/
+            }
 
             .close {
                 margin-left: 95%;
                 margin-top: 0px;
                 border: 0px solid #fff;
-                background-color: #fff;
+                background-color: transparent;
             }
 
             .modal-header {
                 border-bottom: 0px solid red;
+            }    
+
+            .row {
+                --bs-gutter-x: 1.5rem;
+                --bs-gutter-y: 0;
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: calc(-1 * var(--bs-gutter-y));
+                margin-right: calc(-.5 * var(--bs-gutter-x));
+                margin-left: 0px;
+            }
+
+            form input {
+                height: 35px;
+            }
+
+            .btn-secondary {
+                color: #FFFFFF;
+                background: #192335;
+                border-color: #192335;
+                height: 35px;
+                font-size:12px;
+            }
+
+            .userCatTypeClass{
+                font-size:12px;
+            }
+
+            .text-center {
+                text-align: center !important;
+                font-size: 12px;
+            }
+
+            .shadow-card {
+                background: #FFFFFF;
+                border-radius: 10px;
+                padding: 0px;
+                box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
+            }
+
+            #message {
+                font-size: 12px;    
+            }
+
+            .header .header-navbar-rht.logged-in > li .dropdown-menu.show {
+                margin-top: 0;
+                padding: 15px;
+            }
+
+            .header .header-navbar-rht.logged-in > li .dropdown-menu {
+                min-width: 200px;
+                border-radius: 6px;
+            }
+
+            .avatar-sm {
+                width: 2.5rem;
+                height: 2.5rem;
             }    
         </style>
 	    <div class="modal fade" id="register-form-modal">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-body">
-                    <div class="content map-content">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xl-7">
-                                    <div class="map-list-blk">
-                                        &nbsp;
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <button type="button" class="close" onclick="registerFormClose()" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>   
+                        </div>    
+                    </div>
+                    <div class="shadow-card">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                                <form id="userRegisterForm" name="userRegisterForm" method="POST" enctype="multipart/form-data" action="./././api/user/register.php">
+                                    <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+                                    <input type="hidden" class="form-control" name="userType" id="userType" value="4">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <input type="text" class="form-control" name="userName" id="userName" placeholder="Enter Name">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-xl-5 map-right">
-                                    <div class="white-bg d-flex justify-content-start align-items-center availability">                                        
-                                        <form id="userRegisterForm" name="userRegisterForm" method="POST" enctype="multipart/form-data" action="./././api/user/register.php">
-                                            <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
-                                            <input type="hidden" class="form-control" name="userType" id="userType" value="4">
-                                            <div class="row">
-                                                <div class="col-xl-12" style="">
-                                                    <button type="button" class="close" onclick="registerFormClose()" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>   
-                                                </div>    
-                                            </div>    
-                                            <div class="row">
-                                                <label for="first-name" class="form-label">Name</label>
-                                                <input type="text" class="form-control" name="userName" id="userName" placeholder="Enter Name">
-                                            </div>
-                                            <div class="row"></div>
-                                            <div class="row">   
-                                                <label for="phone" class="form-label">Phone</label>
-                                                <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
-                                            </div>
-                                            <div class="row">&nbsp;</div>
-                                            <div class="row">
-                                                <div class="col-xl-3">
-                                                    <button type="submit" id="userRegisterSubmit" name="userRegisterSubmit" class="btn btn-primary">Save</button>
-                                                </div>
-                                            </div>  
-                                        </form>
-                                    </div>   
-                                </div>
-                            </div>
+                                    <div class="row">&nbsp;</div>
+                                    <div class="row">   
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
+                                        </div>
+                                    </div>            
+                                     <div class="row">&nbsp;</div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <input type="checkbox" name="userCatType" id="userCatType">
+                                            <span class="userCatTypeClass">I am a Coach</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">&nbsp;</div>
+                                    <div class="row">   
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Create Account<i class="feather-arrow-right-circle ms-2"></i></button>
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group">
+                                        <div class="login-options text-center">
+                                            <span class="text">Or continue with</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <ul class="social-login d-flex justify-content-center align-items-center">
+                                            <li class="text-center">
+                                                <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/icons/google.svg" class="img-fluid" alt="Google">
+                                                </button>
+                                            </li>
+                                            <li class="text-center">
+                                                <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/icons/facebook.svg" class="img-fluid" alt="Facebook">
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>                              
+                                </form>
+                            </div>                            
                         </div>
+                    </div>
+                    <div class="bottom-text text-center" id="haveanaccount">
+                        Have an account? <a href="#" onclick="loginForm()">Sign In!</a>
                     </div>
                 </div>                    
             </div>
@@ -436,54 +543,64 @@
     <!-- /.modal -->
     <!-- /.card-header -->
     <div class="modal fade" id="login-form-modal">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-body">
-                    <div class="content map-content">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xl-7">
-                                    <div class="map-list-blk">
-                                        &nbsp;
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <button type="button" class="close" onclick="loginFormClose()" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>   
+                    </div>    
+                </div>
+                <div class="shadow-card">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                            <form id="userLoginForm" name="userLoginForm" method="POST" enctype="multipart/form-data" action="./././api/user/login.php">
+                                <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+                                <input type="hidden" class="form-control" name="userType" id="userType" value="4">
+                                <div class="row">   
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
+                                    </div>
+                                </div>            
+                                <div class="row">&nbsp;</div>
+                                <div class="row">   
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Login<i class="feather-arrow-right-circle ms-2"></i></button>
+                                    </div>
+                                </div>                                    
+                                <div class="form-group">
+                                    <div class="login-options text-center">
+                                        <span class="text">Or continue with</span>
                                     </div>
                                 </div>
-                                <div class="col-xl-5 map-right">
-                                    <div class="white-bg d-flex justify-content-start align-items-center availability">                                        
-                                        <form id="userLoginForm" name="userLoginForm" method="POST" enctype="multipart/form-data" action="./././api/user/login.php">
-                                            <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
-                                            <input type="hidden" class="form-control" name="userType" id="userType" value="4">
-                                            <div class="row">
-                                                <div class="col-xl-12" style="">
-                                                    <button type="button" class="close" onclick="loginFormClose()" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>   
-                                                </div>    
-                                            </div>    
-                                            <div class="row"></div>
-                                            <div class="row">   
-                                                <label for="phone" class="form-label">Phone</label>
-                                                <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
-                                            </div>
-                                            <div class="row">&nbsp;</div>
-                                            <div class="row">
-                                                <div class="col-xl-3">
-                                                    <button type="submit" id="userLoginSubmit" name="userLoginSubmit" class="btn btn-primary">Save</button>
-                                                </div>
-                                            </div>
-                                            <div class="row">&nbsp;</div>
-                                            <div class="row">&nbsp;</div>
-                                            <div class="row">&nbsp;</div>
-                                        </form>
-                                    </div>   
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                </div>                    
-            </div>
-            <!-- /.modal-content -->
+                                <div class="form-group mb-0">
+                                    <ul class="social-login d-flex justify-content-center align-items-center">
+                                        <li class="text-center">
+                                            <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
+                                                <img src="<?=$frontendAssetUrl?>assets/img/icons/google.svg" class="img-fluid" alt="Google">
+                                            </button>
+                                        </li>
+                                        <li class="text-center">
+                                            <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
+                                                <img src="<?=$frontendAssetUrl?>assets/img/icons/facebook.svg" class="img-fluid" alt="Facebook">
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>                              
+                            </form>
+                        </div>                            
+                    </div>
+                </div>
+                <div class="bottom-text text-center" id="haveanaccountlogin">
+                    Dont have an account? <a href="#" onclick="registerForm()">Sign Up!</a>
+                </div>
+            </div>                     
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
     </div>
-    <!-- /.modal -->
-    <!-- /.card-header -->
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- /.card-header -->

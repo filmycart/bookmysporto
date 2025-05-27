@@ -3,6 +3,15 @@
 	$response = new Response();
 	$errors = new Errors();
 
+	if(Helper::is_get()) {
+		unset($_SESSION['userId']);
+		unset($_SESSION['userName']);
+		unset($_SESSION['verificationToken']);
+		unset($_SESSION['mobile']);
+		header("Location: ".$_SERVER['HTTP_REFERER']);
+		exit;
+	}
+
 	if(Helper::is_post()){
 	    $api_token = Helper::post_val("api_token");
 	    if($api_token) {
