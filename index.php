@@ -61,6 +61,9 @@
           $pgLoginActive = 'class="active"';
           include_once('frontend/'.$templateName.'/login.php');
           break;  
+        case 'logout':
+          header('Location: '.'api/user/login.php?pg-nm='.$pgName);
+          break;
         case 'register':
           $pgRegisterActive = 'class="active"';
           include_once('frontend/'.$templateName.'/register.php');
@@ -69,9 +72,6 @@
           $pgContactActive = 'class="active"';
           include_once('frontend/'.$templateName.'/contact-us.php');
           break;
-        case 'logout':
-          include_once('frontendapi/'.$templateName.'/logout.php');
-          break; 
         case 'send-sms':
           include_once('frontendapi/'.$templateName.'/send-sms.php');
           break;        
