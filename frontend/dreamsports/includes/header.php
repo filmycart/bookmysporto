@@ -498,7 +498,7 @@
                             </button>   
                         </div>    
                     </div>
-                    <div class="shadow-card">
+                    <!-- <div class="shadow-card"> -->
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
                                 <form id="userRegisterForm" name="userRegisterForm" method="POST" enctype="multipart/form-data" action="./././api/user/register.php">
@@ -534,6 +534,30 @@
                                         </div>
                                     </div>
                                     <div class="form-group mb-0">
+                                        <?php
+                                            /*require_once 'vendor/autoload.php';
+
+                                            $id_token = "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";
+
+                                            // Get $id_token via HTTPS POST.
+                                            $WEB_CLIENT_ID = "128065069669-fj47pvbnokrv2tvra4h1ebihr3qob570.apps.googleusercontent.com";
+                                            $client = new Google_Client(['client_id' => $WEB_CLIENT_ID]);  // Specify the WEB_CLIENT_ID of the app that accesses the backend
+                                            $payload = $client->verifyIdToken($id_token);
+                                            if ($payload) {
+                                              $userid = $payload['sub'];
+                                              // If the request specified a Google Workspace domain
+                                              //$domain = $payload['hd'];
+                                            } else {
+                                              // Invalid ID token
+                                            }*/
+
+                                        ?>
+                                        <a href="google-oauth.php" class="google-login-btn">
+                                            <span class="icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
+                                            </span>
+                                            Login with Google
+                                        </a>
                                         <ul class="social-login d-flex justify-content-center align-items-center">
                                             <li class="text-center">
                                                 <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
@@ -550,7 +574,7 @@
                                 </form>
                             </div>                            
                         </div>
-                    </div>
+                    <!-- </div> -->
                     <div class="bottom-text text-center" id="haveanaccount">
                         Have an account? <a href="#" onclick="loginForm()">Sign In!</a>
                     </div>
@@ -573,7 +597,7 @@
                         </button>   
                     </div>    
                 </div>
-                <div class="shadow-card">
+                <!--<div class="shadow-card">-->
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
                             <form id="userLoginForm" name="userLoginForm" method="POST" enctype="multipart/form-data" action="./././api/user/login.php">
@@ -612,7 +636,7 @@
                             </form>
                         </div>                            
                     </div>
-                </div>
+                <!--</div>-->
                 <div class="bottom-text text-center" id="haveanaccountlogin">
                     Dont have an account? <a href="#" onclick="registerForm()">Sign Up!</a>
                 </div>
