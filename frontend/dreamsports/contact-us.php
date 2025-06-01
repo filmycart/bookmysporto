@@ -1,8 +1,20 @@
 		<?php
 			include("includes/page_header.php");
 		?>
+		<style type="text/css">
+			.content.contact-group {
+    			padding: 10px 0px 0px;
+			}
+
+			.card {
+			    border: 1px solid #EAEDF0;
+			    border-radius: 10px;
+			    padding: 24px;
+			    color: inherit;
+			}
+		</style>
 		<!-- Breadcrumb -->
-		<div class="breadcrumb breadcrumb-list mb-0">
+		<!-- <div class="breadcrumb breadcrumb-list mb-0">
 			<span class="primary-right-round"></span>
 			<div class="container">
 				<h3 class="text-white">Contact US</h3>
@@ -11,7 +23,7 @@
 					<li>Contact US</li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 		<!-- /Breadcrumb -->
 		<!-- Page Content -->
 		<div class="content blog-details contact-group">
