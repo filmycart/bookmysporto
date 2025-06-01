@@ -4,11 +4,15 @@
 	// Update the following variables
 	$google_oauth_client_id = '721747103744-26pe0qorikhrrkcs9kmjpgfn5q54sdbf.apps.googleusercontent.com';
 	$google_oauth_client_secret = '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';
-	$google_oauth_redirect_uri = 'https://dev.sportify.filmycart.in/google-oauth.php';
+	$google_oauth_redirect_uri = 'https://dev.sportify.filmycart.in/google-oauth.php/google';
 	$google_oauth_version = 'v3';
 
-	preg_match("/[^\/]+$/", "https://dev.sportify.filmycart.in/google", $matches);
+	preg_match("/[^\/]+$/", "https://dev.sportify.filmycart.in/google-oauth.php/google", $matches);
 	$pgCode = $matches[0];
+
+/*	echo $pgCode; 
+	exit;*/
+	
 	/*$last_word = $matches[0]; // test
 	echo $last_word;
 	exit;
