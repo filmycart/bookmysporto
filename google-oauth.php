@@ -7,17 +7,17 @@
 	$google_oauth_redirect_uri = 'http://localhost/sportifyv2/google-oauth.php';
 	$google_oauth_version = 'v3';
 
-	$pgProvider = "";
-    if((isset($_GET['provider'])) && (!empty($_GET['provider']))){
-        $pgProvider = $_GET['provider'];
+	$pgCode = "";
+    if((isset($_GET['code'])) && (!empty($_GET['code']))){
+        $pgCode = $_GET['code'];
     }
 
-    if($pgProvider == "google") {
+    if($pgCode == "google") {
 		// If the captured code param exists and is valid
-		if (isset($_GET['code']) && !empty($_GET['code'])) {
+		//if (isset($_GET['code']) && !empty($_GET['code'])) {
 		    // Execute cURL request to retrieve the access token
 		    $params = [
-		        'code' => $_GET['code'],
+		        'code' => $pgCode,
 		        'client_id' => $google_oauth_client_id,
 		        'client_secret' => $google_oauth_client_secret,
 		        'redirect_uri' => $google_oauth_redirect_uri,
@@ -32,9 +32,9 @@
 		    curl_close($ch);
 		    $response = json_decode($response, true);
 		    // Code goes here...
-		} else {
+		//} else {
 		    // Define params and redirect to Google Authentication page
-		    $params = [
+		    /*$params = [
 		        'response_type' => 'code',
 		        'client_id' => $google_oauth_client_id,
 		        'redirect_uri' => $google_oauth_redirect_uri,
@@ -43,9 +43,18 @@
 		        'prompt' => 'consent'
 		    ];
 		    header('Location: https://accounts.google.com/o/oauth2/auth?' . http_build_query($params));
-		    exit;
-		}
-	} elseif($pgProvider == "facebook") {
-
+		    exit;*/
+		//}
+	} else {
+		$params = [
+	        'response_type' => 'code',
+	        'client_id' => $google_oauth_client_id,
+	        'redirect_uri' => $google_oauth_redirect_uri,
+	        'scope' => 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+	        'access_type' => 'offline',
+	        'prompt' => 'consent'
+	    ];
+	    header('Location: https://accounts.google.com/o/oauth2/auth?' . http_build_query($params));
+	    exit;
 	} 
 ?>
