@@ -49,6 +49,10 @@
 
     if(!empty($pgName)) {
       switch ($pgName) {
+        case '':
+          $pgHomeActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/home.php');
+          break;
         case 'home':
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/home.php');
@@ -56,6 +60,14 @@
         case 'about-us':
           $pgAboutActive = 'class="active"';
           include_once('frontend/'.$templateName.'/about-us.php');
+          break;
+        case 'privacy-policy':
+          $pgAboutActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/privacy-policy.php');
+          break;
+        case 'terms-of-service':
+          $pgAboutActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/terms-of-service.php');
           break;
         case 'login':
           $pgLoginActive = 'class="active"';

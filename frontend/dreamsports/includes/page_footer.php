@@ -75,10 +75,10 @@
 										<a href="index.php?pg-nm=faq">Faq</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=privacy">Privacy Policy</a>
+										<a href="index.php?pg-nm=privacy-policy">Privacy Policy</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=terms">Terms & Conditions</a>
+										<a href="index.php?pg-nm=terms-of-service">Terms & Conditions</a>
 									</li>
 								</ul>
 							</div>
