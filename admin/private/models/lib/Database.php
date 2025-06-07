@@ -43,6 +43,17 @@ abstract class Database{
         return $this;
     }
 
+    public function whereIn($column){
+
+        if(count($column) == 1){
+            $this->where_col .= key($column);
+            $this->sql = " WHERE " . key($column) . " IN (" . $this->formatSql($column[key($column)]) . ")";
+            $this->condition_str = key($column) . " IN (" . $this->formatSql($column[key($column)]) . ")";
+        }
+
+        return $this;
+    }
+
     public function not($column){
         if(count($column) == 1){
             $this->extended_where .= " AND NOT " . key($column) . " = " . $this->formatSql($column[key($column)]);

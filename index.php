@@ -26,9 +26,24 @@
         $siteTitle = $configArray['title'];
     }
 
+    $siteKeyword = "";
+    if((isset($configArray['keyword'])) && (!empty($configArray['keyword']))) {
+        $siteKeyword = $configArray['keyword'];
+    }
+
+    $siteSubTitle = "";
+    if((isset($configArray['sub_title'])) && (!empty($configArray['sub_title']))) {
+        $siteSubTitle = $configArray['sub_title'];
+    }
+
     $siteTagLine = "";
     if((isset($configArray['tag_line'])) && (!empty($configArray['tag_line']))) {
         $siteTagLine = $configArray['tag_line'];
+    }
+
+    $siteDescription = "";
+    if((isset($configArray['description'])) && (!empty($configArray['description']))) {
+        $siteDescription = $configArray['description'];
     }
 
     $templateName = 'dreamsports';
@@ -40,8 +55,14 @@
     if((isset($configArray['author'])) && (!empty($configArray['author']))) {
         $siteAuthor = $configArray['author'];
     }
+  
+    /*$stateArr = "";
+    if((isset($config['config']['state'])) && (!empty($config['config']['state']))) {
+        $stateArr = $config['config']['state'];
+    }*/
 
     $pgHomeActive = "";
+    $pgCoachesActive = "";
     $pgAboutActive = "";
     $pgContactActive = "";
     $pgLoginActive = "";
@@ -53,20 +74,24 @@
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/home.php');
           break;
+        case 'coach':
+          $pgCoachesActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/coaches.php');
+          break;
         case 'home':
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/home.php');
-          break;
+          break;  
         case 'about-us':
           $pgAboutActive = 'class="active"';
           include_once('frontend/'.$templateName.'/about-us.php');
           break;
         case 'privacy-policy':
-          $pgAboutActive = 'class="active"';
+          $pgPrivacyActive = 'class="active"';
           include_once('frontend/'.$templateName.'/privacy-policy.php');
           break;
         case 'terms-of-service':
-          $pgAboutActive = 'class="active"';
+          $pgTermsActive = 'class="active"';
           include_once('frontend/'.$templateName.'/terms-of-service.php');
           break;
         case 'login':

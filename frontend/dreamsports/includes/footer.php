@@ -1,14 +1,13 @@
-<!-- Footer -->
+		<!-- Footer -->
 		<footer class="footer">
 			<div class="container">
 				<!-- Footer Join -->
 				<div class="footer-join aos" data-aos="fade-up">
 					<h2>We Welcome Your Passion And Expertise</h2>
 					<p class="sub-title">Join our empowering sports community today and grow with us.</p>
-					<a href="register.html" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
+					<a href="#" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
 				</div>
-				<!-- /Footer Join -->
-			
+				<!-- /Footer Join -->			
 				<!-- Footer Top -->
 				<div class="footer-top">
 					<div class="row">
@@ -18,11 +17,9 @@
 								<h4 class="footer-title">Contact us</h4>
 								<div class="footer-address-blk">
 									<div class="footer-call">
-										<!-- <span>Toll free Customer Care</span> -->
 										<p>+918105460391</p>
 									</div>
 									<div class="footer-call">
-										<!-- <span>Need Live Suppot</span> -->
 										<p>contact@filmycart.in</p>
 									</div>
 								</div>
@@ -99,33 +96,6 @@
 								<div class="copyright-text">
 									<p class="mb-0">&copy; 2025 Sportify  - All rights reserved.</p>
 								</div>
-							</div>
-							<div class="col-md-6">
-								<!-- Copyright Menu -->
-<!-- 								<div class="dropdown-blk">
-									<ul class="navbar-nav selection-list">
-										<li class="nav-item dropdown">
-											<div class="lang-select">
-												<span class="select-icon"><i class="feather-globe"></i></span>
-												<select class="select">
-													<option>English (US)</option>
-													<option>UK</option>
-													<option>Japan</option>
-												</select>
-											</div>
-										</li>
-										<li class="nav-item dropdown">
-											<div class="lang-select">
-												<span class="select-icon"></span>
-												<select class="select">
-													<option>$ USD</option>
-													<option>$ Euro</option>
-												</select>				
-											</div>	
-										</li>
-									</ul>
-								</div> -->
-								<!-- /Copyright Menu -->
 							</div>
 						</div>
 					</div>
