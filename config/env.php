@@ -1,10 +1,30 @@
 <?php
 	require_once('./admin/private/init.php');
 
+	$requestScheme = "";
+	if((isset($_SERVER['REQUEST_SCHEME'])) && (!empty($_SERVER['REQUEST_SCHEME']))) {
+		$requestScheme = $_SERVER['REQUEST_SCHEME'];	
+	}
+
+	$hostName = "";
+	if((isset($_SERVER['HTTP_HOST'])) && (!empty($_SERVER['HTTP_HOST']))) {
+		$hostName = $_SERVER['HTTP_HOST'];	
+	}
+
+	$baseUrl = "";
+	$settingsUrl = "";
+	if($hostName == "localhost") {
+		$baseUrl = "://localhost/sportifyv2/";
+		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
+	} else {
+		$baseUrl = "://dev.sportify.filmycart.in/";
+		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
+	}
+
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	  CURLOPT_URL => 'http://localhost/sportifyv2/api/settings/setting.php',
+	  CURLOPT_URL => $settingsUrl,
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => '',
 	  CURLOPT_MAXREDIRS => 10,
@@ -21,6 +41,39 @@
 	$configResponse = curl_exec($curl);
 
 	curl_close($curl);
+
+	/*$curlState = curl_init();
+
+	$stateUrl = "";
+	if($hostName == "localhost") {
+		$stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
+	} else {
+		$stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
+	}
+
+	curl_setopt_array($curlState, array(
+	  CURLOPT_URL => $stateUrl,
+	  CURLOPT_RETURNTRANSFER => true,
+	  CURLOPT_ENCODING => '',
+	  CURLOPT_MAXREDIRS => 10,
+	  CURLOPT_TIMEOUT => 0,
+	  CURLOPT_FOLLOWLOCATION => true,
+	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	  CURLOPT_CUSTOMREQUEST => 'POST',
+	  CURLOPT_POSTFIELDS => array('api_token' => '123456789'),
+	  CURLOPT_HTTPHEADER => array(
+	    'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+	  ),
+	));
+
+	$stateResponse = curl_exec($curlState);
+
+	$stateResponseArr = array();
+	if(!empty($stateResponse)){
+		$stateResponseArr = json_decode($stateResponse, true);
+	}
+
+	curl_close($curlState);*/
 
 	$configResponseArray = array();
 	if(!empty($configResponse)) {
@@ -48,8 +101,20 @@
         $siteConfigArray['title'] = $siteConfig->title;  
     }
 
+	if((isset($siteConfig->keyword)) && (!empty($siteConfig->keyword))) {
+        $siteConfigArray['keyword'] = $siteConfig->keyword;  
+    }    
+
+    if((isset($siteConfig->sub_title)) && (!empty($siteConfig->sub_title))) {
+        $siteConfigArray['sub_title'] = $siteConfig->sub_title;  
+    }
+
     if((isset($siteConfig->tag_line)) && (!empty($siteConfig->tag_line))) {
         $siteConfigArray['tag_line'] = $siteConfig->tag_line;  
+    }
+
+    if((isset($siteConfig->description)) && (!empty($siteConfig->description))) {
+        $siteConfigArray['description'] = $siteConfig->description;  
     }
 
     if((isset($siteConfig->firebase_auth)) && (!empty($siteConfig->firebase_auth))) {
@@ -75,11 +140,12 @@
     if((isset($siteConfig->frontend_asset_url)) && (!empty($siteConfig->frontend_asset_url))) {
         $siteConfigArray['frontend_asset_url'] = $siteConfig->frontend_asset_url;  
     }
-	
+
 	$config = [
 	    'config' => [
 	        'admin_address' => $admin_address,
 	        'site_config' => $siteConfigArray
+	        //'state' => $stateResponseArr
 	    ],
 	    'db' => [
 	        'connection' => [

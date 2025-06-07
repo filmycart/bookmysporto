@@ -10,7 +10,13 @@ if(Helper::is_post()){
     if($api_token){
         $setting = new Setting();
         $setting = $setting->where(["api_token" => $api_token])->one();
-        
+
+       /* print"<pre>";
+        echo $user->type;
+        echo NUMBER_USER;
+        print_r($_POST);
+        exit;*/
+
         if(!empty($setting)) {
             if(isset($_POST["userName"]) && isset($_POST["userPhoneNumber"]) && isset($_POST["userType"])) {
                 $user = new User();
@@ -18,6 +24,7 @@ if(Helper::is_post()){
                 $user->username = Helper::post_val("userPhoneNumber");
                 $user->name = Helper::post_val("userName");
                 $user->type = Helper::post_val("userType");
+                $user->is_coach = Helper::post_val("isCoach");
 
                 if($user->type == NUMBER_USER){
                     $user->validate_with(["mobile", "username"]);
