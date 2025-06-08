@@ -108,8 +108,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /Customer -->
-        
+                                    <!-- /Customer -->        
                                     <div class="accordion" id="accordionMain2">
                                         <div class="card-header-new" id="headingTwo">
                                             <h5 class="filter-title">
@@ -131,8 +130,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-        
+                                    </div>        
                                     <!-- By Status -->
                                     <div class="accordion" id="accordionMain3">
                                         <div class="card-header-new" id="headingThree">
@@ -151,8 +149,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /By Status -->
-        
+                                    <!-- /By Status -->        
                                     <!-- Category -->
                                     <div class="accordion" id="accordionMain4">
                                         <div class="card-header-new" id="headingFour">
@@ -180,8 +177,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                      <!-- /Category -->
-                                    
+                                    <!-- /Category -->                                    
                                     <!-- Guests -->
                                     <div class="accordion" id="accordionMain5">
                                         <div class="card-header-new" id="headingFive">
@@ -218,7 +214,6 @@
                                         </div>
                                     </div>
                                     <!-- /Guests -->
-
                                     <!-- Reviews -->
                                     <div class="accordion" id="accordionMain6">
                                         <div class="card-header-new" id="headingSix">
@@ -288,7 +283,6 @@
                                         </div>
                                     </div>
                                     <!-- /Reviews -->
-
                                     <!-- Amenities -->
                                     <div class="accordion" id="accordionMain7">
                                         <div class="card-header-new" id="headingSeven">
@@ -312,7 +306,6 @@
                                         </div>
                                     </div>
                                     <!-- /Amenities -->
-
                                     <!-- Amenities -->
                                     <div class="accordion" id="accordionMain8">
                                         <div class="card-header-new" id="headingEight">
@@ -353,7 +346,6 @@
                                         </div>
                                     </div>
                                     <!-- /Amenities -->
-
                                     <button type="submit" class="search-btn btn w-100 btn-primary">
                                         <span><i class="feather-search me-2"></i></span>Search Now
                                     </button>
@@ -363,14 +355,13 @@
 						<div class="col-lg-8">    
                             <!-- Listing Content -->
                             <div class="row justify-content-center">
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-05.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-05.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Professional</span>	
@@ -433,14 +424,13 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-06.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-06.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Rookie</span>	
@@ -503,7 +493,6 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
@@ -573,14 +562,13 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-08.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-08.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Intermediate</span>	
@@ -643,14 +631,13 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-09.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-09.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Professional</span>	
@@ -713,14 +700,13 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-11.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-11.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Herman</span>	
@@ -783,14 +769,13 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-12.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-12.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Professional</span>	
@@ -853,14 +838,13 @@
                                     </div>
                                 </div>
                                 <!-- /Featured Item -->
-
                                 <!-- Featured Item -->
                                 <div class="col-lg-6 col-md-6">
                                     <div class="featured-venues-item">
                                         <div class="listing-item listing-item-grid">										
                                             <div class="listing-img">
                                                 <a href="coach-detail.html">
-                                                    <img src="assets/img/featured/featured-13.jpg" alt="Venue">
+                                                    <img src="<?=$frontendAssetUrl?>assets/img/featured/featured-13.jpg" alt="Venue">
                                                 </a>
                                                 <div class="fav-item-venues">
                                                     <span class="tag tag-blue">Professional</span>	
@@ -922,8 +906,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /Featured Item -->
-                                
+                                <!-- /Featured Item -->                                
                                 <!--Pagination--> 
                                 <div class="pagination-group">
                                     <nav>
@@ -961,22 +944,18 @@
                                         </ul>
                                     </nav>
                                 </div>
-                                <!--/Pagination-->
-                                
+                                <!--/Pagination-->                                
                             </div>
                             <!-- /Listing Content -->
 						</div>
 					</div>
 				</div>
 				<!-- Listing Content Group-->	
-
 			</div>
-
 		</div>
 		<!-- /Page Content -->
 	</div>
 	<!-- /Main Wrapper -->
-
 	<!-- Calendar Js -->
     <script src="<?=$frontendAssetUrl?>assets/plugins/simple-calendar/jquery.simple-calendar.js"></script>
     <script src="<?=$frontendAssetUrl?>assets/js/calander.js"></script> 

@@ -55,11 +55,6 @@
     if((isset($configArray['author'])) && (!empty($configArray['author']))) {
         $siteAuthor = $configArray['author'];
     }
-  
-    /*$stateArr = "";
-    if((isset($config['config']['state'])) && (!empty($config['config']['state']))) {
-        $stateArr = $config['config']['state'];
-    }*/
 
     $pgHomeActive = "";
     $pgCoachesActive = "";

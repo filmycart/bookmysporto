@@ -13,12 +13,12 @@
 	<meta name="author" content="<?=($siteAuthor)?$siteAuthor:''?>">
 
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@dreamguystech">
+	<meta name="twitter:site" content="@sportify">
 	<meta name="twitter:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta name="twitter:image" content="<?=$frontendAssetUrl?>assets/img/meta-image.jpg">
 	<meta name="twitter:image:alt" content="<?=($siteTitle)?$siteTitle:''?>">
 
-	<meta property="og:url" content="https://dreamsports.dreamguystech.com/">
+	<meta property="og:url" content="https://dev.sportify.filmycart.in">
 	<meta property="og:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta property="og:description" content="<?=($siteDescription)?$siteDescription:''?>">
 	<meta property="og:image" content="<?=$frontendAssetUrl?>/assets/img/meta-image.jpg">
@@ -152,9 +152,13 @@
                         } else {
                     ?>
                             <ul class="nav header-navbar-rht">
-                                <li class="nav-item">
-                                    <div class="nav-link btn btn-white log-register">
-                                        <a href="#" data-toggle="modal" data-target="#register-form-modal" onclick="registerForm()"><span><i class="feather-users"></i></span>Login/Register</a>
+                                <li class="nav-item">                                        
+                                    <div class="nav-link btn btn-primary log-register">
+                                        <a href="#" data-toggle="modal" data-target="#login-form-modal" onclick="loginForm()"><span><i class="feather-users"></i></span>Login</a>
+                                    </div>
+                                    &nbsp;
+                                    <div class="nav-link btn btn-primary log-register">
+                                        <a href="#" data-toggle="modal" data-target="#register-form-modal" onclick="registerForm()"><span><i class="feather-users"></i></span>Register</a>
                                     </div>
                                 </li>
                             </ul>        
@@ -308,26 +312,28 @@
                                 <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
                                 <input type="hidden" class="form-control" name="userType" id="userType" value="4">
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                         <input type="text" class="form-control" name="userName" id="userName" placeholder="Enter Name">
                                     </div>
                                 </div>
-                                <div class="row">&nbsp;</div>
+                                <div class="spacer-div"></div>
                                 <div class="row">   
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                         <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
                                     </div>
                                 </div>            
-                                 <div class="row">&nbsp;</div>
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <input type="checkbox" name="isCoach" id="isCoach" value="1">
-                                        <span class="userCatTypeClass">I am a Coach</span>
+                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding display-flex">
+                                        <div>
+                                            <input type="checkbox" name="isCoach" id="isCoach" value="1">
+                                        </div>
+                                        <div class="left-padding-5p top-padding-5p">
+                                            <span class="userCatTypeClass">I am a Coach</span>
+                                        </div>    
                                     </div>
                                 </div>
-                                <div class="row">&nbsp;</div>
                                 <div class="row">   
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                         <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Create Account<i class="feather-arrow-right-circle ms-2"></i></button>
                                     </div>
                                 </div>                                    
@@ -387,13 +393,13 @@
                             <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
                             <input type="hidden" class="form-control" name="userType" id="userType" value="4">
                             <div class="row">   
-                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                     <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
                                 </div>
-                            </div>            
-                            <div class="row">&nbsp;</div>
+                            </div>    
+                            <div class="spacer-div"></div>        
                             <div class="row">   
-                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                     <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Login<i class="feather-arrow-right-circle ms-2"></i></button>
                                 </div>
                             </div>                                    
@@ -430,3 +436,88 @@
 </div>
 <!-- /.modal -->
 <!-- /.card-header -->
+<?php
+    $requestScheme = "";
+    if((isset($_SERVER['REQUEST_SCHEME'])) && (!empty($_SERVER['REQUEST_SCHEME']))) {
+        $requestScheme = $_SERVER['REQUEST_SCHEME'];    
+    }
+
+    $hostName = "";
+    if((isset($_SERVER['HTTP_HOST'])) && (!empty($_SERVER['HTTP_HOST']))) {
+        $hostName = $_SERVER['HTTP_HOST'];  
+    }
+
+    $baseUrl = "";
+    $stateUrl = "";
+    if($hostName == "localhost") {
+        $stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
+    } else {
+        $stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
+    }
+
+    $curlState = curl_init();
+
+    $stateUrl = "";
+    if($hostName == "localhost") {
+        $stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
+    } else {
+        $stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
+    }
+
+    curl_setopt_array($curlState, array(
+      CURLOPT_URL => $stateUrl,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS => array('api_token' => '123456789'),
+      CURLOPT_HTTPHEADER => array(
+        'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+      ),
+    ));
+
+    $stateResponse = curl_exec($curlState);
+
+    $stateResponseArr = array();
+    if(!empty($stateResponse)){
+        $stateResponseArr = json_decode($stateResponse, true);
+    }
+
+    curl_close($curlState);
+
+    $curlVenue = curl_init();
+
+    $venueUrl = "";
+    if($hostName == "localhost") {
+        $venueUrl = $requestScheme.'://localhost/sportifyv2/api/venue/venue.php';
+    } else {
+        $venueUrl = $requestScheme.'://dev.sportify.filmycart.in/api/venue/venue.php';
+    }
+
+    curl_setopt_array($curlVenue, array(
+      CURLOPT_URL => $venueUrl,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS => array('api_token' => '123456789'),
+      CURLOPT_HTTPHEADER => array(
+        'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+      ),
+    ));
+
+    $venueResponse = curl_exec($curlVenue);
+
+    $venueResponseArr = array();
+    if(!empty($venueResponse)){
+        $venueResponseArr = json_decode($venueResponse, true);
+    }
+
+    curl_close($curlVenue);
+?>

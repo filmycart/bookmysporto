@@ -215,6 +215,7 @@ span.has-error {
 form label.error {
     color: #c00 !important;
     font-size: 12px;
+    padding-left:0px;
 }
 
 form input.form-control, form textarea.form-control {
@@ -273,9 +274,10 @@ form input {
     --bs-gutter-y: 0;
     display: flex;
     flex-wrap: wrap;
-    margin-top: calc(-1 * var(--bs-gutter-y));
-    margin-right: calc(-.5 * var(--bs-gutter-x));
-    margin-left: 0px;
+}
+
+.row>* {
+   padding-left: calc(var(--bs-gutter-x) * 0);    
 }
 
 form input {
@@ -334,4 +336,115 @@ form input {
     .header .header-navbar-rht > li .nav-link.btn {
         padding: 5px 10px;
     }
+}
+
+.content {
+    padding: 20px 0;
+}
+
+.sortby-section .sorting-info {
+    background: #FFFFFF;
+    border: 1px solid #EAEDF0;
+    box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
+    border-radius: 10px;
+    margin: 0 0 20px;
+    padding: 7px;
+}
+
+.listing-page .listing-filter-group .listing-content .listing-search .form-custom i {
+    position: absolute;
+    top: 11px;
+    left: 10px;
+    color: #6B7385;
+}
+
+.card {
+    border: 1px solid #EAEDF0;
+    border-radius: 10px;
+    padding: 12px !important;
+    color: inherit;
+}
+
+.content.contact-group {
+    padding: 20px 0px 0px;
+}
+
+.details {
+    box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
+    padding: 24px;
+}
+
+.details i {
+    width: 80px;
+    min-width: 80px;
+    height: 80px;
+    background: linear-gradient(93.86deg, #006177 -2.6%, #269089 67.39%, #7ABC82 110.84%);
+    border-radius: 10px;
+    font-size: 33px;
+    color: #FFFFFF;
+}
+
+.details .info {
+    margin-top: 15px;
+    margin-left: 15px;
+}
+
+form.contact-us {
+    padding: 24px 24px 24px 24px;
+    background: #FFFFFF;
+}
+
+.contact-group .google-maps {
+    width: 100%;
+}
+
+.details {
+    box-shadow: 0px 0px 0px rgba(211, 211, 211, 0.25);
+    padding: 24px 24px 24px 24px !important;
+}
+
+h4 {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.gmap_iframe {
+    height: 530px !important;
+    border-radius:10px;
+}
+
+h3.border-bottom {
+    margin: 0 0 10px 0;
+    padding: 0 0 10px 0;
+}
+
+.spacer-div {
+    clear:both;
+    font-size: 0;
+    height: 12px;
+    line-height: 0;
+}
+
+.left-padding {
+    padding-left:10px;
+}
+
+.left-padding-5p {
+    padding-left:5px;
+}
+
+.top-padding {
+    padding-top:10px;
+}
+
+.top-padding-5p {
+    padding-top:5px;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.featured-slider-group {
+    padding: 0px 0px 0px;
 }

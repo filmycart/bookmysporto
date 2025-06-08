@@ -1,56 +1,5 @@
 		<?php
 			include("includes/header.php");
-
-			$requestScheme = "";
-			if((isset($_SERVER['REQUEST_SCHEME'])) && (!empty($_SERVER['REQUEST_SCHEME']))) {
-				$requestScheme = $_SERVER['REQUEST_SCHEME'];	
-			}
-
-			$hostName = "";
-			if((isset($_SERVER['HTTP_HOST'])) && (!empty($_SERVER['HTTP_HOST']))) {
-				$hostName = $_SERVER['HTTP_HOST'];	
-			}
-
-			$baseUrl = "";
-			$stateUrl = "";
-			if($hostName == "localhost") {
-				$stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
-			} else {
-				$stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
-			}
-
-			$curlState = curl_init();
-
-			$stateUrl = "";
-			if($hostName == "localhost") {
-				$stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
-			} else {
-				$stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
-			}
-
-			curl_setopt_array($curlState, array(
-			  CURLOPT_URL => $stateUrl,
-			  CURLOPT_RETURNTRANSFER => true,
-			  CURLOPT_ENCODING => '',
-			  CURLOPT_MAXREDIRS => 10,
-			  CURLOPT_TIMEOUT => 0,
-			  CURLOPT_FOLLOWLOCATION => true,
-			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS => array('api_token' => '123456789'),
-			  CURLOPT_HTTPHEADER => array(
-			    'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
-			  ),
-			));
-
-			$stateResponse = curl_exec($curlState);
-
-			$stateResponseArr = array();
-			if(!empty($stateResponse)){
-				$stateResponseArr = json_decode($stateResponse, true);
-			}
-
-			curl_close($curlState);
 		?>
 		<!-- Hero Section -->
 		<section class="hero-section">	
@@ -82,8 +31,8 @@
 											<div class="form-group mb-0">
 												<select class="select" name="courtCoaches" id="courtCoaches">
 													<option value="">Choose Court/Coaches</option>
-													<option value="1">Courts</option>
-													<option value="2">Coaches</option>
+													<option value="1">Court</option>
+													<option value="2">Coach</option>
 												</select>
 											</div>
 										</div>
@@ -116,6 +65,8 @@
 						<script>
 				            jQuery.noConflict();
 				            jQuery( document ).ready(function( $ ) {
+				            	var ccid = '';
+				            	var lid = '';
 				                //validate signup form on keyup and submit
 				                $("#searchForm").validate({
 				                    rules: {
@@ -137,7 +88,10 @@
 				                    // Make sure the form is submitted to the destination defined
 				                    // in the "action" attribute of the form when valid
 				                    submitHandler: function(form) {
-				                    	window.location.href='index.php?pg-nm=coach';
+				                    	ccid = $('#courtCoaches').val(); 
+				                    	lid = $('#searchLocation').val();
+
+				                    	window.location.href='index.php?pg-nm=coach&ccid='+ccid+'&lid='+lid;
 				                    	return false; // required to block normal submit since you used ajax
 				                    }
 				                });
@@ -196,12 +150,12 @@
 							</div>
 							<div class="work-content">
 								<h5>
-									<a href="coaches-grid.html">Book Coaches</a>
+									<a href="index.php?pg-nm=coach">Book Coaches</a>
 								</h5>
 								<p>
 									Book Badminton coaches and venues for expert guidance and premium facilities.
 								</p>
-								<a class="btn" href="coaches-grid.html">
+								<a class="btn" href="index.php?pg-nm=coach">
 									Go To Coaches <i class="feather-arrow-right"></i>
 								</a>
 							</div>
@@ -216,12 +170,12 @@
 							</div>
 							<div class="work-content">
 								<h5>
-									<a href="listing-grid-sidebar.html">Book Venue</a>
+									<a href="index.php?pg-nm=venue">Book Venue</a>
 								</h5>
 								<p>
 									Easily book, pay, and enjoy a seamless experience on our user-friendly platform.
 								</p>
-								<a class="btn" href="listing-grid-sidebar.html">
+								<a class="btn" href="index.php?pg-nm=venue">
 									Book Now <i class="feather-arrow-right"></i>
 								</a>
 							</div>
@@ -231,7 +185,6 @@
 			</div>
 		</section>
 		<!-- /How It Works -->
-
 		<!-- Rental Deals -->
 		<section class="section featured-venues">
 			<div class="container">
@@ -243,209 +196,63 @@
 			        <div class="featured-slider-group ">
 			        	<div class="owl-carousel featured-venues-slider owl-theme">
 
-							<!-- Featured Item -->
-						    <div class="featured-venues-item aos" data-aos="fade-up">
-								<div class="listing-item mb-0">										
-									<div class="listing-img">
-										<a href="venue-details.html">
-											<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-01.jpg" alt="Venue">
-										</a>
-										<div class="fav-item-venues">
-											<span class="tag tag-blue">Featured</span>		
-											<h5 class="tag tag-primary">$450<span>/hr</span></h5>
-										</div>
-									</div>										
-									<div class="listing-content">
-										<div class="list-reviews">							
-											<div class="d-flex align-items-center">
-												<span class="rating-bg">4.2</span><span>300 Reviews</span> 
+			        		<?php
+			        			if((isset($venueResponseArr['data'])) && (!empty($venueResponseArr['data']))) {
+			        				foreach($venueResponseArr['data'] as $venueResponseVal) {
+			        		?>
+			        					<div class="featured-venues-item aos" data-aos="fade-up">
+											<div class="listing-item mb-0">										
+												<div class="listing-img">
+													<a href="venue-details.html">
+														<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-01.jpg" alt="Venue">
+													</a>
+													<div class="fav-item-venues">
+														<span class="tag tag-blue">Featured</span>		
+														<h5 class="tag tag-primary">$450<span>/hr</span></h5>
+													</div>
+												</div>										
+												<div class="listing-content">
+													<div class="list-reviews">							
+														<div class="d-flex align-items-center">
+															<span class="rating-bg">4.2</span><span>300 Reviews</span> 
+														</div>
+														<a href="javascript:void(0)" class="fav-icon">
+															<i class="feather-heart"></i>
+														</a>
+													</div>	
+													<h3 class="listing-title">
+														<a href="venue-details.html"><?=(!empty($venueResponseVal['title'])?$venueResponseVal['title']:'')?></a>
+													</h3>
+													<div class="listing-details-group">
+														<p>Elevate your athletic journey at Sarah Sports Academy, where excellence meets opportunity.</p>
+														<ul>
+															<li>
+																<span>
+																	<i class="feather-map-pin"></i><?=(!empty($venueResponseVal['title'])?$venueResponseVal['title']:'')?>
+																</span>
+															</li>
+															<li>
+																<span>
+																	<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">15 May 2023</span>
+																</span>
+															</li>
+														</ul>
+													</div>
+													<div class="listing-button">
+														<div class="listing-venue-owner">
+															<a class="navigation" href="coach-detail.html">
+																<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-01.jpg" alt="Venue">Mart Sublin
+															</a>												
+														</div>
+														<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
+													</div>	
+												</div>
 											</div>
-											<a href="javascript:void(0)" class="fav-icon">
-												<i class="feather-heart"></i>
-											</a>
-										</div>	
-										<h3 class="listing-title">
-											<a href="venue-details.html">Sarah Sports Academy</a>
-										</h3>
-										<div class="listing-details-group">
-											<p>Elevate your athletic journey at Sarah Sports Academy, where excellence meets opportunity.</p>
-											<ul>
-												<li>
-													<span>
-														<i class="feather-map-pin"></i>Port Alsworth, AK
-													</span>
-												</li>
-												<li>
-													<span>
-														<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">15 May 2023</span>
-													</span>
-												</li>
-											</ul>
 										</div>
-										<div class="listing-button">
-											<div class="listing-venue-owner">
-												<a class="navigation" href="coach-detail.html">
-													<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-01.jpg" alt="Venue">Mart Sublin
-												</a>												
-											</div>
-											<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
-										</div>	
-									</div>
-								</div>
-							</div>
-							<!-- /Featured Item -->
-							<!-- Featured Item -->
-						    <div class="featured-venues-item aos" data-aos="fade-up">
-								<div class="listing-item mb-0">										
-									<div class="listing-img">
-										<a href="venue-details.html">
-											<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-02.jpg" class="img-fluid" alt="Venue">
-										</a>
-										<div class="fav-item-venues">
-											<span class="tag tag-blue">Top Rated</span>		
-											<h5 class="tag tag-primary">$200<span>/hr</span></h5>
-										</div>
-									</div>										
-									<div class="listing-content">
-										<div class="list-reviews">							
-											<div class="d-flex align-items-center">
-												<span class="rating-bg">5.0</span><span>150 Reviews</span> 
-											</div>
-											<a href="javascript:void(0)" class="fav-icon">
-												<i class="feather-heart"></i>
-											</a>
-										</div>	
-										<h3 class="listing-title">
-											<a href="venue-details.html">Badminton Academy</a>
-										</h3>
-										<div class="listing-details-group">
-											<p>Unleash your badminton potential at our premier Badminton Academy, where champions are made.</p>
-											<ul>
-												<li>
-													<span>
-														<i class="feather-map-pin"></i>Sacramento, CA
-													</span>
-												</li>
-												<li>
-													<span>
-														<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">15 May 2023</span>
-													</span>
-												</li>
-											</ul>
-										</div>
-										<div class="listing-button">
-											<div class="listing-venue-owner">
-												<a class="navigation" href="coach-detail.html">
-													<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-02.jpg" alt="Venue">Rebecca
-												</a>												
-											</div>
-											<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
-										</div>	
-									</div>
-								</div>
-							</div>
-							<!-- /Featured Item -->
-							<!-- Featured Item -->
-						    <div class="featured-venues-item aos" data-aos="fade-up">
-								<div class="listing-item mb-0">										
-									<div class="listing-img">
-										<a href="venue-details.html">
-											<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-03.jpg" class="img-fluid" alt="Venue">
-										</a>
-										<div class="fav-item-venues">
-											<h5 class="tag tag-primary">$350<span>/hr</span></h5>
-										</div>
-									</div>										
-									<div class="listing-content">
-										<div class="list-reviews">							
-											<div class="d-flex align-items-center">
-												<span class="rating-bg">4.7</span><span>120 Reviews</span> 
-											</div>
-											<a href="javascript:void(0)" class="fav-icon">
-												<i class="feather-heart"></i>
-											</a>
-										</div>	
-										<h3 class="listing-title">
-											<a href="venue-details.html">Manchester Academy</a>
-										</h3>
-										<div class="listing-details-group">
-											<p>Manchester Academy: Where dreams meet excellence in sports education and training.</p>
-											<ul>
-												<li>
-													<span>
-														<i class="feather-map-pin"></i>Guysville, OH
-													</span>
-												</li>
-												<li>
-													<span>
-														<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">16 May 2023</span>
-													</span>
-												</li>
-											</ul>
-										</div>
-										<div class="listing-button">
-											<div class="listing-venue-owner">
-												<a class="navigation" href="coach-detail.html">
-													<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-03.jpg" alt="Venue">Andrew
-												</a>												
-											</div>
-											<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
-										</div>	
-									</div>
-								</div>
-							</div>
-							<!-- /Featured Item -->
-							<!-- Featured Item -->
-						    <div class="featured-venues-item aos" data-aos="fade-up">
-								<div class="listing-item mb-0">										
-									<div class="listing-img">
-										<a href="venue-details.html">
-											<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-02.jpg" class="img-fluid" alt="Venue">
-										</a>
-										<div class="fav-item-venues">
-											<span class="tag tag-blue">Featured</span>		
-											<h5 class="tag tag-primary">$450<span>/hr</span></h5>
-										</div>
-									</div>										
-									<div class="listing-content">
-										<div class="list-reviews">							
-											<div class="d-flex align-items-center">
-												<span class="rating-bg">4.5</span><span>300 Reviews</span> 
-											</div>
-											<a href="javascript:void(0)" class="fav-icon">
-												<i class="feather-heart"></i>
-											</a>
-										</div>	
-										<h3 class="listing-title">
-											<a href="venue-details.html">ABC Sports Academy</a>
-										</h3>
-										<div class="listing-details-group">
-											<p>Unleash your badminton potential at our premier ABC Sports Academy, where champions are made.</p>
-											<ul>
-												<li>
-													<span>
-														<i class="feather-map-pin"></i>Little Rock, AR
-													</span>
-												</li>
-												<li>
-													<span>
-														<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">17 May 2023</span>
-													</span>
-												</li>
-											</ul>
-										</div>
-										<div class="listing-button">
-											<div class="listing-venue-owner">
-												<a class="navigation" href="coach-detail.html">
-													<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-04.jpg" alt="Venue">Mart Sublin
-												</a>												
-											</div>
-											<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
-										</div>	
-									</div>
-								</div>
-							</div>
-							<!-- /Featured Item -->
+			        		<?php		
+			        				}
+			        			}
+			        		?>								
 						</div>	
 					</div>
 				</div>
