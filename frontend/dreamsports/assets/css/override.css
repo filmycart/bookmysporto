@@ -67,6 +67,7 @@
     height: 30px;
     color: #FFFFFF;
     padding: 0;
+    margin-left:10px;
 }
 
 .hero-section .section-search .search-box .search-input.line::before {
@@ -448,3 +449,26 @@ h3.border-bottom {
 .featured-slider-group {
     padding: 0px 0px 0px;
 }
+
+.events-page .listing-item .listing-img .date-info {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    background: #192335;
+    padding: 5px;
+    border-radius: 6px;
+    width: 90px;
+    height: 70px;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -ms-transition: all 0.5s ease-in-out 0s;
+    transition: all 0.5s ease-in-out 0s;
+}
+
+.content {
+    padding: 20px 0 0 15px;
+}
+
+.events-page .listing-item .listing-img a img {
+    width: 100%;
+    max-height: 266px;
+ }

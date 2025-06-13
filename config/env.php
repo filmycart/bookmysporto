@@ -21,6 +21,9 @@
 		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
 	}
 
+	$eventImagePath = $requestScheme.$baseUrl."admin/uploads/events/";
+	$eventNoImage = $requestScheme.$baseUrl."admin/assets/images/event-01.jpg";
+	
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
@@ -41,40 +44,7 @@
 	$configResponse = curl_exec($curl);
 
 	curl_close($curl);
-
-	/*$curlState = curl_init();
-
-	$stateUrl = "";
-	if($hostName == "localhost") {
-		$stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
-	} else {
-		$stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
-	}
-
-	curl_setopt_array($curlState, array(
-	  CURLOPT_URL => $stateUrl,
-	  CURLOPT_RETURNTRANSFER => true,
-	  CURLOPT_ENCODING => '',
-	  CURLOPT_MAXREDIRS => 10,
-	  CURLOPT_TIMEOUT => 0,
-	  CURLOPT_FOLLOWLOCATION => true,
-	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	  CURLOPT_CUSTOMREQUEST => 'POST',
-	  CURLOPT_POSTFIELDS => array('api_token' => '123456789'),
-	  CURLOPT_HTTPHEADER => array(
-	    'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
-	  ),
-	));
-
-	$stateResponse = curl_exec($curlState);
-
-	$stateResponseArr = array();
-	if(!empty($stateResponse)){
-		$stateResponseArr = json_decode($stateResponse, true);
-	}
-
-	curl_close($curlState);*/
-
+	
 	$configResponseArray = array();
 	if(!empty($configResponse)) {
 		$configResponseArray = (array)json_decode($configResponse);

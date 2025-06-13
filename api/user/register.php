@@ -11,12 +11,6 @@ if(Helper::is_post()){
         $setting = new Setting();
         $setting = $setting->where(["api_token" => $api_token])->one();
 
-       /* print"<pre>";
-        echo $user->type;
-        echo NUMBER_USER;
-        print_r($_POST);
-        exit;*/
-
         if(!empty($setting)) {
             if(isset($_POST["userName"]) && isset($_POST["userPhoneNumber"]) && isset($_POST["userType"])) {
                 $user = new User();

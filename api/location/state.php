@@ -12,7 +12,9 @@
             $setting = new Setting();
             $setting = $setting->where(["api_token" => $api_token])->one();
 
-            if(!empty($setting)){
+            $sid = Helper::post_val("state_id");
+
+            if(!empty($setting)) {
                 $state = new State();
                 $state = $state
                             ->where(["country_id" => '101'])

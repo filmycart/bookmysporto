@@ -1,11 +1,21 @@
-<!-- Footer -->
+		<!-- Footer -->
 		<footer class="footer">
 			<div class="container">
 				<!-- Footer Join -->
 				<div class="footer-join">
 					<h2>We Welcome Your Passion And Expertise</h2>
 					<p class="sub-title">Join our empowering sports community today and grow with us.</p>
-					<a href="index.php?pg-nm=register" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
+					<?php
+                        if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+                    ?>
+                            <a href="index.php?pg-name=my-profile" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> My Profile</a>
+                    <?php        
+                        } else {
+                    ?>
+                            <a href="#" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
+                    <?php
+                        }
+                    ?>
 				</div>
 				<!-- /Footer Join -->
 			

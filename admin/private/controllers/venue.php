@@ -34,9 +34,8 @@
     }
 
     if((Helper::is_get()) && (!empty($pgVenuId)) && ($pgVenueAction == "view")) {
-
         $column = "";
-        $column = "venue.id AS venueId, venue.title AS venueTitle, venue.address AS venuAddress, venue.state AS venueState, venue.city AS venueCity, venue.country AS venueCountry, venue.status AS venueStatus, venue.admin_id AS venueAdminId, ";
+        $column = "venue.id AS venueId, venue.title AS venueTitle, venue.description AS venueDescription, venue.address AS venuAddress, venue.owner AS venuOwner, venue.image AS venuImage, venue.state AS venueState, venue.city AS venueCity, venue.country AS venueCountry, venue.status AS venueStatus, venue.admin_id AS venueAdminId, ";
         $column .= "countries.id AS countryId, countries.shortname AS countryShortName, countries.name AS countryName, countries.phonecode AS countryPhoneCode, ";
         $column .= "state.id AS stateId, state.name AS stateName, state.country_id AS stateCountryId, ";
         $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId ";
@@ -83,7 +82,7 @@
         $countfiles = count($_FILES['files']['name']);
 
         //Upload Location
-        $upload_location = "../../uploads/venue/";
+        $upload_location = "../../uploads/venues/";
         $newfile = "";
 
         //To store uploaded files path
@@ -150,7 +149,10 @@
                     Helper::redirect_to("../../venue.php?msg=4");
                 } else {
                     $venue->title = trim($_POST['venueTitle']);
+                    $venue->description = $_POST['venueDescription'];                    
                     $venue->address = trim($_POST['venueAddress']);
+                    $venue->owner = trim($_POST['venueOwner']);
+                    $venue->image = trim($_POST['venueAddress']);
                     $venue->state = $_POST['state'];
                     $venue->city = $_POST['city'];
                     $venue->country = $_POST['venueCountry'];
@@ -219,16 +221,13 @@
                 $viewVenue->id = $pgVenuId;
                 $viewVenuArray = (array) $viewVenue->where(["title" => $viewVenue->title])->not(["id" => $viewVenue->id])->one();
 
-                /*print"<pre>";
-                print_r($viewVenuArray);
-                exit;*/
-
                 if((isset($viewVenuArray['id'])) && (!empty($viewVenuArray['id']))) {
                     Helper::redirect_to("../../venue.php?msg=5");
                     exit;
                 } else {
                         $venue->id = $pgVenuId;
                         $venue->title = trim($_POST['venueTitle']);
+                        $venue->description = $_POST['venueDescription'];
                         $venue->address = trim($_POST['venueAddress']);
                         $venue->state = $_POST['state'];
                         $venue->city = $_POST['city'];

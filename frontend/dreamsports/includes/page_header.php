@@ -90,7 +90,7 @@
 							<li class="has-submenu">
 								<a href="#">Book <i class="fas fa-chevron-down"></i></a>
 								<ul class="submenu">
-									<li><a href="index.php?pg-nm=event">Event</a></li>
+									<li><a href="index.php?pg-nm=events">Event</a></li>
 									<li><a href="index.php?pg-nm=venue">Court</a></li>
 									<li><a href="index.php?pg-nm=coach">Coach</a></li>
 								</ul>
@@ -124,17 +124,17 @@
 					<?php
                         if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
                     ?>                    
-                            <ul class="nav header-navbar-rht">
+                            <ul class="nav header-navbar-rht logged-in"> 
                                 <li class="nav-item dropdown has-arrow logged-item">
-                                    <a href="#" class="dropdown-toggle nav-link show" data-bs-toggle="dropdown" aria-expanded="true">
+                                    <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                                         <span class="user-img">
                                             <img class="rounded-circle" src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" width="31" alt="Darren Elder">
                                         </span>
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end show" data-bs-popper="static">
+                                    <div class="dropdown-menu dropdown-menu-end">
                                         <div class="user-header">
                                             <div class="avatar avatar-sm">
-                                                <img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" height="50" width="50" alt="User" class="avatar-img rounded-circle">
+                                                <img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" alt="User" class="avatar-img rounded-circle">
                                             </div>
                                             <div class="user-text">
                                                 <h6><?=(!empty($_SESSION['userName'])?$_SESSION['userName']:'')?></h6>
@@ -267,13 +267,11 @@
                     // Make sure the form is submitted to the destination defined
                     // in the "action" attribute of the form when valid
                     submitHandler: function(form) {
-                        //form.submit();
                         $.ajax({
                             type: "POST",
                             url: "./api/user/login.php",
                             data: $(form).serialize(),
                             success: function (resp) {
-                                console.log(resp);
                                 $(form).html("<div id='message'></div><div class='row'>&nbsp;</div>");
                                 $('#haveanaccountlogin').hide();
                                 $('#message').html(resp.message);
