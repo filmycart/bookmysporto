@@ -552,7 +552,7 @@
         ),
     ));
 
-    $eventResponseHomePage = curl_exec($eventUrlHomePage);
+    $eventResponseHomePage = curl_exec($curlEventHomePage);
 
     $eventResponseHomePageArr = array();
     if(!empty($eventResponseHomePage)) {
