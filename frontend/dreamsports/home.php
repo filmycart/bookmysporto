@@ -244,7 +244,8 @@
 		</section>
 		<!-- /How It Works -->
 		<!-- Rental Deals -->
-		<section class="section featured-events">
+
+		<section class="section featured-venues">
 			<div class="container">
 				<div class="section-heading aos" data-aos="fade-up">
 					<h2>Featured <span>Events</span></h2>
@@ -253,41 +254,80 @@
 				<div class="row">
 			        <div class="featured-slider-group ">
 			        	<div class="owl-carousel featured-venues-slider owl-theme">
+
 			        		<?php
-			        			if((isset($eventResponseArr['data'])) && (!empty($eventResponseArr['data']))) {
-			        				foreach($eventResponseArr['data'] as $eventResponseVal) {
-			        					/*print"<pre>";
-			        					print($eventResponseVal);
-			        					exit;*/
+			        			if((isset($eventResponseHomePageArr['data'])) && (!empty($eventResponseHomePageArr['data']))) {
+			        				foreach($eventResponseHomePageArr['data'] as $eventResponseHomePageVal) {
+
+			        					$eventImageArray = array();
+			    						$eventImage = "";
+			    						if((isset($eventResponseHomePageVal['eventImage'])) && (!empty($eventResponseHomePageVal['eventImage']))) {
+			    							$eventImageArray = explode(",",$eventImagePath.$eventResponseHomePageVal['eventImage']);
+			    							if((isset($eventResponseHomePageVal['eventImage'])) && (!empty($eventResponseHomePageVal['eventImage']))) {
+			    								$eventImage = $eventImageArray['0'];
+			    							}
+			    						} else {
+			    							$eventImage = $eventNoImage;	
+			    						}
+
+			    						/*echo $eventImage;
+			    						exit;*/
+
+			    						$eventStartDay = "";   
+			    						if((isset($eventResponseHomePageVal['eventStartDate'])) && (!empty($eventResponseHomePageVal['eventStartDate']))) {
+			        						$eventStartDay = date("m", strtotime($eventResponseHomePageVal['eventStartDate']));
+										}	
+
+			    						$eventStartMonthYear = "";   
+			    						if((isset($eventResponseHomePageVal['eventStartDate'])) && (!empty($eventResponseHomePageVal['eventStartDate']))) {
+			        						$eventStartMonthYear = date("F-Y", strtotime($eventResponseHomePageVal['eventStartDate']));
+			        						//$eventStartMonthYear = date('d F Y', strtotime($eventResponseHomePageVal['eventStartDate'])); 
+										}	
+
+										$eventEndDay = "";   
+			    						if((isset($eventResponseHomePageVal['eventEndDate'])) && (!empty($eventResponseHomePageVal['eventEndDate']))) {
+			        						$eventEndDay = date("m", strtotime($eventResponseHomePageVal['eventEndDate']));
+										}	
+
+										$eventEndMonthYear = "";   
+			    						if((isset($eventResponseHomePageVal['eventEndDate'])) && (!empty($eventResponseHomePageVal['eventEndDate']))) {
+			        						$eventEndMonthYear = date("F-Y", strtotime($eventResponseHomePageVal['eventEndDate']));
+										}		
 			        		?>
 			        					<div class="featured-venues-item aos" data-aos="fade-up">
 											<div class="listing-item mb-0">										
 												<div class="listing-img">
-													<a href="index.php?pg-nm=venue-details">
-														<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-01.jpg" alt="Venue">
+													<a href="index.php?pg-nm=event-details">
+														<img src="<?=$eventImage?>" alt="Event">
 													</a>
 													<div class="fav-item-venues">
-														<span class="tag tag-blue">Featured</span>		
-														<h5 class="tag tag-primary">$450<span>/hr</span></h5>
+														<span class="tag tag-blue"><?=$eventStartDay?>-<?=$eventStartMonthYear?></span>	
+														<span class="tag tag-blue"><?=$eventEndDay?>-<?=$eventEndMonthYear?></span>		
+														<!-- <h5 class="tag tag-primary">$450<span>/hr</span></h5> -->
 													</div>
 												</div>										
 												<div class="listing-content">
-													<div class="list-reviews">							
-														<div class="d-flex align-items-center">
-															<span class="rating-bg">4.2</span><span>300 Reviews</span> 
-														</div>
-														<a href="javascript:void(0)" class="fav-icon">
-															<i class="feather-heart"></i>
-														</a>
-													</div>	
 													<h3 class="listing-title">
-														<a href="index.php?pg-nm=venue-details"><?=(!empty($venueResponseVal['title'])?$venueResponseVal['title']:'')?></a>
+														<?php
+															// strip tags to avoid breaking any html
+															$eventHomeTitle = strip_tags($eventResponseHomePageVal['eventTitle']);
+															if (strlen($eventHomeTitle) > 25) {
+															    // truncate string
+															    $eventHomeTitleStringCut = substr($eventHomeTitle, 0, 25);
+															    $eventHomeTitleEndPoint = strrpos($eventHomeTitleStringCut, ' ');
+
+															    //if the string doesn't contain any space then it will cut without word basis.
+															    $eventHomeTitle = $eventHomeTitleEndPoint? substr($eventHomeTitleStringCut, 0, $eventHomeTitleEndPoint) : substr($eventHomeTitleStringCut, 0);
+															    $eventHomeTitle .= '...';
+															}
+														?>
+														<a href="index.php?pg-nm=event-details"><?=$eventHomeTitle?></a>
 													</h3>
 													<div class="listing-details-group">
 														<p>
 															<?php
 																// strip tags to avoid breaking any html
-																$description = strip_tags($venueResponseVal['description']);
+																$description = strip_tags($eventResponseHomePageVal['eventDescription']);
 																if (strlen($description) > 120) {
 																    // truncate string
 																    $stringCut = substr($description, 0, 120);
@@ -303,23 +343,13 @@
 														<ul>
 															<li>
 																<span>
-																	<i class="feather-map-pin"></i><?=(!empty($venueResponseVal['address'])?$venueResponseVal['address']:'')?>
+																	<i class="feather-map-pin"></i><?=(!empty($eventResponseHomePageVal['eventAddress'])?$eventResponseHomePageVal['eventAddress']:'')?>
 																</span>
 															</li>
-															<!-- <li>
-																<span>
-																	<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">15 May 2023</span>
-																</span>
-															</li> -->
 														</ul>
 													</div>
 													<div class="listing-button">
-														<div class="listing-venue-owner">
-															<a class="navigation" href="coach-detail.html">
-																<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-01.jpg" alt="Venue"><?=(!empty($venueResponseVal['venueOwner'])?$venueResponseVal['venueOwner']:'')?>
-															</a>												
-														</div>
-														<a href="index.php?pg-nm=venue-details" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
+														<a href="index.php?pg-nm=event-details" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Event Details</a>
 													</div>	
 												</div>
 											</div>
@@ -333,7 +363,7 @@
 				</div>
 				<!-- View More -->
 				<div class="view-all text-center aos" data-aos="fade-up">
-					<a href="listing-grid.html" class="btn btn-secondary d-inline-flex align-items-center">View All Featured<span class="lh-1"><i class="feather-arrow-right-circle ms-2"></i></span></a>
+					<a href="index.php?pg-nm=events" class="btn btn-secondary d-inline-flex align-items-center">View All Events<span class="lh-1"><i class="feather-arrow-right-circle ms-2"></i></span></a>
 				</div>
 				<!-- View More -->
 			</div>

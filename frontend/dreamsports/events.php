@@ -52,7 +52,6 @@
 			</div>
 		</div>
 		<!-- /Breadcrumb -->
-
 		<!-- Page Content -->
 		<div class="content">
 			<div class="container">
