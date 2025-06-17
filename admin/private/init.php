@@ -92,6 +92,7 @@
 	require_once('models/Slider.php');
 	require_once('models/Event.php');
 	require_once('models/Venue.php');
+	require_once('models/Countries.php');
 	require_once('models/City.php');
 	require_once('models/State.php');
 	require_once('models/Contact.php');

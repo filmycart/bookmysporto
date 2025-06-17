@@ -7,6 +7,7 @@ class User extends Util{
     public $email;
     public $password;
     public $type;
+    public $is_coach;
     public $social_id;
     public $verification_token;
     public $status = 0;

@@ -1,10 +1,33 @@
 <?php
 	require_once('./admin/private/init.php');
 
+	$requestScheme = "";
+	if((isset($_SERVER['REQUEST_SCHEME'])) && (!empty($_SERVER['REQUEST_SCHEME']))) {
+		$requestScheme = $_SERVER['REQUEST_SCHEME'];	
+	}
+
+	$hostName = "";
+	if((isset($_SERVER['HTTP_HOST'])) && (!empty($_SERVER['HTTP_HOST']))) {
+		$hostName = $_SERVER['HTTP_HOST'];	
+	}
+
+	$baseUrl = "";
+	$settingsUrl = "";
+	if($hostName == "localhost") {
+		$baseUrl = "://localhost/sportifyv2/";
+		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
+	} else {
+		$baseUrl = "://dev.sportify.filmycart.in/";
+		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
+	}
+
+	$eventImagePath = $requestScheme.$baseUrl."admin/uploads/events/";
+	$eventNoImage = $requestScheme.$baseUrl."admin/assets/images/event-01.jpg";
+	
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	  CURLOPT_URL => 'http://localhost/sportifyv2/api/settings/setting.php',
+	  CURLOPT_URL => $settingsUrl,
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => '',
 	  CURLOPT_MAXREDIRS => 10,
@@ -21,7 +44,7 @@
 	$configResponse = curl_exec($curl);
 
 	curl_close($curl);
-
+	
 	$configResponseArray = array();
 	if(!empty($configResponse)) {
 		$configResponseArray = (array)json_decode($configResponse);
@@ -48,8 +71,20 @@
         $siteConfigArray['title'] = $siteConfig->title;  
     }
 
+	if((isset($siteConfig->keyword)) && (!empty($siteConfig->keyword))) {
+        $siteConfigArray['keyword'] = $siteConfig->keyword;  
+    }    
+
+    if((isset($siteConfig->sub_title)) && (!empty($siteConfig->sub_title))) {
+        $siteConfigArray['sub_title'] = $siteConfig->sub_title;  
+    }
+
     if((isset($siteConfig->tag_line)) && (!empty($siteConfig->tag_line))) {
         $siteConfigArray['tag_line'] = $siteConfig->tag_line;  
+    }
+
+    if((isset($siteConfig->description)) && (!empty($siteConfig->description))) {
+        $siteConfigArray['description'] = $siteConfig->description;  
     }
 
     if((isset($siteConfig->firebase_auth)) && (!empty($siteConfig->firebase_auth))) {
@@ -75,11 +110,12 @@
     if((isset($siteConfig->frontend_asset_url)) && (!empty($siteConfig->frontend_asset_url))) {
         $siteConfigArray['frontend_asset_url'] = $siteConfig->frontend_asset_url;  
     }
-	
+
 	$config = [
 	    'config' => [
 	        'admin_address' => $admin_address,
 	        'site_config' => $siteConfigArray
+	        //'state' => $stateResponseArr
 	    ],
 	    'db' => [
 	        'connection' => [

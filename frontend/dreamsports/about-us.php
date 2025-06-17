@@ -395,7 +395,6 @@
 			<!-- Group Coaching -->
 		</div>
 		<!-- /Page Content -->
-
 		<?php
 			include("includes/page_footer.php");
 		?>

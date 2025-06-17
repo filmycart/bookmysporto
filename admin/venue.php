@@ -298,7 +298,7 @@
                                 <div id="venueSucResponseDiv" style="color:green;"></div>
                                 <div id="venueErrResponseDiv" style="color:green;"></div>
                                 <div class="venueFormMainDiv" id="modal-div">    
-                                   <div class="venueFormRow">
+                                    <div class="venueFormRow">
                                         <div class="eventFormCol">
                                             <label>Title</label>
                                             <span class="required-field">*</span>
@@ -312,6 +312,27 @@
                                             <span class="required-field">*</span>
                                             <div class="form-group" data-target-input="nearest">
                                                 <input type="text" id="venueAddress" name="venueAddress" class="form-control" data-target="#venueAddress" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="venueFormRow">
+                                        <div class="eventFormCol">
+                                            <label>Owner</label>
+                                            <span class="required-field">*</span>
+                                            <div class="form-group" data-target-input="nearest">
+                                                <input type="text" id="venueOwner" name="venueOwner" class="form-control" data-target="#venueOwner" />
+                                            </div>
+                                        </div>
+                                        <div class="eventFormSpacerDiv">&nbsp;</div>
+                                        <div class="eventFormCol">
+                                            <div id="venueFileSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                            <div id="eventImagePreview"></div>
+                                            <div class="form-group" id="eventFileLabelDiv">
+                                                <label>Image</label>
+                                            </div>
+                                            <div class="form-group" id="eventFileDiv">
+                                                <input name="eventFile" id="eventFile" type="file" multiple />
+                                                <input type="hidden" name="eventFileHidden" id="eventFileHidden" />
                                             </div>
                                         </div>
                                     </div>
@@ -334,6 +355,12 @@
                                             </div>
                                         </div>
                                     </div> 
+                                    <div class="venueFormRow">
+                                        <label>Description</label>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <textarea id="venueDescription" name="venueDescription" class="form-control" data-target="#venueDescription"></textarea>
+                                        </div>
+                                    </div>
                                     <div class="venueFormRow">
                                         <div class="eventFormCol">
                                             <label>Status</label>
@@ -470,6 +497,12 @@
                                         <div class="form-group" data-target-input="nearest">
                                             <span id="viewVenueStatus" name="viewVenueStatus"></span>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="venueFormRow">
+                                    <label>Description</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewVenueDescription" name="viewVenueDescription"></span>
                                     </div>
                                 </div>
                             </div>    
@@ -654,9 +687,9 @@
                 return myArray;
             }
 
-            function delEventImage(eventFileName, respArray) {
+            function delVenueImage(eventFileName, respArray) {
 
-                $('#eventImagePreview').html('');
+                $('#venueImagePreview').html('');
 
                 respArr = removeA(respArray, eventFileName);
                 respArray1 = "'"+respArr+"'";
@@ -684,8 +717,8 @@
                             var src = "'"+respArr[index]+"'";
                             var src1 = respArr[index];
                             if((src != undefined) && (src1 != undefined)) {
-                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
-                                 $('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a></div>');
+                                var delVenueImage = 'onclick="delVenueImage('+src+','+respArray1+')"';
+                                 $('#venueImagePreview').append('<div><a href ="uploads/venues/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a></div>');
                                 respFileNameArray[index] = src1;
                             }
                         }  
@@ -700,30 +733,30 @@
                 });
             }
 
-            $('#eventFile').change(function(e) {
+            $('#venueFile').change(function(e) {
 
-                $('#eventImagePreview').html('');
+                $('#venueImagePreview').html('');
 
-                var fileData = $('#eventFile').prop('files')[0];   
+                var fileData = $('#venueFile').prop('files')[0];   
                 var formdata = new FormData(); 
 
                 // Read selected files
-                var totalfiles = document.getElementById('eventFile').files.length;
-                var eventTitle = $('#eventTitle').val();
+                var totalfiles = document.getElementById('venueFile').files.length;
+                var venueTitle = $('#venueTitle').val();
                 for (var index = 0; index < totalfiles; index++) {
-                    formdata.append("files[]", document.getElementById('eventFile').files[index]);
+                    formdata.append("files[]", document.getElementById('venueFile').files[index]);
                 }   
 
                 if (formdata) {
-                    formdata.append("eventAction", "upload");
-                    formdata.append("eventTitle", eventTitle);
+                    formdata.append("venueAction", "upload");
+                    formdata.append("venueTitle", venueTitle);
                 }
 
                 var respArray = new Array();
                 var respFileNameArray = new Array();
                 var respFileName = "";
                 $.ajax({
-                    url: "./private/controllers/event.php", 
+                    url: "./private/controllers/venue.php", 
                     cache: false,
                     contentType: false,
                     processData: false,
@@ -731,23 +764,20 @@
                     dataType: 'json',                         
                     type: 'POST',
                     success: function(php_script_response) {
-                        respArray = php_script_response['eventImage'];
-                        respArray1 = "'"+php_script_response['eventImage']+"'";
+                        respArray = php_script_response['venueImage'];
+                        respArray1 = "'"+php_script_response['venueImage']+"'";
                         var fileCount = respArray.length;
                         for (var index = 0; index < fileCount; index++) {
                             var src = "'"+respArray[index]+"'";
                             var src1 = respArray[index];
-                            var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
-
-                            /*$('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+' name="deleteEventImg" name="deleteEventImg" id="deleteEventImg"><i class="fa fa-trash" aria-hidden="true"></i></a></div>');*/
-
-                            $('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;</div>');
+                            var delVenueImage = 'onclick="delVenueImage('+src+','+respArray1+')"';
+                            $('#venueImagePreview').append('<div><a href ="uploads/venues/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;</div>');
                             respFileNameArray[index] = src1;
                         }   
 
                         respFileName = respFileNameArray.toString();
 
-                        $('#eventFileHidden').val(respFileName);
+                        $('#venueFileHidden').val(respFileName);
                     }
                  });      
             });
@@ -758,7 +788,7 @@
             $('#categorySpinnerDiv').hide();
             $('#categoryTypeSpinnerDiv').hide();            
             $('#subCategorySpinnerDiv').hide();
-            $('#evenFileSpinnerDiv').hide();
+            $('#venueFileSpinnerDiv').hide();
 
             function deleteVenue(venueAction, venuId) {
                 window.location.href='private/controllers/venue.php?venueAction='+venueAction+'&venueId='+venuId;
@@ -785,7 +815,10 @@
                             respArr = JSON.parse(html);
                             $("#viewVenueId").text(respArr.venueId);
                             $("#viewVenueTitle").text(respArr.venueTitle);
+                            $("#viewVenueDescription").text(respArr.venueDescription);
                             $("#viewVenueAddress").text(respArr.venuAddress);
+                            $("#viewVenueOwner").text(respArr.venuOwner);
+                            $("#viewVenueImage").text(respArr.venuImage);
                             $("#viewVenueState").text(respArr.stateName);
                             $("#viewVenueCity").text(respArr.cityName);
 
@@ -813,7 +846,10 @@
                 $("#venueId").val('');
                 $("#venueAction").val('');
                 $("#venueTitle").val('');
+                $("#venueDescription").val('');
                 $("#venueAddress").val('');
+                $("#venueOwner").val('');
+                $("#venueImage").val('');
                 $("#venueCountry").val('');
 
                 var venueModalTitle = "";
@@ -856,7 +892,10 @@
                                 $("#venueId").val(respArr.id);
                                 $("#venueAction").val('update');
                                 $("#venueTitle").val(respArr.title);
+                                $("#venueDescription").val(respArr.description);
                                 $("#venueAddress").val(respArr.address);
+                                $("#venueOwner").val(respArr.owner);
+                                $("#venueImage").val(respArr.image);
                                 eventState(countryId, cityId, stateId);
                                 $("#venueCountry").val(respArr.country);
 
@@ -881,6 +920,10 @@
                                 required: true,
                                 letterswithspace: true
                             },
+                            venueDescription: {
+                                required: true,
+                                letterswithspace: true
+                            },
                             venueAddress: {
                                 required: true,
                                 minlength: 10,
@@ -897,6 +940,10 @@
                             venueTitle: {
                                 required: "Please enter Title.",
                                 letterswithspace: "Please enter a title with letters and spaces only."
+                            },
+                            venueDescription: {
+                                required: "Please enter Description.",
+                                letterswithspace: "Please enter a description with letters and spaces only."
                             },
                             venueAddress: {
                                 required: "Please enter Address.",

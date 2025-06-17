@@ -3,11 +3,20 @@
 	$response = new Response();
 	$errors = new Errors();
 
+	if(Helper::is_get()) {
+		unset($_SESSION['userId']);
+		unset($_SESSION['userName']);
+		unset($_SESSION['verificationToken']);
+		unset($_SESSION['mobile']);
+		header("Location: ".$_SERVER['HTTP_REFERER']);
+		exit;
+	}
+
 	if(Helper::is_post()){
 	    $api_token = Helper::post_val("api_token");
 	    if($api_token) {
 
-	    	$curl = curl_init();
+	    	/*$curl = curl_init();
             curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://api.infobip.com/sms/2/text/advanced',
             CURLOPT_RETURNTRANSFER => true,
@@ -26,7 +35,7 @@
              ),
             ));
             $smsresponse = curl_exec($curl);
-            curl_close($curl);
+            curl_close($curl);*/
             
             /*echo $smsresponse;
             exit;*/
@@ -67,13 +76,12 @@
 	        $setting = $setting->where(["api_token" => $api_token])->one();
 
 	        if(!empty($setting)){
-	            if(isset($_POST["usr_phone_number"])) {
-
+	            if(isset($_POST["userPhoneNumber"])) {
 	                $user = new User();
-	                $user->mobile = trim($_POST["usr_phone_number"]);
+	                $user->mobile = trim($_POST["userPhoneNumber"]);
 	                //$user->password = trim($_POST["password"]);
 
-	                $user->validate_with(["usr_phone_number"]);
+	                $user->validate_with(["userPhoneNumber"]);
 	                $errors = $user->get_errors();
 
 	                if($errors->is_empty()){
@@ -88,7 +96,7 @@
 							$curl = curl_init();
 
 							if(!empty($user)){
-								if($user->status > 0){
+								if($user->status > 0) {
 									
 									$cart_count = new Cart();
 									$cart_count = $cart_count->where(["user_id" => $user->id])->count();

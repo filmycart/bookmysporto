@@ -10,7 +10,7 @@ if(Helper::is_post()){
     if($api_token){
         $setting = new Setting();
         $setting = $setting->where(["api_token" => $api_token])->one();
-        
+
         if(!empty($setting)) {
             if(isset($_POST["userName"]) && isset($_POST["userPhoneNumber"]) && isset($_POST["userType"])) {
                 $user = new User();
@@ -18,6 +18,7 @@ if(Helper::is_post()){
                 $user->username = Helper::post_val("userPhoneNumber");
                 $user->name = Helper::post_val("userName");
                 $user->type = Helper::post_val("userType");
+                $user->is_coach = Helper::post_val("isCoach");
 
                 if($user->type == NUMBER_USER){
                     $user->validate_with(["mobile", "username"]);
@@ -29,7 +30,7 @@ if(Helper::is_post()){
                             $user->id = $user->save();
                             if(!empty($user->id)) {
 
-                                 $curl = curl_init();
+                                /*$curl = curl_init();
                                 curl_setopt_array($curl, array(
                                 CURLOPT_URL => 'https://api.infobip.com/sms/2/text/advanced',
                                 CURLOPT_RETURNTRANSFER => true,
@@ -52,7 +53,7 @@ if(Helper::is_post()){
                                 
                                 echo $smsresponse;
                                 exit;
-                                
+                                */
 
                                 /*
                                     https://www.fast2sms.com/dev/bulkV2?authorization=XTtWLw39b8qZckUH7gSmRAKMYuGle5zNDpaxfni16PrCF4hQV2jS6nFwyQHgZ5mr2oCcKW3xP1BbXNiR&route=q&message=test123&flash=0&numbers=&schedule_time=

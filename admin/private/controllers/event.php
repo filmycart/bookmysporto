@@ -117,10 +117,6 @@
         $message = new Message();
         $event = new Event();
 
-        /*print"<pre>";
-        print_r($_POST);
-        exit;*/                
-
         if (Helper::is_post()) {
             if((empty($pgEventId)) && ($pgEventAction == "add")) {
                 $viewEvent = new Event();
