@@ -62,6 +62,7 @@
     $pgContactActive = "";
     $pgLoginActive = "";
     $pgRegisterActive = "";
+    $pgEventActive = "";
 
     if(!empty($pgName)) {
       switch ($pgName) {
@@ -69,10 +70,33 @@
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/home.php');
           break;
-        case 'coach':
+        case 'coaches':
           $pgCoachesActive = 'class="active"';
-          include_once('frontend/'.$templateName.'/coaches.php');
+          //include_once('frontend/'.$templateName.'/coaches.php');
+          include_once('frontend/'.$templateName.'/coming-soon.php');
           break;
+        case 'coach-details':
+          $pgCoachesDetailsActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/coach-details.php');
+          break;
+        case 'venues':
+          $pgCoachesActive = 'class="active"';
+          //include_once('frontend/'.$templateName.'/venues.php');
+          include_once('frontend/'.$templateName.'/coming-soon.php');
+          break;    
+        case 'venue-details':
+          $pgVenueDetailsActive = 'class="active"';
+          //include_once('frontend/'.$templateName.'/venue-details.php');
+          include_once('frontend/'.$templateName.'/coming-soon.php');
+          break; 
+        case 'events':
+          $pgEventActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/events.php');
+          break;    
+        case 'event-details':
+          $pgEventActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/event-details.php');
+          break;      
         case 'home':
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/home.php');

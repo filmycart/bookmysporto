@@ -23,7 +23,8 @@
 					<div class="row align-items-center w-100">
 						<div class="col-lg-7 col-md-10 mx-auto">
 							<div class="section-search aos" data-aos="fade-up">
-								<h4>World Class Badminton Coaching & Premium Courts</h4>
+								<p>&nbsp;</p>
+								<p>&nbsp;</p>
 								<h1>Choose Your <span>Coaches</span> and Start Your Training</h1>
 								<div class="search-box">
 									<form name="searchForm" id="searchForm"> 
@@ -123,7 +124,7 @@
 					<p class="sub-title">Simplifying the booking process for coaches, venues, and athletes.</p>
 				</div>
 				<div class="row justify-content-center ">
-					<div class="col-lg-4 col-md-6 d-flex">
+					<div class="col-lg-3 col-md-5 d-flex">
 						<div class="work-grid w-100 aos" data-aos="fade-up">
 							<div class="work-icon">
 								<div class="work-icon-inner">
@@ -132,16 +133,60 @@
 							</div>
 							<div class="work-content">
 								<h5>
-									<a href="#" onclick="registerForm()">Join Us</a>
+									<?php
+		                                if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+		                            ?>
+		                                    <a href="index.php?pg-name=my-profile">My Profile</a>
+
+		                            <?php        
+		                                } else {
+		                            ?>
+		                                    <a href="#" onclick="registerForm()">Join Us</a>
+		                            <?php
+		                                }
+		                            ?>
 								</h5>
 								<p>Quick and Easy Registration: Get started on our software platform with a simple account creation process.</p>
-								<a class="btn" href="#" onclick="registerForm()">
-									Register Now <i class="feather-arrow-right"></i>
+								<?php
+	                                if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+	                            ?>
+	                                    <a class="btn" href="index.php?pg-name=my-profile">
+											My Profile<i class="feather-arrow-right"></i>
+										</a>
+
+	                            <?php        
+	                                } else {
+	                            ?>
+	                                    <a class="btn" href="#" onclick="registerForm()">
+											Register Now <i class="feather-arrow-right"></i>
+										</a>
+	                            <?php
+	                                }
+	                            ?>								
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-5 d-flex">
+						<div class="work-grid w-100 aos" data-aos="fade-up">
+							<div class="work-icon">
+								<div class="work-icon-inner">
+									<img src="<?=$frontendAssetUrl?>assets/img/icons/booking-icon.svg" alt="Icon">
+								</div>
+							</div>
+							<div class="work-content">
+								<h5>
+									<a href="index.php?pg-nm=events">Book Event</a>
+								</h5>
+								<p>
+									Easily book events seamless experience on our user-friendly platform.
+								</p>
+								<a class="btn" href="index.php?pg-nm=events">
+									Go To Events <i class="feather-arrow-right"></i>
 								</a>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-6 d-flex">
+					<div class="col-lg-3 col-md-5 d-flex">
 						<div class="work-grid w-100 aos" data-aos="fade-up">
 							<div class="work-icon">
 								<div class="work-icon-inner">
@@ -150,18 +195,18 @@
 							</div>
 							<div class="work-content">
 								<h5>
-									<a href="index.php?pg-nm=coach">Book Coaches</a>
+									<a href="index.php?pg-nm=coaches">Book Coach</a>
 								</h5>
 								<p>
 									Book Badminton coaches and venues for expert guidance and premium facilities.
 								</p>
-								<a class="btn" href="index.php?pg-nm=coach">
+								<a class="btn" href="index.php?pg-nm=coaches">
 									Go To Coaches <i class="feather-arrow-right"></i>
 								</a>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-6 d-flex">
+					<div class="col-lg-3 col-md-5 d-flex">
 						<div class="work-grid w-100 aos" data-aos="fade-up">
 							<div class="work-icon">
 								<div class="work-icon-inner">
@@ -170,14 +215,27 @@
 							</div>
 							<div class="work-content">
 								<h5>
-									<a href="index.php?pg-nm=venue">Book Venue</a>
+									<a href="index.php?pg-nm=venues">Book Court</a>
 								</h5>
 								<p>
 									Easily book, pay, and enjoy a seamless experience on our user-friendly platform.
 								</p>
-								<a class="btn" href="index.php?pg-nm=venue">
-									Book Now <i class="feather-arrow-right"></i>
-								</a>
+
+								<?php
+			                        if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+			                    ?>      
+			                    		<a class="btn" href="index.php?pg-nm=venues">
+											Book Now <i class="feather-arrow-right"></i>
+										</a>
+			                    <?php        
+			                        } else {
+			                    ?>
+			                            <a class="btn" href="#">
+											Book Now <i class="feather-arrow-right"></i>
+										</a>   
+			                    <?php
+			                        }
+			                    ?>								
 							</div>
 						</div>
 					</div>
@@ -185,6 +243,132 @@
 			</div>
 		</section>
 		<!-- /How It Works -->
+		<!-- Rental Deals -->
+
+		<section class="section featured-venues">
+			<div class="container">
+				<div class="section-heading aos" data-aos="fade-up">
+					<h2>Featured <span>Events</span></h2>
+					<p class="sub-title">Advanced sports events offer the latest facilities, dynamic and unique environments for enhanced badminton performance.</p>
+				</div>
+				<div class="row">
+			        <div class="featured-slider-group ">
+			        	<div class="owl-carousel featured-venues-slider owl-theme">
+
+			        		<?php
+			        			if((isset($eventResponseHomePageArr['data'])) && (!empty($eventResponseHomePageArr['data']))) {
+			        				foreach($eventResponseHomePageArr['data'] as $eventResponseHomePageVal) {
+
+			        					$eventImageArray = array();
+			    						$eventImage = "";
+			    						if((isset($eventResponseHomePageVal['eventImage'])) && (!empty($eventResponseHomePageVal['eventImage']))) {
+			    							$eventImageArray = explode(",",$eventImagePath.$eventResponseHomePageVal['eventImage']);
+			    							if((isset($eventResponseHomePageVal['eventImage'])) && (!empty($eventResponseHomePageVal['eventImage']))) {
+			    								$eventImage = $eventImageArray['0'];
+			    							}
+			    						} else {
+			    							$eventImage = $eventNoImage;	
+			    						}
+
+			    						/*echo $eventImage;
+			    						exit;*/
+
+			    						$eventStartDay = "";   
+			    						if((isset($eventResponseHomePageVal['eventStartDate'])) && (!empty($eventResponseHomePageVal['eventStartDate']))) {
+			        						$eventStartDay = date("m", strtotime($eventResponseHomePageVal['eventStartDate']));
+										}	
+
+			    						$eventStartMonthYear = "";   
+			    						if((isset($eventResponseHomePageVal['eventStartDate'])) && (!empty($eventResponseHomePageVal['eventStartDate']))) {
+			        						$eventStartMonthYear = date("F-Y", strtotime($eventResponseHomePageVal['eventStartDate']));
+			        						//$eventStartMonthYear = date('d F Y', strtotime($eventResponseHomePageVal['eventStartDate'])); 
+										}	
+
+										$eventEndDay = "";   
+			    						if((isset($eventResponseHomePageVal['eventEndDate'])) && (!empty($eventResponseHomePageVal['eventEndDate']))) {
+			        						$eventEndDay = date("m", strtotime($eventResponseHomePageVal['eventEndDate']));
+										}	
+
+										$eventEndMonthYear = "";   
+			    						if((isset($eventResponseHomePageVal['eventEndDate'])) && (!empty($eventResponseHomePageVal['eventEndDate']))) {
+			        						$eventEndMonthYear = date("F-Y", strtotime($eventResponseHomePageVal['eventEndDate']));
+										}		
+			        		?>
+			        					<div class="featured-venues-item aos" data-aos="fade-up">
+											<div class="listing-item mb-0">										
+												<div class="listing-img">
+													<a href="index.php?pg-nm=event-details">
+														<img src="<?=$eventImage?>" alt="Event">
+													</a>
+													<div class="fav-item-venues">
+														<span class="tag tag-blue"><?=$eventStartDay?>-<?=$eventStartMonthYear?></span>	
+														<span class="tag tag-blue"><?=$eventEndDay?>-<?=$eventEndMonthYear?></span>		
+														<!-- <h5 class="tag tag-primary">$450<span>/hr</span></h5> -->
+													</div>
+												</div>										
+												<div class="listing-content">
+													<h3 class="listing-title">
+														<?php
+															// strip tags to avoid breaking any html
+															$eventHomeTitle = strip_tags($eventResponseHomePageVal['eventTitle']);
+															if (strlen($eventHomeTitle) > 25) {
+															    // truncate string
+															    $eventHomeTitleStringCut = substr($eventHomeTitle, 0, 25);
+															    $eventHomeTitleEndPoint = strrpos($eventHomeTitleStringCut, ' ');
+
+															    //if the string doesn't contain any space then it will cut without word basis.
+															    $eventHomeTitle = $eventHomeTitleEndPoint? substr($eventHomeTitleStringCut, 0, $eventHomeTitleEndPoint) : substr($eventHomeTitleStringCut, 0);
+															    $eventHomeTitle .= '...';
+															}
+														?>
+														<a href="index.php?pg-nm=event-details"><?=$eventHomeTitle?></a>
+													</h3>
+													<div class="listing-details-group">
+														<p>
+															<?php
+																// strip tags to avoid breaking any html
+																$description = strip_tags($eventResponseHomePageVal['eventDescription']);
+																if (strlen($description) > 120) {
+																    // truncate string
+																    $stringCut = substr($description, 0, 120);
+																    $endPoint = strrpos($stringCut, ' ');
+
+																    //if the string doesn't contain any space then it will cut without word basis.
+																    $description = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+																    $description .= '...';
+																}
+																echo $description;
+															?>
+														</p>
+														<ul>
+															<li>
+																<span>
+																	<i class="feather-map-pin"></i><?=(!empty($eventResponseHomePageVal['eventAddress'])?$eventResponseHomePageVal['eventAddress']:'')?>
+																</span>
+															</li>
+														</ul>
+													</div>
+													<div class="listing-button">
+														<a href="index.php?pg-nm=event-details" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Event Details</a>
+													</div>	
+												</div>
+											</div>
+										</div>
+			        		<?php		
+			        				}
+			        			}
+			        		?>								
+						</div>	
+					</div>
+				</div>
+				<!-- View More -->
+				<div class="view-all text-center aos" data-aos="fade-up">
+					<a href="index.php?pg-nm=events" class="btn btn-secondary d-inline-flex align-items-center">View All Events<span class="lh-1"><i class="feather-arrow-right-circle ms-2"></i></span></a>
+				</div>
+				<!-- View More -->
+			</div>
+		</section>
+		<!-- /Rental Deals -->
 		<!-- Rental Deals -->
 		<section class="section featured-venues">
 			<div class="container">
@@ -203,7 +387,7 @@
 			        					<div class="featured-venues-item aos" data-aos="fade-up">
 											<div class="listing-item mb-0">										
 												<div class="listing-img">
-													<a href="venue-details.html">
+													<a href="index.php?pg-nm=venue-details">
 														<img src="<?=$frontendAssetUrl?>assets/img/venues/venues-01.jpg" alt="Venue">
 													</a>
 													<div class="fav-item-venues">
@@ -221,30 +405,45 @@
 														</a>
 													</div>	
 													<h3 class="listing-title">
-														<a href="venue-details.html"><?=(!empty($venueResponseVal['title'])?$venueResponseVal['title']:'')?></a>
+														<a href="index.php?pg-nm=venue-details"><?=(!empty($venueResponseVal['title'])?$venueResponseVal['title']:'')?></a>
 													</h3>
 													<div class="listing-details-group">
-														<p>Elevate your athletic journey at Sarah Sports Academy, where excellence meets opportunity.</p>
+														<p>
+															<?php
+																// strip tags to avoid breaking any html
+																$description = strip_tags($venueResponseVal['description']);
+																if (strlen($description) > 120) {
+																    // truncate string
+																    $stringCut = substr($description, 0, 120);
+																    $endPoint = strrpos($stringCut, ' ');
+
+																    //if the string doesn't contain any space then it will cut without word basis.
+																    $description = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+																    $description .= '...';
+																}
+																echo $description;
+															?>
+														</p>
 														<ul>
 															<li>
 																<span>
-																	<i class="feather-map-pin"></i><?=(!empty($venueResponseVal['title'])?$venueResponseVal['title']:'')?>
+																	<i class="feather-map-pin"></i><?=(!empty($venueResponseVal['address'])?$venueResponseVal['address']:'')?>
 																</span>
 															</li>
-															<li>
+															<!-- <li>
 																<span>
 																	<i class="feather-calendar"></i>Next Availablity : <span class="primary-text">15 May 2023</span>
 																</span>
-															</li>
+															</li> -->
 														</ul>
 													</div>
 													<div class="listing-button">
 														<div class="listing-venue-owner">
 															<a class="navigation" href="coach-detail.html">
-																<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-01.jpg" alt="Venue">Mart Sublin
+																<img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-01.jpg" alt="Venue"><?=(!empty($venueResponseVal['venueOwner'])?$venueResponseVal['venueOwner']:'')?>
 															</a>												
 														</div>
-														<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
+														<a href="index.php?pg-nm=venue-details" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
 													</div>	
 												</div>
 											</div>
@@ -379,7 +578,7 @@
 							<div class="featured-venues-item">
 								<div class="listing-item mb-0">										
 									<div class="listing-img">
-										<a href="coach-detail.html">
+										<a href="index.php?coach-details">
 											<img src="<?=$frontendAssetUrl?>assets/img/profiles/user-01.jpg" alt="User">
 										</a>
 										<div class="fav-item-venues">
@@ -397,18 +596,17 @@
 									<div class="listing-content list-coche-content">
 										<span>4 Lessons</span>
 										<h3><a href="coach-detail.html">Kevin Anderson</a></h3>
-										<a href="coach-details.html"><i class="feather-arrow-right"></i></a>
-										<a href="coach-details.html" class="icon-hover"><i class="feather-calendar"></i></a>
+										<a href="index.php?coach-details"><i class="feather-arrow-right"></i></a>
+										<a href="index.php?coach-details" class="icon-hover"><i class="feather-calendar"></i></a>
 									</div>
 								</div>
 							</div>
 							<!-- /Featured Item -->
-
 							<!-- Featured Item -->
 							<div class="featured-venues-item">
 								<div class="listing-item mb-0">										
 									<div class="listing-img">
-										<a href="coach-detail.html">
+										<a href="index.php?coach-details">
 											<img src="<?=$frontendAssetUrl?>assets/img/profiles/user-02.jpg" alt="User">
 										</a>
 										<div class="fav-item-venues">
@@ -425,9 +623,9 @@
 									</div>										
 									<div class="listing-content list-coche-content">
 										<span>3 Lessons</span>
-										<h3><a href="coach-detail.html">Harry Richardson</a></h3>
-										<a href="coach-details.html"><i class="feather-arrow-right"></i></a>
-										<a href="coach-details.html" class="icon-hover"><i class="feather-calendar"></i></a>
+										<h3><a href="index.php?coach-details">Harry Richardson</a></h3>
+										<a href="index.php?coach-details"><i class="feather-arrow-right"></i></a>
+										<a href="index.php?coach-details" class="icon-hover"><i class="feather-calendar"></i></a>
 									</div>
 								</div>
 							</div>
@@ -437,7 +635,7 @@
 							<div class="featured-venues-item">
 								<div class="listing-item mb-0">										
 									<div class="listing-img">
-										<a href="coach-detail.html">
+										<a href="index.php?coach-details">
 											<img src="<?=$frontendAssetUrl?>assets/img/profiles/user-03.jpg" alt="User">
 										</a>
 										<div class="fav-item-venues">
@@ -454,9 +652,9 @@
 									</div>										
 									<div class="listing-content list-coche-content">
 										<span>2 Lessons</span>
-										<h3><a href="coach-detail.html">Evon Raddick</a></h3>
-										<a href="coach-details.html"><i class="feather-arrow-right"></i></a>
-										<a href="coach-details.html" class="icon-hover"><i class="feather-calendar"></i></a>
+										<h3><a href="index.php?coach-details">Evon Raddick</a></h3>
+										<a href="index.php?coach-details"><i class="feather-arrow-right"></i></a>
+										<a href="index.php?coach-details" class="icon-hover"><i class="feather-calendar"></i></a>
 									</div>
 								</div>
 							</div>
@@ -466,7 +664,7 @@
 							<div class="featured-venues-item">
 								<div class="listing-item mb-0">										
 									<div class="listing-img">
-										<a href="coach-detail.html">
+										<a href="index.php?coach-details">
 											<img src="<?=$frontendAssetUrl?>assets/img/profiles/user-04.jpg" alt="User">
 										</a>
 										<div class="fav-item-venues">
@@ -483,9 +681,9 @@
 									</div>										
 									<div class="listing-content list-coche-content">
 										<span>4 Lessons</span>
-										<h3><a href="coach-detail.html">Angela Roudrigez</a></h3>
-										<a href="coach-details.html"><i class="feather-arrow-right"></i></a>
-										<a href="coach-details.html" class="icon-hover"><i class="feather-calendar"></i></a>
+										<h3><a href="index.php?coach-details">Angela Roudrigez</a></h3>
+										<a href="index.php?coach-details"><i class="feather-arrow-right"></i></a>
+										<a href="index.php?coach-details" class="icon-hover"><i class="feather-calendar"></i></a>
 									</div>
 								</div>
 							</div>
@@ -512,9 +710,9 @@
 									</div>										
 									<div class="listing-content list-coche-content">
 										<span>4 Lessons</span>
-										<h3><a href="coach-detail.html">Harry Richardson</a></h3>
-										<a href="coach-details.html"><i class="feather-arrow-right"></i></a>
-										<a href="coach-details.html" class="icon-hover"><i class="feather-calendar"></i></a>
+										<h3><a href="index.php?coach-details">Harry Richardson</a></h3>
+										<a href="index.php?coach-details"><i class="feather-arrow-right"></i></a>
+										<a href="index.php?coach-details" class="icon-hover"><i class="feather-calendar"></i></a>
 									</div>
 								</div>
 							</div>
@@ -524,7 +722,7 @@
 					</div>
 				</div>
 				<div class="view-all text-center aos" data-aos="fade-up">
-					<a href="index.php?pg-nm=coach" class="btn btn-secondary d-inline-flex align-items-center">
+					<a href="index.php?pg-nm=coaches" class="btn btn-secondary d-inline-flex align-items-center">
 						View All Coaches  <span class="lh-1"><i class="feather-arrow-right-circle ms-2"></i></span>
 					</a>
 				</div>

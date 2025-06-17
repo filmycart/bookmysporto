@@ -5,7 +5,17 @@
 				<div class="footer-join aos" data-aos="fade-up">
 					<h2>We Welcome Your Passion And Expertise</h2>
 					<p class="sub-title">Join our empowering sports community today and grow with us.</p>
-					<a href="#" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
+					<?php
+                        if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+                    ?>
+                            <a href="index.php?pg-name=my-profile" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> My Profile</a>
+                    <?php        
+                        } else {
+                    ?>
+                            <a href="#" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
+                    <?php
+                        }
+                    ?>
 				</div>
 				<!-- /Footer Join -->			
 				<!-- Footer Top -->
@@ -84,8 +94,7 @@
 					</div>
 				</div>
 				<!-- /Footer Top -->
-			</div>
-			
+			</div>			
 			<!-- Footer Bottom -->
 			<div class="footer-bottom">
 				<div class="container">
@@ -102,14 +111,11 @@
 					<!-- /Copyright -->
 				</div>
 			</div>
-			<!-- /Footer Bottom -->
-			
+			<!-- /Footer Bottom -->			
 		</footer>
 		<!-- /Footer -->
-
 	</div>
 	<!-- /Main Wrapper -->
-
 	<!-- scrollToTop start -->
 	<div class="progress-wrap active-progress">
 		<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
@@ -117,7 +123,6 @@
 		</svg>
 	</div>
 	<!-- scrollToTop end -->
-
 	<!-- jQuery -->
 	<script src="<?=$frontendAssetUrl?>assets/js/jquery-3.7.1.min.js"></script>
 
@@ -142,6 +147,5 @@
 
 	<!-- Custom JS -->
 	<script src="<?=$frontendAssetUrl?>assets/js/script.js"></script>
-
 </body>
 </html>

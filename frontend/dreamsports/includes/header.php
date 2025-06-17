@@ -93,9 +93,9 @@
 							<li class="has-submenu">
 								<a href="#">Book <i class="fas fa-chevron-down"></i></a>
 								<ul class="submenu">
-									<li><a href="index.php?pg-nm=event">Event</a></li>
-									<li><a href="index.php?pg-nm=venue">Court</a></li>
-									<li><a href="index.php?pg-nm=coach">Coach</a></li>
+									<li><a href="index.php?pg-nm=events">Event</a></li>
+									<li><a href="index.php?pg-nm=venues">Court</a></li>
+									<li><a href="index.php?pg-nm=coaches">Coach</a></li>
 								</ul>
 							</li>		
 							<li <?=$pgAboutActive?>><a href="index.php?pg-nm=about-us">About Us</a></li>
@@ -126,22 +126,22 @@
 					</div>
                     <?php
                         if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
-                    ?>                    
-                            <ul class="nav header-navbar-rht">
+                    ?>     
+                            <ul class="nav header-navbar-rht logged-in"> 
                                 <li class="nav-item dropdown has-arrow logged-item">
-                                    <a href="#" class="dropdown-toggle nav-link show" data-bs-toggle="dropdown" aria-expanded="true">
+                                    <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                                         <span class="user-img">
                                             <img class="rounded-circle" src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" width="31" alt="Darren Elder">
                                         </span>
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end show" data-bs-popper="static">
+                                    <div class="dropdown-menu dropdown-menu-end">
                                         <div class="user-header">
                                             <div class="avatar avatar-sm">
-                                                <img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" height="50" width="50" alt="User" class="avatar-img rounded-circle">
+                                                <img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" alt="User" class="avatar-img rounded-circle">
                                             </div>
                                             <div class="user-text">
                                                 <h6><?=(!empty($_SESSION['userName'])?$_SESSION['userName']:'')?></h6>
-                                                <a href="user-profile.html" class="text-profile mb-0">Go to Profile</a>
+                                                <a href="index.php?pg-name=my-profile" class="text-profile mb-0">Go to Profile</a>
                                             </div>
                                         </div>
                                         <p><a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a></p>
@@ -270,7 +270,6 @@
                     // Make sure the form is submitted to the destination defined
                     // in the "action" attribute of the form when valid
                     submitHandler: function(form) {
-                        //form.submit();
                         $.ajax({
                             type: "POST",
                             url: "./api/user/login.php",
@@ -497,6 +496,10 @@
         $venueUrl = $requestScheme.'://dev.sportify.filmycart.in/api/venue/venue.php';
     }
 
+    $postValArray = array(
+                            'api_token' => '123456789'
+                        );
+
     curl_setopt_array($curlVenue, array(
       CURLOPT_URL => $venueUrl,
       CURLOPT_RETURNTRANSFER => true,
@@ -506,7 +509,7 @@
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS => array('api_token' => '123456789'),
+      CURLOPT_POSTFIELDS => $postValArray,
       CURLOPT_HTTPHEADER => array(
         'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
       ),
@@ -520,4 +523,45 @@
     }
 
     curl_close($curlVenue);
+
+    $curlEventHomePage = curl_init();
+
+    $eventUrlHomePage = "";
+    if($hostName == "localhost") {
+        $eventUrlHomePage = $requestScheme.'://localhost/sportifyv2/api/event/event.php';
+    } else {
+        $eventUrlHomePage = $requestScheme.'://dev.sportify.filmycart.in/api/event/event.php';
+    }
+
+    $postValArray = array(
+                            'api_token' => '123456789'
+                        );
+
+    curl_setopt_array($curlEventHomePage, array(
+        CURLOPT_URL => $eventUrlHomePage,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $postValArray,
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+        ),
+    ));
+
+    $eventResponseHomePage = curl_exec($curlEventHomePage);
+
+    $eventResponseHomePageArr = array();
+    if(!empty($eventResponseHomePage)) {
+        $eventResponseHomePageArr = json_decode($eventResponseHomePage, true);
+    }
+
+    curl_close($curlEventHomePage);
+
+    /*print"<pre>";
+    print($eventResponseHomePageArr);
+    exit;*/
 ?>
