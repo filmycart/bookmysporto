@@ -129,7 +129,7 @@
 														<span><a href="forgot-password.html" class="forgot-pass">Forgot Password</a></span>
 													</div>
 													<button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Sign In<i class="feather-arrow-right-circle ms-2"></i></button>
-													<div class="form-group">
+													<!-- <div class="form-group">
 														<div class="login-options text-center">
 															<span class="text">Or continue with</span>
 														</div>
@@ -149,7 +149,7 @@
 																</button>
 															</li>
 														</ul>
-													</div>								
+													</div>	 -->							
 												</form>
 												<!-- /Login Form -->
 											</div>
@@ -176,7 +176,7 @@
 														<span><a href="forgot-password.html" class="forgot-pass">Forgot Password</a></span>
 													</div>
 													<button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Sign In<i class="feather-arrow-right-circle ms-2"></i></button>
-													<div class="form-group">
+													<!-- <div class="form-group">
 														<div class="login-options text-center">
 															<span class="text">Or continue with</span>
 														</div>
@@ -196,7 +196,7 @@
 																</button>
 															</li>
 														</ul>
-													</div>								
+													</div>	 -->							
 												</form>
 												<!-- /Login Form -->
 											</div>

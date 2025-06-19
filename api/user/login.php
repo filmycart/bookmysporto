@@ -104,11 +104,13 @@
 									$response_user = $user->response()->to_valid_array();
 									$response_user["cart_count"] = $cart_count;
 
-									//header('Location: '.$_SERVER['HTTP_ORIGIN'].'/sportify/');
-									header('Location: '.$_SERVER['HTTP_ORIGIN']);
-									exit;
+                                	$response->create(200, "Logged In Successfully.", $user->response()->to_valid_array());
 
-									$response->create(200, "Successfully Signed In", $response_user);
+									//header('Location: '.$_SERVER['HTTP_ORIGIN'].'/sportify/');
+									/*header('Location: '.$_SERVER['HTTP_ORIGIN']);
+									exit;*/
+
+									
 
 								}else$response->create(201, "Please Verify Your Email", null);
 							}else $response->create(201, "Invalid Email / Password", null);

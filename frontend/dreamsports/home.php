@@ -350,6 +350,7 @@
 													</div>
 													<div class="listing-button">
 														<a href="index.php?pg-nm=event-details" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Event Details</a>
+														<a href="venue-details.html" class="user-book-now"><span><i class="feather-calendar me-2"></i></span>Book Now</a>
 													</div>	
 												</div>
 											</div>
