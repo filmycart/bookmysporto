@@ -17,7 +17,7 @@
 		$baseUrl = "://localhost/sportifyv2/";
 		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
 	} else {
-		$baseUrl = "://dev.sportify.filmycart.in/";
+		$baseUrl = "://bookmysporto.com/";
 		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
 	}
 
