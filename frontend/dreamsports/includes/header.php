@@ -238,9 +238,15 @@
                             url: "./api/user/register.php",
                             data: $(form).serialize(),
                             success: function (resp) {
-                                $(form).html("<div id='message'></div><div class='row'>&nbsp;</div>");
-                                $('#haveanaccount').hide();
-                                $('#message').html(resp.message);
+                                if(resp.status_code == 200) {
+                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
+                                    $('#message').html(resp.message);
+                                } else if(resp.status_code == 201) {
+                                    $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
+                                    $('#err_message').html(resp.message);
+                                }
+
+                                $('#haveanaccount').hide();                                
 
                                 setTimeout(function () {
                                     window.location.href='index.php';
@@ -275,18 +281,19 @@
                             url: "./api/user/login.php",
                             data: $(form).serialize(),
                             success: function (resp) {
-                                console.log(resp);
-                                $(form).html("<div id='message'></div><div class='row'>&nbsp;</div>");
-                                $('#haveanaccountlogin').hide();
-                                $('#message').html(resp.message);
+                                if(resp.status_code == 200) {
+                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
+                                    $('#message').html(resp.message);
+                                } else if(resp.status_code == 201) {
+                                    $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
+                                    $('#err_message').html(resp.message);
+                                }
 
-                                if(resp.status_code == 201) {
-                                    setTimeout(function () {
-                                       window.location.href='index.php';
-                                    }, 1500);
-                                } else {
+                                $('#haveanaccountlogin').hide();                                
+
+                                setTimeout(function () {
                                     window.location.href='index.php';
-                                }                                
+                                }, 1500);                            
                             }
                         });
                         return false; // required to block normal submit since you used ajax
@@ -336,7 +343,7 @@
                                         <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Create Account<i class="feather-arrow-right-circle ms-2"></i></button>
                                     </div>
                                 </div>                                    
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <div class="login-options text-center">
                                         <span class="text">Or continue with</span>
                                     </div>
@@ -344,7 +351,7 @@
                                 <div class="form-group mb-0">
                                     <a href="google-oauth.php" class="google-login-btn">
                                         <span class="icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
                                         </span>
                                         Login with Google
                                     </a>
@@ -360,7 +367,7 @@
                                             </button>
                                         </li>
                                     </ul>
-                                </div>                              
+                                </div>     -->                          
                             </form>
                         </div>                            
                     </div>
@@ -402,7 +409,7 @@
                                     <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Login<i class="feather-arrow-right-circle ms-2"></i></button>
                                 </div>
                             </div>                                    
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="login-options text-center">
                                     <span class="text">Or continue with</span>
                                 </div>
@@ -420,7 +427,7 @@
                                         </button>
                                     </li>
                                 </ul>
-                            </div>                              
+                            </div>  -->                             
                         </form>
                     </div>                            
                 </div>
@@ -560,8 +567,4 @@
     }
 
     curl_close($curlEventHomePage);
-
-    /*print"<pre>";
-    print($eventResponseHomePageArr);
-    exit;*/
 ?>
