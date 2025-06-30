@@ -133,7 +133,7 @@
                                 } else {
                                     $profileImage = $requestScheme.'//'.$hostName."bookmysporto.com/public_html/admin/uploads/users/".$_SESSION['userImage'];
                                 }
-                            } else{
+                            } else {
                                 $profileImage = $frontendAssetUrl."assets/img/profiles/avatar-05.jpg";
                             }
                     ?>     
