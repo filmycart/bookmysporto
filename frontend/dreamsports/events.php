@@ -9,7 +9,7 @@
 		    if($hostName == "localhost") {
 		        $eventUrl = $requestScheme.'://localhost/sportifyv2/api/event/event.php';
 		    } else {
-		        $eventUrl = $requestScheme.'://dev.sportify.filmycart.in/api/event/event.php';
+		        $eventUrl = $requestScheme.'://bookmysporto.com/api/event/event.php';
 		    }
 
 		    $postValArray = array(

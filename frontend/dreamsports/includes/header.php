@@ -458,7 +458,7 @@
     if($hostName == "localhost") {
         $stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
     } else {
-        $stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
+        $stateUrl = $requestScheme.'://bookmysporto.com/api/location/state.php';
     }
 
     $curlState = curl_init();
@@ -467,7 +467,7 @@
     if($hostName == "localhost") {
         $stateUrl = $requestScheme.'://localhost/sportifyv2/api/location/state.php';
     } else {
-        $stateUrl = $requestScheme.'://dev.sportify.filmycart.in/api/location/state.php';
+        $stateUrl = $requestScheme.'://bookmysporto.com/api/location/state.php';
     }
 
     curl_setopt_array($curlState, array(
@@ -500,7 +500,7 @@
     if($hostName == "localhost") {
         $venueUrl = $requestScheme.'://localhost/sportifyv2/api/venue/venue.php';
     } else {
-        $venueUrl = $requestScheme.'://dev.sportify.filmycart.in/api/venue/venue.php';
+        $venueUrl = $requestScheme.'://bookmysporto.com/api/venue/venue.php';
     }
 
     $postValArray = array(
@@ -537,7 +537,7 @@
     if($hostName == "localhost") {
         $eventUrlHomePage = $requestScheme.'://localhost/sportifyv2/api/event/event.php';
     } else {
-        $eventUrlHomePage = $requestScheme.'://dev.sportify.filmycart.in/api/event/event.php';
+        $eventUrlHomePage = $requestScheme.'://bookmysporto.com/api/event/event.php';
     }
 
     $postValArray = array(
