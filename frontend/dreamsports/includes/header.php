@@ -131,7 +131,7 @@
                                 if($hostName == "localhost") {
                                     $profileImage = "/sportifyv2/admin/uploads/users/".$_SESSION['userImage'];
                                 } else {
-                                    $profileImage = $requestScheme.'//'.$hostName."/admin/uploads/users/".$_SESSION['userImage'];
+                                    $profileImage = $requestScheme.'://'.$hostName."/admin/uploads/users/".$_SESSION['userImage'];
                                 }
                             } else {
                                 $profileImage = $frontendAssetUrl."assets/img/profiles/avatar-05.jpg";
