@@ -40,7 +40,7 @@
                     foreach($all_events as $key=>$eventVal) {
                         $eventsArray[$key]['eventId'] = $eventVal->eventId;
                         $eventsArray[$key]['eventTitle'] = $eventVal->eventTitle;
-                        $eventsArray[$key]['eventDescription'] = $eventVal->eventDescription;                        
+                        $eventsArray[$key]['eventDescription'] = (isset($eventVal->eventDescription)?$eventVal->eventDescription:'');                        
                         $eventsArray[$key]['eventVenue'] = $eventVal->eventVenue;
                         $eventsArray[$key]['eventAddress'] = $eventVal->eventAddress;
                         $eventsArray[$key]['eventStartDate'] = $eventVal->eventStartDate;

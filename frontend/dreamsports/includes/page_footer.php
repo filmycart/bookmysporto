@@ -8,7 +8,7 @@
 					<?php
                         if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
                     ?>
-                            <a href="index.php?pg-name=my-profile" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> My Profile</a>
+                            <a href="index.php?pg-nm=my-profile" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> My Profile</a>
                     <?php        
                         } else {
                     ?>

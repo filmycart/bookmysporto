@@ -136,7 +136,7 @@
 									<?php
 		                                if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
 		                            ?>
-		                                    <a href="index.php?pg-name=my-profile">My Profile</a>
+		                                    <a href="index.php?pg-nm=my-profile">My Profile</a>
 
 		                            <?php        
 		                                } else {
@@ -150,7 +150,7 @@
 								<?php
 	                                if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
 	                            ?>
-	                                    <a class="btn" href="index.php?pg-name=my-profile">
+	                                    <a class="btn" href="index.php?pg-nm=my-profile">
 											My Profile<i class="feather-arrow-right"></i>
 										</a>
 
