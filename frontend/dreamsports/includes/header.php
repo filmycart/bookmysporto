@@ -203,13 +203,13 @@
             }
 	    </script>
         <script src="<?=$frontendAssetUrl?>assets/js/jquery.js"></script>
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+        <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.min.js"></script>
         <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
         <script>
             jQuery.noConflict();
             jQuery( document ).ready(function( $ ) {
 
-                $('#userImageSpinnerDiv').hide();    
+                $('#userImageSpinnerDiv').hide();
 
                 function removeA(arr, eventFileName) {
                     const myArray = arr.split(",");
@@ -487,7 +487,7 @@
                                         <div>
                                             <input type="checkbox" name="isCoach" id="isCoach" value="1">
                                         </div>
-                                        <div class="left-padding-5p top-padding-5p">
+                                        <div class="left-padding-5p top-padding-2p">
                                             <span class="userCatTypeClass">I am a Coach</span>
                                         </div>    
                                     </div>

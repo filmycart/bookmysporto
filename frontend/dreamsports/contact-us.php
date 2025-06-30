@@ -48,7 +48,7 @@
 							<section class="card booking-form">
 								<h3 class="border-bottom">Contact Form</h3>
 								<script src="<?=$frontendAssetUrl?>assets/js/jquery.js"></script>
-							    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+							    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.min.js"></script>
 							    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
 							    <script>
 							        $.noConflict();

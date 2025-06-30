@@ -198,11 +198,143 @@
             }
 	    </script>
         <script src="<?=$frontendAssetUrl?>assets/js/jquery.js"></script>
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+        <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.min.js"></script>
         <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
         <script>
             jQuery.noConflict();
             jQuery( document ).ready(function( $ ) {
+
+                $('#userImageSpinnerDiv').hide();
+
+                function removeA(arr, eventFileName) {
+                    const myArray = arr.split(",");
+                    position = myArray.indexOf(eventFileName);
+                    delete myArray[position];
+                    return myArray;
+                }
+
+                function delUserImage(eventFileName, respArray) {
+
+                    $('#userImagePreview').html('');
+
+                    respArr = removeA(respArray, eventFileName);
+                    respArray1 = "'"+respArr+"'";
+
+                    var formdata = new FormData(); 
+        
+                    formdata.append("userImgAction", "deleteEventImg");
+                    formdata.append("eventFileName", eventFileName);
+        
+                    var respArray = new Array();
+                    var respFileNameArray = new Array();
+                    var respFileName = "";
+
+                    $.ajax({
+                        url: "././api/user/user-image.php", 
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formdata,
+                        dataType: 'json',                         
+                        type: 'POST',
+                        success: function(php_script_response) {
+
+                            var fileCount = respArr.length;
+
+                            for (var index = 0; index < fileCount; index++) {
+                                var src = "'"+respArr[index]+"'";
+                                var src1 = respArr[index];
+                                if((src != undefined) && (src1 != undefined)) {
+                                    var delUserImage = 'onclick="delUserImage('+src+','+respArray1+')"';
+                                    $('#userImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteUserImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delUserImage+'><i class="ion-trash-a"><i></a></div>');
+                                    respFileNameArray[index] = src1;
+                                }
+                            }  
+
+                            respFileName = respFileNameArray.toString();
+
+                            $('#userImageHidden').val(respFileName);                
+                        }
+                    });
+                }
+
+                $('#userImageDel').click(function(e) {
+                    console.log("delete file");
+                });
+
+                $('#userImage').change(function(e) {
+
+                    $('#userImagePreview').html('');
+                    $('#userImageError').html('');
+
+                    var fileData = $('#userImage').prop('files')[0];   
+                    var formdata = new FormData(); 
+
+                    // Read selected files
+                    var totalfiles = document.getElementById('userImage').files.length;
+                    var userName = $('#userName').val();
+                    var api_token = $('#api_token').val();
+
+                    for (var index = 0; index < totalfiles; index++) {
+                        formdata.append("files[]", document.getElementById('userImage').files[index]);
+                    }   
+
+                    if (formdata) {
+                        formdata.append("api_token", api_token);
+                        formdata.append("userImgAction", "upload");
+                        formdata.append("userName", userName);
+                    }
+
+                    var respArray = new Array();
+                    var errorRespArray = new Array();
+                    var respFileNameArray = new Array();
+                    var respFileName = "";
+                    var protocol = window.location.protocol;
+                    var hostName = window.location.host;
+                    var pathname = window.location.pathname;
+
+                    var hostUrl = '';
+                    if(hostName == "localhost") {
+                        hostUrl = protocol+'//'+hostName+pathname+'admin/uploads/users/';
+                    } else {
+                        hostUrl = protocol+'//'+'bookmysporto.com/admin/uploads/users/';
+                    }                   
+
+                    $.ajax({
+                        url: "././api/user/user-image.php", 
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formdata,
+                        dataType: 'json',                         
+                        type: 'POST',
+                        success: function(php_script_response) {
+                            respArray = php_script_response['userImage'];
+                            errorRespArray = php_script_response['userImageInvalid'];
+                            respArray1 = "'"+php_script_response['userImage']+"'";
+                            
+                            if(respArray) {
+                                var fileCount = respArray.length;
+
+                                for (var index = 0; index < fileCount; index++) {
+                                    var src = "'"+respArray[index]+"'";
+                                    var src1 = respArray[index];
+                                    var delUserImage = 'onclick="delUserImage('+src+','+respArray1+')"';
+
+                                    //$('#userImagePreview').append('<div><a href ="'+hostUrl+src1+'" target="_blank" class="deleteUserImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delUserImage+'><i class="ion-trash-a"><i></a></div>');
+                                    respFileNameArray[index] = src1;
+                                }   
+
+                                respFileName = respFileNameArray.toString();
+
+                                $('#userImageHidden').val(respFileName);
+                            } else if(errorRespArray) {
+                                $('#userImageError').append(errorRespArray);
+                            }
+                        }
+                    });      
+                });
+
                 //validate the register form when it is submitted
                 $.validator.addMethod(
                     "mobileValidation",
@@ -326,13 +458,23 @@
                                     <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                         <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
                                     </div>
-                                </div>            
+                                </div> 
+                                <div class="spacer-div"></div>
+                                <div class="row">   
+                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+                                        <div id="userImageSpinnerDiv"><img src="./frontend/dreamsports/assets/img/loader.png" class="loader"></div>
+                                        <div id="userImagePreview"></div>
+                                        <div id="userImageError" style="color:red;"></div>
+                                        <input type="hidden" name="userImageHidden" id="userImageHidden" />
+                                        <input name="userImage" id="userImage" type="file" class="form-control" />
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-lg-12 left-padding display-flex">
                                         <div>
                                             <input type="checkbox" name="isCoach" id="isCoach" value="1">
                                         </div>
-                                        <div class="left-padding-5p top-padding-5p">
+                                        <div class="left-padding-5p top-padding-2p">
                                             <span class="userCatTypeClass">I am a Coach</span>
                                         </div>    
                                     </div>
