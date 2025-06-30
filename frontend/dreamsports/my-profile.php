@@ -81,7 +81,7 @@
 		</div>
 		<!-- /Dashboard Menu -->
 		<script src="<?=$frontendAssetUrl?>assets/js/jquery.js"></script>
-	    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+	    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.min.js"></script>
 	    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
 	    <script>
 	        $.noConflict();

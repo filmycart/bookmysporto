@@ -442,6 +442,10 @@ h3.border-bottom {
     padding-top:5px;
 }
 
+.top-padding-2p {
+    padding-top:2px;
+}
+
 .display-flex {
     display: flex;
 }
@@ -503,4 +507,26 @@ h3.border-bottom {
 
 .rounded-circle2 {
     border-radius: 10% !important;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem !important;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: var(--bs-body-bg);
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+form input {
+    height: 32px !important;
 }
