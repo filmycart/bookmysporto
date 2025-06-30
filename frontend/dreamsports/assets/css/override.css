@@ -472,3 +472,35 @@ h3.border-bottom {
     width: 100%;
     max-height: 266px;
  }
+
+ .profile-detail-group .card {
+    padding: 24px;
+    box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
+    border: 0;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.file-upload-text .file-upload {
+    background: #FFFFFF;
+    border: 1px solid #e9e5e5 !important;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    width: 100% !important;
+    height: 23px !important;
+    padding: 45px 20px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 0px;
+}
+
+.user-profile-img {
+    max-width: 100% !important;
+    height: 200px !important;
+    width: 200px !important;
+}
+
+.rounded-circle2 {
+    border-radius: 10% !important;
+}

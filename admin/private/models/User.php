@@ -6,6 +6,7 @@ class User extends Util{
     public $username;
     public $email;
     public $password;
+    public $image;
     public $type;
     public $is_coach;
     public $social_id;

@@ -18,6 +18,7 @@ if(Helper::is_post()){
                 $user->username = Helper::post_val("userPhoneNumber");
                 $user->name = Helper::post_val("userName");
                 $user->type = Helper::post_val("userType");
+                $user->image = Helper::post_val("userImageHidden");
                 $user->is_coach = Helper::post_val("isCoach");
 
                 if($user->type == NUMBER_USER){

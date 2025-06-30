@@ -122,23 +122,33 @@
 						</ul>
 					</div>
 					<?php
+                        $profileImage = "";
                         if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+                            if((isset($_SESSION['userImage'])) && (!empty($_SESSION['userImage']))) {
+                                if($hostName == "localhost") {
+                                    $profileImage = "/sportifyv2/admin/uploads/users/".$_SESSION['userImage'];
+                                } else {
+                                    $profileImage = $requestScheme.'//'.$hostName."bookmysporto.com/public_html/admin/uploads/users/".$_SESSION['userImage'];
+                                }
+                            } else{
+                                $profileImage = $frontendAssetUrl."assets/img/profiles/avatar-05.jpg";
+                            }
                     ?>                    
                             <ul class="nav header-navbar-rht logged-in"> 
                                 <li class="nav-item dropdown has-arrow logged-item">
                                     <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                                         <span class="user-img">
-                                            <img class="rounded-circle" src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" width="31" alt="Darren Elder">
+                                            <img class="rounded-circle" src="<?=$profileImage?>" width="31" alt="Darren Elder">
                                         </span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <div class="user-header">
                                             <div class="avatar avatar-sm">
-                                                <img src="<?=$frontendAssetUrl?>assets/img/profiles/avatar-05.jpg" alt="User" class="avatar-img rounded-circle">
+                                                <img src="<?=$profileImage?>" alt="User" class="avatar-img rounded-circle">
                                             </div>
                                             <div class="user-text">
                                                 <h6><?=(!empty($_SESSION['userName'])?$_SESSION['userName']:'')?></h6>
-                                                <a href="user-profile.html" class="text-profile mb-0">Go to Profile</a>
+                                                <a href="index.php?pg-nm=my-profile" class="text-profile mb-0">Go to Profile</a>
                                             </div>
                                         </div>
                                         <p><a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a></p>
@@ -278,10 +288,10 @@
 
                                 if(resp.status_code == 201) {
                                     setTimeout(function () {
-                                       window.location.href='index.php';
+                                       window.location.href='index.php?pg-nm=my-profile';
                                     }, 1500);
                                 } else {
-                                    window.location.href='index.php';
+                                    window.location.href='index.php?pg-nm=my-profile';
                                 }                                
                             }
                         });
