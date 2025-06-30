@@ -46,14 +46,14 @@
                                 <?php
                                     if(!file_exists(MATHURANJELLY_UPLOAD_PATH.$s_config->image_name)){
                                 ?>
-                                        <a class="navbar-brand" href="index.php?pg-name=home">
+                                        <a class="navbar-brand" href="index.php?pg-nm=home">
                                             <?=$s_config->title?>
                                         </a>    
                                 <?php
                                     }
                                     else{
                                 ?>
-                                         <a class="navbar-brand" href="index.php?pg-name=home">
+                                         <a class="navbar-brand" href="index.php?pg-nm=home">
                                             <img src="<?=MATHURANJELLY_UPLOAD_PATH?><?=$s_config->image_name?>" alt="Logo"><?=$s_config->title?>
                                         </a>
                                 <?php        
@@ -72,7 +72,7 @@
                                 ?>
                                 <ul class="nav navbar-nav me-auto mb-2 mb-lg-0">
                                     <li class="menu-item-has-children">
-                                        <a <?=$menu_active_home?> href="index.php?pg-name=home">Home</a>
+                                        <a <?=$menu_active_home?> href="index.php?pg-nm=home">Home</a>
                                     </li>
                                     <?php
                                         if(!empty($parent_cms_menu)) {

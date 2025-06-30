@@ -101,6 +101,14 @@
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/home.php');
           break;  
+        case 'my-booking':
+          $pgHomeActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/my-booking.php');
+          break;   
+        case 'my-profile':
+          $pgHomeActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/my-profile.php');
+          break;      
         case 'about-us':
           $pgAboutActive = 'class="active"';
           include_once('frontend/'.$templateName.'/about-us.php');
@@ -118,7 +126,7 @@
           include_once('frontend/'.$templateName.'/login.php');
           break;  
         case 'logout':
-          header('Location: '.'api/user/login.php?pg-nm='.$pgName);
+          include('api/user/logout.php');
           break;
         case 'register':
           $pgRegisterActive = 'class="active"';

@@ -3,15 +3,6 @@
 	$response = new Response();
 	$errors = new Errors();
 
-	if(Helper::is_get()) {
-		unset($_SESSION['userId']);
-		unset($_SESSION['userName']);
-		unset($_SESSION['verificationToken']);
-		unset($_SESSION['mobile']);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
-		exit;
-	}
-
 	if(Helper::is_post()){
 	    $api_token = Helper::post_val("api_token");
 	    if($api_token) {
@@ -90,14 +81,14 @@
 
 							$_SESSION['userId'] = $user->id;
 							$_SESSION['userName'] = $user->username;
+							$_SESSION['userImage'] = $user->image;
 							$_SESSION['verificationToken'] = $user->verification_token;
 							$_SESSION['mobile'] = $user->mobile;
 
 							$curl = curl_init();
 
 							if(!empty($user)){
-								if($user->status > 0) {
-									
+								if($user->status > 0) {									
 									$cart_count = new Cart();
 									$cart_count = $cart_count->where(["user_id" => $user->id])->count();
 											
@@ -105,12 +96,6 @@
 									$response_user["cart_count"] = $cart_count;
 
                                 	$response->create(200, "Logged In Successfully.", $user->response()->to_valid_array());
-
-									//header('Location: '.$_SERVER['HTTP_ORIGIN'].'/sportify/');
-									/*header('Location: '.$_SERVER['HTTP_ORIGIN']);
-									exit;*/
-
-									
 
 								}else$response->create(201, "Please Verify Your Email", null);
 							}else $response->create(201, "Invalid Email / Password", null);
