@@ -176,12 +176,14 @@
 											<div>
 												<?php
 													$profileImage = "";
-													if((isset($userProfilePageArr['data']['image'])) && (!empty($userProfilePageArr['data']['image']))) {
-														$profileImage = $userProfilePageArr['data']['image'];
+													if($hostName == "localhost") {
+														$profileImage = "/sportifyv2/admin/uploads/users/".$_SESSION['userImage'];
+													} else {
+														$profileImage = $requestScheme.'://'.$hostName."/admin/uploads/users/".$_SESSION['userImage'];
 													}
 												?>
 												<span>
-		                                            <img class="user-profile-img rounded-circle2" src="/sportifyv2/admin/uploads/users/<?=$profileImage?>" width="31" alt="User Profile">
+		                                            <img class="user-profile-img rounded-circle2" src="<?=$profileImage?>" width="31" alt="User Profile Image">
 		                                        </span>
 		                                    </div>    
 										</div>
