@@ -90,6 +90,10 @@
                          }
                     }
 
+                    /*print"<pre>";
+                    print_r($errorArray);
+                    exit;*/
+
                     echo json_encode($errorArray);
                     die;
                 }                

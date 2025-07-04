@@ -2,7 +2,7 @@
 			include("includes/page_header.php");
 			include("././validate_login.php");
 
-			$curlUserProfile = curl_init();
+			/*$curlUserProfile = curl_init();
 
 		    $userProfileUrl = "";
 		    if($hostName == "localhost") {
@@ -38,8 +38,7 @@
 		        $userProfilePageArr = json_decode($responseUserProfile, true);
 		    }
 
-		    curl_close($curlUserProfile);
-
+		    curl_close($curlUserProfile);*/
 		?>
 		<!-- Breadcrumb -->
 		<section class="breadcrumb breadcrumb-list mb-0">
@@ -53,7 +52,6 @@
 			</div>
 		</section>
 		<!-- /Breadcrumb -->
-
 		<!-- Dashboard Menu -->
 		<div class="dashboard-section">
 			<div class="container">
@@ -83,6 +81,8 @@
 		<script src="<?=$frontendAssetUrl?>assets/js/jquery.js"></script>
 	    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.min.js"></script>
 	    <script src="<?=$frontendAssetUrl?>assets/js/jquery.validate.js"></script>
+		<script type="text/javascript" src="<?=$frontendAssetUrl?>assets/js/thickbox.js"></script>
+		<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/css/thickbox.css" media="screen" />
 	    <script>
 	        $.noConflict();
 				jQuery( document ).ready(function( $ ) {
@@ -177,13 +177,24 @@
 												<?php
 													$profileImage = "";
 													if($hostName == "localhost") {
-														$profileImage = "/sportifyv2/admin/uploads/users/".$_SESSION['userImage'];
+														if((isset($userProfilePageArr['data']['image'])) && (!empty($userProfilePageArr['data']['image']))) {
+															$profileImage = "/sportifyv2/admin/uploads/users/".$userProfilePageArr['data']['image'];
+														} else {
+															$profileImage = $frontendAssetUrl."assets/img/profiles/avatar-05.jpg";
+														}
 													} else {
-														$profileImage = $requestScheme.'://'.$hostName."/admin/uploads/users/".$_SESSION['userImage'];
+														if((isset($userProfilePageArr['data']['image'])) && (!empty($userProfilePageArr['data']['image']))) {
+															$profileImage = $requestScheme.'://'.$hostName."/admin/uploads/users/".$userProfilePageArr['data']['image'];
+														} else {
+															$profileImage = $requestScheme.'://'.$hostName."/frontend/dreamsports/assets/img/profiles/avatar-05.jpg";
+														}
 													}
 												?>
 												<span>
-		                                            <img class="user-profile-img rounded-circle2" src="<?=$profileImage?>" width="31" alt="User Profile Image">
+													<a href="<?=$profileImage?>" title="" class="thickbox">
+		                                            	<img class="user-profile-img rounded-circle2" src="<?=$profileImage?>" width="31" alt="User Profile Image">
+		                                            </a>
+		                                            <!--<a href="images/single.jpg" title="add a caption to title attribute / or leave blank" class="thickbox"><img src="images/single_t.jpg" alt="Single Image"/></a>-->
 		                                        </span>
 		                                    </div>    
 										</div>

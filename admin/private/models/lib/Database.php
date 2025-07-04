@@ -329,21 +329,22 @@ abstract class Database{
         else return $this->db_escape($var);*/
     }
 
-    public function db_connect() {
+    public function db_connect(){
         $connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
         $this->confirm_db_connect();
         return $connection;
     }
 
-    private function db_disconnect($connection) {
+    private function db_disconnect($connection){
         if(isset($connection))  $this->mysqli_close($this->db_conn);
     }
 
-    private function db_escape($string) {
+    private function db_escape($string){
+        $this->db_conn = $this->db_connect();
         return mysqli_real_escape_string($this->db_conn, $string);
     }
 
-    private  function confirm_db_connect() {
+    private  function confirm_db_connect(){
         if(mysqli_connect_errno()) {
             $msg = "Database connection failed: ";
             $msg .= mysqli_connect_error();
@@ -352,7 +353,7 @@ abstract class Database{
         }
     }
 
-    private function confirm_result_set($result_set) {
+    private function confirm_result_set($result_set){
         if (!$result_set) exit("Database query failed.");
     }
 
