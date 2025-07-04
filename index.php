@@ -108,7 +108,11 @@
         case 'my-profile':
           $pgHomeActive = 'class="active"';
           include_once('frontend/'.$templateName.'/my-profile.php');
-          break;      
+          break;
+        case 'upd-profile':
+          $pgHomeActive = 'class="active"';
+          include_once('frontend/'.$templateName.'/update-profile.php');
+          break;        
         case 'about-us':
           $pgAboutActive = 'class="active"';
           include_once('frontend/'.$templateName.'/about-us.php');

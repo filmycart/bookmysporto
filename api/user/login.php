@@ -87,8 +87,8 @@
 
 							$curl = curl_init();
 
-							if(!empty($user)){
-								if($user->status > 0) {									
+							if(!empty($user)) {
+								if($user->status > 0) {							
 									$cart_count = new Cart();
 									$cart_count = $cart_count->where(["user_id" => $user->id])->count();
 											
@@ -97,8 +97,8 @@
 
                                 	$response->create(200, "Logged In Successfully.", $user->response()->to_valid_array());
 
-								}else$response->create(201, "Please Verify Your Email", null);
-							}else $response->create(201, "Invalid Email / Password", null);
+								}else$response->create(201, "Please verify your phone umber.", null);
+							}else $response->create(201, "Phone number not registered.", null);
 							
 						//}else $response->create(201, "Charater must be over 10 character.", null);
 	                }else $response->create(201, $errors, null);

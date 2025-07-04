@@ -55,6 +55,45 @@
     <link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/css/override.css">
 </head>
 <body>
+    <?php
+        $curlUserProfile = curl_init();
+
+            $userProfileUrl = "";
+            if($hostName == "localhost") {
+                $userProfileUrl = $requestScheme.'://localhost/sportifyv2/api/user/user-profile.php';
+            } else {
+                $userProfileUrl = $requestScheme.'://bookmysporto.com/api/user/user-profile.php';
+            }
+
+            $postValArray = array(
+                                    'api_token' => '123456789',
+                                    'user_id' => $_SESSION['userName']
+                                );
+
+            curl_setopt_array($curlUserProfile, array(
+                CURLOPT_URL => $userProfileUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $postValArray,
+                CURLOPT_HTTPHEADER => array(
+                    'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+                ),
+            ));
+
+            $responseUserProfile = curl_exec($curlUserProfile);
+
+            $userProfilePageArr = array();
+            if(!empty($responseUserProfile)) {
+                $userProfilePageArr = json_decode($responseUserProfile, true);
+            }
+
+            curl_close($curlUserProfile);
+    ?>
 	<div id="global-loader" >
 		<div class="loader-img">
 			<img src="<?=$frontendAssetUrl?>assets/img/loader.png" class="img-fluid" alt="Global">
@@ -124,11 +163,11 @@
 					<?php
                         $profileImage = "";
                         if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
-                            if((isset($_SESSION['userImage'])) && (!empty($_SESSION['userImage']))) {
+                            if((isset($userProfilePageArr['data']['image'])) && (!empty($userProfilePageArr['data']['image']))) {
                                 if($hostName == "localhost") {
-                                    $profileImage = "/sportifyv2/admin/uploads/users/".$_SESSION['userImage'];
+                                    $profileImage = "/sportifyv2/admin/uploads/users/".$userProfilePageArr['data']['image'];
                                 } else {
-                                    $profileImage = $requestScheme.'://'.$hostName."/admin/uploads/users/".$_SESSION['userImage'];
+                                    $profileImage = $requestScheme.'://'.$hostName."/admin/uploads/users/".$userProfilePageArr['data']['image'];
                                 }
                             } else{
                                 $profileImage = $frontendAssetUrl."assets/img/profiles/avatar-05.jpg";
