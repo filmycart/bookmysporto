@@ -97,7 +97,7 @@
 
 .btn {
     font-size: 14px;
-    padding: 12px 20px;
+    padding: 4px 20px;
     font-weight: 500;
     border-radius: 10px;
     -webkit-transition: all 0.5s ease-in-out 0s;
@@ -529,4 +529,13 @@ h3.border-bottom {
 
 form input {
     height: 32px !important;
+}
+
+#TB_window img#TB_Image {
+    display: block;
+    margin: 0px 0px 0px 12px !important;
+    border-right: 0px solid #ccc !important;
+    border-bottom: 0px solid #ccc !important;
+    border-top: 0px solid #666 !important;
+    border-left: 0px solid #666 !important;
 }

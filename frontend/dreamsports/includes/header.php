@@ -58,6 +58,45 @@
     <link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/css/override.css">
 </head>
 <body>
+    <?php
+        $curlUserProfile = curl_init();
+
+            $userProfileUrl = "";
+            if($hostName == "localhost") {
+                $userProfileUrl = $requestScheme.'://localhost/sportifyv2/api/user/user-profile.php';
+            } else {
+                $userProfileUrl = $requestScheme.'://bookmysporto.com/api/user/user-profile.php';
+            }
+
+            $postValArray = array(
+                                    'api_token' => '123456789',
+                                    'user_id' => $_SESSION['userName']
+                                );
+
+            curl_setopt_array($curlUserProfile, array(
+                CURLOPT_URL => $userProfileUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $postValArray,
+                CURLOPT_HTTPHEADER => array(
+                    'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+                ),
+            ));
+
+            $responseUserProfile = curl_exec($curlUserProfile);
+
+            $userProfilePageArr = array();
+            if(!empty($responseUserProfile)) {
+                $userProfilePageArr = json_decode($responseUserProfile, true);
+            }
+
+            curl_close($curlUserProfile);
+    ?>
 	<div id="global-loader" >
 		<div class="loader-img">
 			<img src="<?=$frontendAssetUrl?>assets/img/loader.png" class="img-fluid" alt="Global">
@@ -496,32 +535,7 @@
                                     <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                         <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Create Account<i class="feather-arrow-right-circle ms-2"></i></button>
                                     </div>
-                                </div>                                    
-                                <!-- <div class="form-group">
-                                    <div class="login-options text-center">
-                                        <span class="text">Or continue with</span>
-                                    </div>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <a href="google-oauth.php" class="google-login-btn">
-                                        <span class="icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
-                                        </span>
-                                        Login with Google
-                                    </a>
-                                    <ul class="social-login d-flex justify-content-center align-items-center">
-                                        <li class="text-center">
-                                            <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
-                                                <img src="<?=$frontendAssetUrl?>assets/img/icons/google.svg" class="img-fluid" alt="Google">
-                                            </button>
-                                        </li>
-                                        <li class="text-center">
-                                            <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
-                                                <img src="<?=$frontendAssetUrl?>assets/img/icons/facebook.svg" class="img-fluid" alt="Facebook">
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div> -->                          
+                                </div>                          
                             </form>
                         </div>                            
                     </div>
@@ -562,26 +576,7 @@
                                 <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                     <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Login<i class="feather-arrow-right-circle ms-2"></i></button>
                                 </div>
-                            </div>                                    
-                            <!-- <div class="form-group">
-                                <div class="login-options text-center">
-                                    <span class="text">Or continue with</span>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0">
-                                <ul class="social-login d-flex justify-content-center align-items-center">
-                                    <li class="text-center">
-                                        <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
-                                            <img src="<?=$frontendAssetUrl?>assets/img/icons/google.svg" class="img-fluid" alt="Google">
-                                        </button>
-                                    </li>
-                                    <li class="text-center">
-                                        <button type="button" class="btn btn-social d-flex align-items-center justify-content-center">
-                                            <img src="<?=$frontendAssetUrl?>assets/img/icons/facebook.svg" class="img-fluid" alt="Facebook">
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>  -->                             
+                            </div>                         
                         </form>
                     </div>                            
                 </div>
