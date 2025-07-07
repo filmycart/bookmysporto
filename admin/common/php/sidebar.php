@@ -9,7 +9,7 @@
   }
 
   $current = basename($_SERVER["SCRIPT_FILENAME"]);
-  $index = $users = $setting = $admob = $site_config = $push_notifications = $products = $categories = "";
+  $index = $users = $setting = $admob = $site_config = $push_notifications = $products = $categories = $events = $event_category = $event_subcategory = "";
   $payment = $attributes = $orders = $sub_categories = "";
 
   if($current == "index.php") $index = "active";
@@ -17,8 +17,8 @@
   else if(($current == "categories.php") ||($current == "category-form.php")) $categories = "active";
   else if(($current == "sub-categories.php") ||($current == "sub-category-form.php")) $sub_categories = "active";
   else if(($current == "products.php") ||($current == "product-form.php")) $products = "active";
-  else if(($current == "contacts.php") ||($current == "contacts.php")) $events = "active";
-  else if(($current == "events.php") ||($current == "event-form.php")) $events = "active";
+  else if(($current == "contacts.php") ||($current == "contacts.php")) $contacts = "active";
+  else if(($current == "events.php") || ($current == "event_type.php") || ($current == "event-category.php") || ($current == "event-subcategory.php.php")) $events = "active";
   else if(($current == "attributes.php") ||($current == "attribute-form.php")) $attributes = "active";
   else if(($current == "orders.php") || ($current == "order-detail.php") || ($current == "generate-invoice.php")) $orders = "active";
   else if($current == "payment.php") $payment = "active";
@@ -64,41 +64,6 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
-              <p>
-                Forms
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pages/forms/general.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>General Elements</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/advanced.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Advanced Elements</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/editors.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Editors</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/validation.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Validation</p>
-                </a>
-              </li>
-            </ul>
-          </li> -->
           <li class="nav-item">
             <a href="contacts.php" class="nav-link">
               <i class="nav-icon far fa-calendar"></i>
@@ -107,25 +72,35 @@
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-            <a href="events.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
+          </li>
+          <li class="nav-item">
+            <a href="events.php" class="nav-link <?=$events?>">
+              <i class="nav-icon far fa fa-folder-open"></i>
               <p>
                 Event
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-            <!--<ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="events.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>List</p>
+                  <i class="far fa-calendar-alt nav-icon"></i>
+                  <p>Event</p>
                 </a>
-                 <a href="event-form.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Add Event</p>
+                <a href="event-type.php" class="nav-link">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Event Type</p>
+                </a>
+                <a href="event-category.php" class="nav-link">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Event Category</p>
+                </a>
+                 <a href="event-subcategory.php" class="nav-link">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Event Sub-Category</p>
                 </a>
               </li>
-            </ul>-->
+            </ul>
           </li>
           <li class="nav-item">
             <a href="venue.php" class="nav-link">
@@ -135,18 +110,6 @@
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-            <!-- <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="venue.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>List</p>
-                </a>
-                <a href="event-form.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Add Event</p>
-                </a>
-              </li>
-            </ul>-->
           </li>
           <li class="nav-item">
             <a href="bookings.php" class="nav-link">
@@ -156,14 +119,6 @@
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-            <!--<ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="bookings.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>List</p>
-                </a>
-              </li>
-            </ul>-->
           </li>          
         </ul>
       </nav>
