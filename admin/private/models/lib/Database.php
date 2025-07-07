@@ -316,6 +316,30 @@ abstract class Database{
         
         return $this->multiple_rows();
     }
+
+    public function allWithJoinOneTable($column = null, $joinColumn = null) {
+
+        $joinSql = "";
+        
+        if(!empty($this->by_distance)){
+            $this->sql = "SELECT * " . $this->by_distance ."FROM " . strtolower(get_called_class()) . $this->sql . $this->having . $this->order_by . $this->limit;
+
+        } elseif (!empty($this->by_date)){
+            $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->by_date . $this->order_by . $this->limit;
+        }else{
+            $this->order_by = " ORDER BY ". $joinColumn['join_column_child'];
+            
+            $this->joinSql = $joinSql;
+
+            if(!empty($column)){
+                $this->sql = "SELECT " . $column . " FROM " . strtolower(get_called_class()) . $this->joinSql. $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }else{
+                $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }
+        }
+        
+        return $this->multiple_rows();
+    }
 	
     private function removeLastChar($str){
         $str = trim($str);
@@ -358,6 +382,7 @@ abstract class Database{
     }
 
     private function delete_row(){
+        $this->db_conn = $this->db_connect();
         $result = mysqli_query($this->db_conn, $this->sql);
         $this->confirm_result_set($result);
         return $result;

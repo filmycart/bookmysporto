@@ -162,6 +162,24 @@
 						</li>	
 					</ul>
 				</div>
+				<?php
+					/*$a = array(9, 4, 9, 6, 7, 4);
+
+					$finArr = array_unique(array_diff_assoc($a, array_unique($a)));	
+					$finArr = array_diff($a, $finArr);				
+
+					print"<pre>";
+					print_r($finArr);
+					exit;*/
+
+					/*function get_duplicates ($array) {
+						$diff = array_unique( array_diff_assoc( $array, array_unique( $array ) ) );
+						$finarr = array_diff($array, $diff);
+						return $finarr;	
+					}
+
+					$fin = get_duplicates ($a);*/					
+				?>
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="profile-detail-group">
@@ -194,7 +212,6 @@
 													<a href="<?=$profileImage?>" title="" class="thickbox">
 		                                            	<img class="user-profile-img rounded-circle2" src="<?=$profileImage?>" width="31" alt="User Profile Image">
 		                                            </a>
-		                                            <!--<a href="images/single.jpg" title="add a caption to title attribute / or leave blank" class="thickbox"><img src="images/single_t.jpg" alt="Single Image"/></a>-->
 		                                        </span>
 		                                    </div>    
 										</div>

@@ -444,7 +444,7 @@
                   <tbody>
                     <?php 
                         if(count($all_events) > 0){
-                            foreach ($all_events as $item){
+                            foreach ($all_events as $item){ 
                     ?>
                               <tr>
                                 <!-- <td>

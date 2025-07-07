@@ -50,6 +50,15 @@
                         $eventsArray[$key]['countryName'] = $eventVal->countryName;
                         $eventsArray[$key]['stateName'] = $eventVal->stateName;
                         $eventsArray[$key]['cityName'] = $eventVal->cityName;
+
+                        $eventStatus = "In-Active";
+                        if($evenTypeVal->eventStatus == 1){
+                            $eventStatus = "Active";
+                        } elseif($evenTypeVal->eventStatus == 2){
+                            $eventStatus = "In-Active";
+                        }
+
+                        $eventsArray[$key]['eventStatus'] = $eventStatus;
                     }
                 }
 

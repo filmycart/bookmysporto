@@ -17,7 +17,7 @@
     $sort_type_array["ASC"] = "Asc";
 
     $sort_by = $sort_type = $search = "";
-    $url_current = "events.php?";
+    $url_current = "event-category.php?";
 
     if(!empty($admin)) {
         $events = new Event();
@@ -180,7 +180,7 @@
           <div class="col-sm-12">
             <ol class="breadcrumb float-sm-left">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">Events</li>
+              <li class="breadcrumb-item active">Event Category</li>
             </ol>
           </div>
         </div>
@@ -196,10 +196,10 @@
               <div class="card-header">
                 <div style="width:100%;float:left;">
                     <div style="width:30%;float:left;">
-                        <h3 class="card-title">Events</h3>
+                        <h3 class="card-title">Event Category</h3>
                     </div>  
-                    <div style="width:9%;float:right;">  
-                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEvent('create','','101','4183','35','20','37','171','174')">Add Event</a>
+                    <div style="width:15%;float:right;">  
+                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventCategory('create','','101','4183','35','20','37','171','174')">Add Event Category</a>
                     </div>
                 </div>
               </div>
@@ -213,11 +213,11 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                        <div id="add-msg-div" style="color:green;">Event Created Successfully.</div>
-                        <div id="upd-msg-div" style="color:green;">Event Updated Successfully.</div>
-                        <div id="del-msg-div" style="color:green;">Event Deleted Successfully.</div>
-                        <div id="add-uniq-msg-div" style="color:red;">Event Title Already Exist.</div>
-                        <div id="upd-uniq-msg-div" style="color:red;">Event Title Already Exist.</div>
+                        <div id="add-msg-div" style="color:green;">Event Category Created Successfully.</div>
+                        <div id="upd-msg-div" style="color:green;">Event Category Updated Successfully.</div>
+                        <div id="del-msg-div" style="color:green;">Event Category Deleted Successfully.</div>
+                        <div id="add-uniq-msg-div" style="color:red;">Event Category Title Already Exist.</div>
+                        <div id="upd-uniq-msg-div" style="color:red;">Event Category Title Already Exist.</div>
                     </div>
                   </div>
                   <!-- /.modal-content -->
@@ -284,6 +284,7 @@
                                  float:left;
                                  width:1%;
                             }
+
                             .bootstrap-select > .dropdown-toggle {
                                 height: 38px ;
                             }
@@ -312,20 +313,20 @@
                                 color:red;
                             }
                         </style>
-                        <form id="eventForm" name="eventForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/event.php">
-                            <input type="hidden" id="eventId" name="eventId" value="<?php echo (!empty($eventId)?$eventId:''); ?>" />
-                            <input type="hidden" id="eventAction" name="eventAction" value="<?php echo (!empty($pgAction)?$pgAction:''); ?>" />
+                        <form id="eventCategoryForm" name="eventCategoryForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/event.php">
+                            <input type="hidden" id="eventCategoryId" name="eventCategoryId" value="<?php echo (!empty($eventId)?$eventId:''); ?>" />
+                            <input type="hidden" id="eventCategoryAction" name="eventCategoryAction" value="<?php echo (!empty($pgAction)?$pgAction:''); ?>" />
                             <input type="hidden" id="eventCategoryHidden" name="eventCategoryHidden" value="" />
                             <input type="hidden" id="eventCountry" name="eventCountry" value="101" />
-                            <div id="eventSucResponseDiv" style="color:green;"></div>
-                            <div id="eventErrResponseDiv" style="color:green;"></div>
-                            <div class="eventFormMainDiv" id="modal-div">
+                            <div id="eventCatSucResponseDiv" style="color:green;"></div>
+                            <div id="eventCatErrResponseDiv" style="color:green;"></div>
+                            <div class="eventCatFormMainDiv" id="modal-div">
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
                                         <label>Title</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="eventTitle" name="eventTitle" class="form-control" data-target="#eventTitle" />
+                                            <input type="text" id="eventCategoryTitle" name="eventCategoryTitle" class="form-control" data-target="#eventCategoryTitle" />
                                         </div>
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
@@ -444,7 +445,7 @@
                   <tbody>
                     <?php 
                         if(count($all_events) > 0){
-                            foreach ($all_events as $item){
+                            foreach ($all_events as $item){ 
                     ?>
                               <tr>
                                 <!-- <td>
@@ -454,7 +455,7 @@
                                     <?php echo $item->id; ?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><?php echo $item->title; ?></a>
+                                    <a href="#" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventCategory('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><?php echo $item->title; ?></a>
                                 </td>
                                 <?php 
                                     $current_category = $eventDispCat = "";
@@ -514,7 +515,7 @@
                                 </td>
                                 <td style="width:100px;">
                                     <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="fa fa-credit-card" aria-hidden="true"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventCategory('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
                                     <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->id; ?>','<?php echo $item->admin_id; ?>')"><i class="ion-trash-a"></i></a>
                                     <!-- <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#venue-form-modal-msg" onclick="deleteEvent('delete','<?php echo $item->venueId; ?>')"><i class="ion-trash-a"></i></a> -->
                                 </td>
@@ -790,7 +791,7 @@
                 });
             }
 
-            function addEditEvent(eventAction, eventId, countryId, cityId, stateId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
+            function addEditEventCategory(eventAction, eventId, countryId, cityId, stateId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
                 $("#eventImagePreview").html('');
                 $("#eventSucResponseDiv").html('');
                 $("#eventErrResponseDiv").html('');                
