@@ -633,7 +633,7 @@
 
                 var formdata = new FormData(); 
     
-                formdata.append("eventAction", "deleteEventImg");
+                formdata.append("eventAction", "deleteEventCatImg");
                 formdata.append("eventFileName", eventFileName);
     
                 var respArray = new Array();
@@ -783,9 +783,7 @@
                         $(".eventId").val(respArr.id);
                         $(".eventAction").val('booking');
                         $(".eventTitle").val(respArr.title);                        
-                        $(".eventCountry").val(respArr.country_id);
-
-                       
+                        $(".eventCountry").val(respArr.country_id);                       
                     }
                 });
             }
