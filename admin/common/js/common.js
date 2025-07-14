@@ -105,6 +105,24 @@ function eventImage(eventId) {
             $("#eventImagePreview").html(html);
         }
     });
+}
+
+function eventCategoryImage(eventCategoryId) {
+    $.ajax({
+        url: "event-category-images.php",
+        cache: false,
+        type: "POST",
+        data: {eventCategoryId: eventCategoryId},
+        beforeSend: function() {
+            $('#eventCategoryFileSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#eventCategoryFileSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#eventCategoryImagePreview").html(html);
+        }
+    });
 }  
 
 function eventSubCategory(categoryId, subCategoryId) {

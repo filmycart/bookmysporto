@@ -317,6 +317,78 @@ abstract class Database{
         return $this->multiple_rows();
     }
 
+    public function allWithJoinTwoTables($column = null, $joinColumn = null) {
+
+        if(!empty($this->by_distance)){
+            $this->sql = "SELECT * " . $this->by_distance ."FROM " . strtolower(get_called_class()) . $this->sql . $this->having . $this->order_by . $this->limit;
+
+        } elseif (!empty($this->by_date)){
+            $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->by_date . $this->order_by . $this->limit;
+        }else{
+            $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_child'];
+
+            $this->order_by = " ORDER BY ". $joinColumn['join_table_name1'].".".$joinColumn['join_column_child'];
+            
+            $this->joinSql = $joinSql;
+
+            if(!empty($column)){
+                $this->sql = "SELECT " . $column . " FROM " . strtolower(get_called_class()) . $this->joinSql. $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }else{
+                $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }
+        }
+        
+        return $this->multiple_rows();
+    }
+
+    public function allWithJoinTwoTablesSingleRecord($column = null, $joinColumn = null) {
+
+        if(!empty($this->by_distance)){
+            $this->sql = "SELECT * " . $this->by_distance ."FROM " . strtolower(get_called_class()) . $this->sql . $this->having . $this->order_by . $this->limit;
+
+        } elseif (!empty($this->by_date)){
+            $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->by_date . $this->order_by . $this->limit;
+        }else{
+            $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_child'];
+
+            $this->order_by = " ORDER BY ". $joinColumn['join_table_name1'].".".$joinColumn['join_column_child'];
+            
+            $this->joinSql = $joinSql;
+
+            if(!empty($column)){
+                $this->sql = "SELECT " . $column . " FROM " . strtolower(get_called_class()) . $this->joinSql. $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }else{
+                $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }
+        }
+        
+        return $this->multiple_rows();
+    }
+
+    public function allWithJoinTwoTablesSigleRecord($column = null, $joinColumn = null) {
+
+        if(!empty($this->by_distance)){
+            $this->sql = "SELECT * " . $this->by_distance ."FROM " . strtolower(get_called_class()) . $this->sql . $this->having . $this->order_by . $this->limit;
+
+        } elseif (!empty($this->by_date)){
+            $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->by_date . $this->order_by . $this->limit;
+        }else{
+            $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_child'];
+
+            $this->order_by = " ORDER BY ". $joinColumn['join_table_name1'].".".$joinColumn['join_column_child'];
+            
+            $this->joinSql = $joinSql;
+
+            if(!empty($column)){
+                $this->sql = "SELECT " . $column . " FROM " . strtolower(get_called_class()) . $this->joinSql. $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }else{
+                $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->group_by . $this->order_by . $this->limit;
+            }
+        }
+        
+        return $this->multiple_rows();
+    }
+
     public function allWithJoinOneTable($column = null, $joinColumn = null) {
 
         $joinSql = "";
@@ -337,7 +409,7 @@ abstract class Database{
                 $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->group_by . $this->order_by . $this->limit;
             }
         }
-        
+
         return $this->multiple_rows();
     }
 	

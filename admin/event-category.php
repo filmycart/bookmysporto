@@ -20,8 +20,20 @@
 
         $sort_by = "id";
         $sort_type = "desc";
-        $all_event_category = $event_category->where(["admin_id" => $admin->id])
-                            ->orderBy($sort_by)->orderType($sort_type)->all();
+
+        $column = "";
+        $column = "category.id AS categoryId, category.parent_id AS categoryParentId, category.type_id AS categoryTypeId, category.admin_id AS categoryAdminId, category.title AS categoryTitle, category.status AS categoryStatus, category.image_name AS categoryImageName, category.image_resolution AS categoryImageResolution, category.created AS categoryCreated, ";
+        $column .= "event_type.id AS eventTypeId, event_type.name AS eventTypeName, event_type.admin_id AS eventTypeAdminId, event_type.status AS eventTypeStatus";
+        $joinColumn['join_table_name1'] = "category";
+        $joinColumn['join_table_name2'] = "event_type";
+
+        $joinColumn['join_column_name1'] = "type_id";
+        $joinColumn['join_column_name2'] = "id";
+        $joinColumn['join_column_child'] = "id";
+
+        $adminId = $joinColumn['join_table_name1']."."."admin_id";  
+        
+        $all_event_category = (array) $event_category->where([$adminId => $admin->id])->orderBy('id')->orderType('desc')->allWithJoinTwoTables($column, $joinColumn);
 
         $panel_setting = new Setting();
         $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
@@ -69,10 +81,10 @@
               <div class="card-header">
                 <div style="width:100%;float:left;">
                     <div style="width:30%;float:left;">
-                        <h3 class="card-title">Event Type</h3>
+                        <h3 class="card-title">Event Category</h3>
                     </div>  
                     <div style="width:14%;float:right;">  
-                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventCategory('create','','101','4183','35','20','37','171','174')">Add Event Category</a>
+                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventCategory('create','20','171')">Add Event Category</a>
                     </div>
                 </div>
               </div>
@@ -201,6 +213,29 @@
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
+                                        <div id="eventCategorySpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            <span class="required-field">*</span>
+                                            <div id="eventTypeDiv"></div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="eventFormRow">
+                                    <div class="eventFormCol">
+                                        <div id="eventCategoryFileSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                        <div id="eventCategoryImagePreview"></div>
+                                        <div id="eventCategoryImageError" style="color:red;"></div>
+                                        <div class="form-group" id="eventFileLabelDiv">
+                                            <label>Image</label>
+                                        </div>
+                                        <div class="form-group" id="eventFileDiv">
+                                            <input name="eventCategoryFile" id="eventCategoryFile" type="file" multiple />
+                                            <input type="hidden" name="eventCategoryFileHidden" id="eventCategoryFileHidden" />
+                                        </div>
+                                    </div>
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
+                                    <div class="eventFormCol">
                                         <label>Status</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group">
@@ -243,18 +278,40 @@
                         <div class="eventFormMainDiv" id="modal-div">
                             <div class="eventFormRow">
                                 <div class="eventFormCol">
-                                    <label>Name</label>
+                                    <label>Title</label>
                                     <div class="form-group" data-target-input="nearest">
                                         <span id="viewEventCategoryTitle" name="viewEventCategoryTitle" data-target="#viewEventCategoryTitle"></span>
                                     </div>
                                 </div>
+                                <div class="eventFormCol">
+                                    <label>Parent</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventCategoryParent" name="viewEventCategoryParent" data-target="#viewEventCategoryParent"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Type</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventCategoryType" name="viewEventCategoryType" data-target="#viewEventCategoryType"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormCol">
+                                    <label>Image</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventCategoryImage" name="viewEventCategoryImage" data-target="#viewEventCategoryImage"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
                                 <div class="eventFormCol">
                                     <label>Status</label>
                                     <div class="form-group" data-target-input="nearest">
                                         <span id="viewEventCategoryStatus" name="viewEventCategoryStatus" data-target="#viewEventCategoryStatus"></span>
                                     </div>
                                 </div>
-                            </div>  
+                            </div> 
                         </div>
                     </div>
                   </div>
@@ -268,7 +325,9 @@
                   <thead>
                     <tr>
                         <th class="width10">ID</th>
-                        <th>Name</th>
+                        <th>Title</th>
+                        <th>Parent</th>
+                        <th>Type</th>
                         <th>Status</th>
                         <th class="width20">Action</th>
                     </tr>
@@ -280,16 +339,27 @@
                     ?>
                               <tr>
                                 <td>
-                                    <?php echo $item->id; ?>
+                                    <?php echo $item->categoryId; ?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventCategory('view','<?php echo $item->id; ?>')"><?php echo $item->title; ?></a>
+                                    <a href="#" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventCategory('view','<?php echo $item->categoryId; ?>')"><?php echo $item->categoryTitle; ?></a>
+                                </td>
+                                <td>
+                                    <?php
+                                        $categoryParentName = "N/A";
+                                        if($item->categoryParentId != 0){
+                                            $categoryParentName = $item->categoryParentId;
+                                        }
+                                        echo $categoryParentName; ?>
+                                </td>
+                                <td>
+                                    <?php echo $item->eventTypeName; ?>
                                 </td>
                                 <td>
                                     <?php 
                                         $status_class = "";
                                         $status = '<span class="badge badge-secondary">In-Active</span>';
-                                        if($item->status == 1){
+                                        if($item->categoryStatus == 1){
                                             $status_class = "active";
                                             $status = '<span class="badge badge-success">Active</span>';
                                         }     
@@ -297,9 +367,9 @@
                                     <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
                                 </td>
                                 <td style="width:100px;">
-                                    <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventCategory('view','<?php echo $item->id; ?>')"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventCategory('edit','<?php echo $item->id; ?>')"><i class="ion-compose"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEventCategory('delete','<?php echo $item->id; ?>')"><i class="ion-trash-a"></i></a>
+                                    <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventCategory('view','<?php echo $item->categoryId; ?>')"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventCategory('edit','<?php echo $item->categoryId; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEventCategory('delete','<?php echo $item->categoryId; ?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
                   <?php 
@@ -310,7 +380,9 @@
                   <tfoot>
                     <tr>
                         <th class="width10">ID</th>
-                        <th>Name</th>
+                        <th>Title</th>
+                        <th>Parent</th>
+                        <th>Type</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -395,6 +467,8 @@
             $('#del-msg-div').hide();
             $('#upd-uniq-msg-div').hide();
             $('#add-uniq-msg-div').hide();
+            $('#eventCategorySpinnerDiv').hide();
+            $('#eventCategoryFileSpinnerDiv').hide();
 
             function removeA(arr, eventFileName) {
                 const myArray = arr.split(",");
@@ -403,9 +477,118 @@
                 return myArray;
             }
 
+            function delEventImage(eventFileName, respArray) {
+
+                $('#eventCategoryImagePreview').html('');
+
+                respArr = removeA(respArray, eventFileName);
+                respArray1 = "'"+respArr+"'";
+
+                var formdata = new FormData(); 
+    
+                formdata.append("eventCategoryAction", "deleteEventImg");
+                formdata.append("eventFileName", eventFileName);
+    
+                var respArray = new Array();
+                var respFileNameArray = new Array();
+                var respFileName = "";
+
+                $.ajax({
+                    url: "./private/controllers/event_category.php", 
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formdata,
+                    dataType: 'json',                         
+                    type: 'POST',
+                    success: function(php_script_response) {
+
+                        var fileCount = respArr.length;
+
+                        for (var index = 0; index < fileCount; index++) {
+                            var src = "'"+respArr[index]+"'";
+                            var src1 = respArr[index];
+                            if((src != undefined) && (src1 != undefined)) {
+                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
+                                $('#eventCategoryImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+'><i class="ion-trash-a"><i></a></div>');
+                                respFileNameArray[index] = src1;
+                            }
+                        }  
+
+                        respFileName = respFileNameArray.toString();
+
+                        $('#eventCategoryFileHidden').val(respFileName);       
+                        $('#eventCategoryImagePreview').html('');     
+                        $('#eventCategoryFile').val()    
+                    }
+                });
+            }
+
             $('#eventFileDel').click(function(e) {
                 console.log("delete file");
             });
+
+            $('#eventCategoryFile').change(function(e) {
+
+                $('#eventCategoryImagePreview').html('');
+                $('#eventCategoryImageError').html('');
+
+                var fileData = $('#eventCategoryFile').prop('files')[0];   
+                var formdata = new FormData(); 
+
+                // Read selected files
+                var totalfiles = document.getElementById('eventCategoryFile').files.length;
+                var eventCategoryTitle = $('#eventCategoryTitle').val();
+                for (var index = 0; index < totalfiles; index++) {
+                    formdata.append("files[]", document.getElementById('eventCategoryFile').files[index]);
+                }   
+
+                if (formdata) {
+                    formdata.append("eventCategoryAction", "upload");
+                    formdata.append("eventCategoryTitle", eventCategoryTitle);
+                }
+
+                var respArray = new Array();
+                var errorRespArray = new Array();
+                var respFileNameArray = new Array();
+                var respFileName = "";
+                $.ajax({
+                    url: "./private/controllers/event_category.php", 
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formdata,
+                    dataType: 'json',                         
+                    type: 'POST',
+                    success: function(php_script_response) {
+                        respArray = php_script_response['eventCategoryImage'];
+                        errorRespArray = php_script_response['eventCategoryImageInvalid'];
+                        respArray1 = "'"+php_script_response['eventCategoryImage']+"'";
+
+                        if(respArray) {
+                            var fileCount = respArray.length;
+
+                            for (var index = 0; index < fileCount; index++) {
+                                var src = "'"+respArray[index]+"'";
+                                var src1 = respArray[index];
+                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
+
+                                $('#eventCategoryImagePreview').append('<div><a href ="uploads/event_category/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+'><i class="ion-trash-a"><i></a></div>');
+                                respFileNameArray[index] = src1;
+                            }   
+
+                            respFileName = respFileNameArray.toString();
+
+                            $('#eventCategoryFileHidden').val(respFileName);
+                        } else if(errorRespArray) {
+                            $('#eventCategoryImageError').append(errorRespArray);
+                        }
+                    }
+                 });      
+            });
+
+            $('#stateSpinnerDiv').show();
+            $('#evenFileSpinnerDiv').hide();
 
             function deleteEventCategory(eventCatAction, eventCatId) {
                 window.location.href='private/controllers/event_category.php?eventCategoryAction='+eventCatAction+'&eventCategoryId='+eventCatId;
@@ -427,13 +610,24 @@
                         success: function(html) {
                             respArr = JSON.parse(html);
                             if(eventCatAction == "view") {
-                                $("#viewEventCategoryId").html(respArr.id);
-                                $("#viewEventCategoryTitle").html(respArr.title);
-                                                
+                                $("#viewEventCategoryId").html(respArr.categoryId);
+                                $("#viewEventCategoryTitle").html(respArr.categoryTitle);
+                                $("#viewEventCategoryParent").html(respArr.categoryParentId);
+                                $("#viewEventCategoryType").html(respArr.eventTypeName);
+                                var viewEventCategoryImage = "";
+                                var hostname = location.hostname;
+                                var viewEventCategoryImageLink = "";
+                                if(hostname == "localhost"){
+                                    viewEventCategoryImageLink = "<a href='http://localhost/sportifyv2/admin/uploads/event_category/"+respArr.categoryImageName+"' target='_blank'>"+respArr.categoryImageName+"</a>";
+                                } else {
+                                    viewEventCategoryImageLink = "<a href='https://bookmysporto.com/admin/uploads/event_category/"+respArr.categoryImageName+"' target='_blank'>"+respArr.categoryImageName+"</a>";
+                                }
+                                $("#viewEventCategoryImage").html(viewEventCategoryImageLink);
+                                                              
                                 var viewEventStatus = "In-Active";
-                                if(respArr.status == 1){
+                                if(respArr.categoryStatus == 1){
                                     viewEventStatus = "Active";
-                                } else if(respArr.status == 2){
+                                } else if(respArr.categoryStatus == 2){
                                     viewEventStatus = "In-Active";
                                 }
                                 $("#viewEventCategoryStatus").html(viewEventStatus);
@@ -443,7 +637,7 @@
                } 
             }
             
-            function addEditEventCategory(eventCategoryAction, eventCategoryId) {
+            function addEditEventCategory(eventCategoryAction, eventCategoryId, eventTypeId) {
                 var formData = {};
                 if(eventCategoryAction == "create") {
                     $("#eventCategoryAction").val(eventCategoryAction);
@@ -463,7 +657,9 @@
                         "eventCategoryId": eventCategoryId,
                         "eventCategoryAction": eventCategoryAction
                     };
-                }  
+                }
+
+                eventType(eventTypeId);
 
                 if(eventCategoryAction == "edit") {
                     $.ajax({
@@ -492,7 +688,9 @@
                             }                    
                         }
                     });
-                } 
+                    
+                    eventCategoryImage(eventCategoryId);
+                }
             }
 
             jQuery.noConflict();
