@@ -4,8 +4,8 @@
 
     $pgContactId = "";
     $pgContactAction = "";
-    if((isset($_GET["id"])) && (!empty($_GET["id"]))) {
-        $pgContactId = $_GET['id'];
+    if((isset($_GET["contactId"])) && (!empty($_GET["contactId"]))) {
+        $pgContactId = $_GET['contactId'];
     } elseif((isset($_POST["contactId"])) && (!empty($_POST["contactId"]))) {
         $pgContactId = $_POST['contactId'];
     } 
@@ -19,7 +19,12 @@
     $viewContact = new Contact();
     $viewContactArray = array();
 
-    if((Helper::is_get()) && (!empty($pgContactId)) && ($pgContactAction == "edit")) {
+    if((Helper::is_get()) && (!empty($pgContactId)) && ($pgContactAction == "view")) {
+        $viewContact->id = $pgContactId;
+        $viewContactArray = (array) $viewContact->where(["id" => $viewContact->id])->one();
+        echo json_encode($viewContactArray);
+        exit;
+    }elseif((Helper::is_get()) && (!empty($pgContactId)) && ($pgContactAction == "edit")) {
         $viewContact->id = $pgContactId;
         $viewContactArray = (array) $viewContact->where(["id" => $viewContact->id])->one();
         echo json_encode($viewContactArray);
@@ -31,37 +36,39 @@
     } else {
         $errors = new Errors();
         $message = new Message();
-        $contact = new Contact();
+        $updContact = new Contact();
+        $delContact = new Contact();
 
         if (Helper::is_post()) {
             if((!empty($pgContactId)) && ($pgContactAction == "update")) {
-                $viewContact = new Contact();
-                $viewContact->name = trim($_POST['contactName']);
-                $viewContact->id = $pgContactId;
-                $viewContactArray = (array) $viewContact->where(["id" => $viewContact->id])->one();
+                $viewEditContact = new Contact();
+                $viewEditContact->name = trim($_POST['contactName']);
+                $viewEditContact->id = $pgContactId;
+                //$viewEditContactArray = (array) $viewEditContact->where(["name" => $viewEditContact->name])->not(["id" => $viewEditContact->id])->one();
+                $viewEditContactArray = (array) $viewEditContact->where(["id" => $viewEditContact->id])->one();
 
-                $contact->id = $pgEventId;
-                $contact->name = trim($_POST['contactName']);
-                $contact->email = $_POST['contactEmail'];
-                $contact->mobile = $_POST['contactPhone'];
-                $contact->message = $_POST['contactMessage'];
+                $updContact->id = $pgContactId;
+                $updContact->name = trim($_POST['contactName']);
+                $updContact->email = $_POST['contactEmail'];
+                $updContact->mobile = $_POST['contactPhone'];
+                $updContact->subject = $_POST['contactSubject'];
+                $updContact->message = $_POST['contactMessage'];
+                $updContact->status = (isset($_POST['contacStatus'])) ? 1 : 1;
 
-                $errors = $contact->get_errors();
+                $errors = $updContact->get_errors();
 
-                if($errors->is_empty()) {
-                    if($contact->update()) {
+                if($errors->is_empty()){
+                    if($updContact->where(["id"=>$updContact->id])->update()){
                         Helper::redirect_to("../../contacts.php?msg=2");
                         exit;
                     }
-                }
+                }   
             }
-        }
-        elseif(Helper::is_get()) {
+        }elseif(Helper::is_get()) {
             if((!empty($pgContactId)) && ($pgContactAction == "delete")) {
-                $contact->id = $pgContactId;
-
-                if(!empty($contact->id)){
-                    if($contact->where(["id" => $contact->id])->delete()) {
+                $delContact->id = $pgContactId;
+                if(!empty($delContact->id)){
+                    if($delContact->where(["id" => $delContact->id])->delete()) {
                         $message->set_message("Successfully Deleted.");
                     }else $errors->add_error("Error Occurred While Deleting");            
                 }else $errors->add_error("Invalid Notification.");

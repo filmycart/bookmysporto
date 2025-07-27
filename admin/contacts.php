@@ -26,10 +26,8 @@
 
         $sort_by = "id";
         $sort_type = "desc";
-        //$all_events = (array) $events->orderBy('id')->orderType('desc')->all();
-        //$all_contacts = $contacts->where(["admin_id" => $admin->id])
+
         $all_contacts = $contacts->orderBy($sort_by)->orderType($sort_type)->all();
-                            //->limit($start, BACKEND_PAGINATION)->all();
 
         $all_category = $category->where(["admin_id" => $admin->id])
                             ->orderBy($sort_by)->orderType($sort_type)->all();    
@@ -149,7 +147,7 @@
         $panel_setting = new Setting();
         $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
 
-        $all_sub_categories = new Sub_Category();
+        $all_sub_categories = new Event_SubCategory();
         $all_sub_categories = $all_sub_categories->where(["admin_id" => $admin->id])->all();
         $sub_categories_assoc = [];
         foreach ($all_sub_categories as $item){
@@ -320,13 +318,22 @@
                             <div class="eventFormMainDiv" id="modal-div">
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
+                                        <label>ID</label>
+                                        <span class="required-field">*</span>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <input type="text" id="contactID" name="contactID" class="form-control" data-target="#contactID" />
+                                        </div>
+                                    </div>
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
+                                    <div class="eventFormCol">
                                         <label>Name</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group" data-target-input="nearest">
                                             <input type="text" id="contactName" name="contactName" class="form-control" data-target="#contactName" />
                                         </div>
-                                    </div>
-                                    <div class="eventFormSpacerDiv">&nbsp;</div>
+                                    </div>                                    
+                                </div>
+                                <div class="eventFormRow">
                                     <div class="eventFormCol">
                                         <label>E-Mail</label>
                                         <span class="required-field">*</span>
@@ -334,8 +341,7 @@
                                             <input type="text" id="contactEmail" name="contactEmail" class="form-control" data-target="#contactEmail" />
                                         </div>
                                     </div>
-                                </div> 
-                                <div class="eventFormRow">
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
                                         <label>Phone</label>
                                         <span class="required-field">*</span>
@@ -343,8 +349,17 @@
                                             <input type="text" id="contactPhone" name="contactPhone" class="form-control" data-target="#contactPhone" />
                                         </div>
                                     </div>
+                                </div>
+                                <div class="eventFormRow">
+                                    <div class="eventFormCol">
+                                        <label>Subject</label>
+                                        <span class="required-field">*</span>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <input type="text" id="contactSubject" name="contactSubject" class="form-control" data-target="#contactSubject" />
+                                        </div>
+                                    </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
-                                </div> 
+                                </div>
                                 <div class="eventFormRow">           
                                     <label>Message</label>
                                     <span class="required-field">*</span>
@@ -357,6 +372,74 @@
                                 <button type="submit" id="contactSubmit" name="contactSubmit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
+                    </div>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
+               <div class="modal fade" id="view-contact-modal">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title"><span id="view-modal-title-text"></span></h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="eventFormMainDiv" id="modal-div">
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>ID</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewContactId" name="viewContactId" data-target="#viewContactId"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Name</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewContactName" name="viewContactName" data-target="#viewContactName"></span>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="eventFormRow">                                
+                                <div class="eventFormCol">
+                                    <label>E-Mail</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewContactEmail" name="viewContactEmail" data-target="#viewContactEmail"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Phone</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group date" data-target-input="nearest">
+                                        <span id="viewContactPhone" name="viewContactPhone" data-target="#viewContactPhone"></span>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Subject</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewContactSubject" name="viewContactSubject" data-target="#viewContactSubject"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <label>Message</label>
+                                <span class="required-field">*</span>
+                                <div class="form-group date" data-target-input="nearest">
+                                    <span id="viewContactMessage" name="viewContactMessage" data-target="#viewContactMessage"></span>
+                                </div>
+                            </div>    
+                        </div>                        
                     </div>
                   </div>
                   <!-- /.modal-content -->
@@ -379,14 +462,14 @@
                   <tbody>
                     <?php 
                         if(count($all_contacts) > 0) {
-                            foreach ($all_contacts as $item) { 
+                            foreach ($all_contacts as $item) {
                     ?>
                               <tr>
                                 <td>
                                     <?php echo $item->id; ?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#event-form-modal" onclick="addEditContact('edit','<?php echo $item->id; ?>')"><?php echo $item->name; ?></a>
+                                    <a href="#" data-toggle="modal" data-target="#view-contact-modal" onclick="viewContact('view','<?php echo $item->id; ?>')"><?php echo $item->name; ?></a>
                                 </td>
                                 <td>
                                     <?php 
@@ -418,9 +501,9 @@
                                     <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
                                 </td>
                                 <td style="width:100px;">
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#contact-modal" onclick="addEditContact('view','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#contact-modal" onclick="addEditContact('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-contact-form-modal" onclick="deleteContact('delete','<?php echo $item->id; ?>','<?php echo $item->admin_id; ?>')"><i class="ion-trash-a"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-contact-modal" onclick="viewContact('view','<?php echo $item->id; ?>')"><i class="fa fa-eye"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#contact-modal" onclick="addEditContact('edit','<?php echo $item->id; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-contact-form-modal" onclick="deleteContact('delete','<?php echo $item->id; ?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
                   <?php 
@@ -483,7 +566,7 @@
                     "responsive": true, "lengthChange": false, "autoWidth": false,
                     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                     "order":  [[0, 'desc']],
-                    "columnDefs": [{ "orderable": false, "targets": [6,7] }]
+                    "columnDefs": [{ "orderable": true, "targets": [1,2,3,4] }]
                 }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
                 $('#example2').DataTable({
@@ -520,11 +603,10 @@
             $('#add-uniq-msg-div').hide();
 
             function deleteContact(contactAction, contactId) {
-                window.location.href='private/controllers/contact.php?contactAction='+contactAction+'&id='+contactId;
+                window.location.href='private/controllers/contact.php?contactAction='+contactAction+'&contactId='+contactId;
             }
            
             function addEditContact(contactAction, contactId) {
-
                 var formData = {};
                 if(contactAction == "edit") {
                     $("#contactAction").val(contactAction);
@@ -551,11 +633,45 @@
                             respArr = JSON.parse(html);
                             if(contactAction == "edit") {
                                 $("#contactId").val(respArr.id);
+                                $("#contactID").val(respArr.id);                                
                                 $("#contactAction").val('update');
                                 $("#contactName").val(respArr.name);
                                 $("#contactEmail").val(respArr.email);
                                 $("#contactPhone").val(respArr.mobile);
+                                $("#contactSubject").val(respArr.subject);
                                 $("#contactMessage").val(respArr.message);
+                            }                    
+                        }
+                    });
+                } 
+            }
+
+            function viewContact(contactAction, contactId) {
+                var formData = {};
+                if(contactAction == "view") {
+                    $('#view-modal-title-text').text('View Contact');
+                    formData = {
+                        "contactId": contactId,
+                        "contactAction": contactAction
+                    };
+                } 
+
+                if(contactAction == "view") {
+                    $.ajax({
+                        url: "./private/controllers/contact.php",
+                        cache: false,
+                        type: "GET",
+                        datatype:"JSON",
+                        data: formData,
+                        success: function(html) {
+                            respArr = JSON.parse(html);
+                            if(contactAction == "view") {
+                                $("#viewContactId").html(respArr.id);
+                                $("#viewContactName").html(respArr.name);
+                                $("#viewContactEmail").html(respArr.email);
+                                $("#viewContactPhone").html(respArr.mobile);
+                                $("#viewContactSubject").html(respArr.subject);
+                                $("#viewContactMessage").html(respArr.message);
                             }                    
                         }
                     });
@@ -584,10 +700,15 @@
                                 maxlength: 15,
                                 phoneIN: true
                             },
+                            contactSubject: {
+                                required: true,
+                                minlength: 10,
+                                maxlength: 100
+                            },
                             contactMessage: {
                                 required: true,
                                 minlength: 25,
-                                maxlength: 10000
+                                maxlength: 1000
                             }
                         },
                         messages: {
@@ -607,6 +728,11 @@
                                 minlength: "Phone should be minimum of 10 characters.",
                                 maxlength: "Phone should not be beyond 15 characters.",
                                 phoneIN: "Phone should be valid."
+                            },                            
+                            contactSubject: {
+                                required: "Subject should not be empty.",
+                                minlength: "Subject should be minimum of 10 characters.",
+                                maxlength: "Subject should not be beyond 100 characters."
                             },
                             contactMessage: {
                                 required: "Message should not be empty.",

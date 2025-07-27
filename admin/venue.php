@@ -149,7 +149,7 @@
             $panel_setting = new Setting();
             $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
 
-            $all_sub_categories = new Sub_Category();
+            $all_sub_categories = new Event_SubCategory();
             $all_sub_categories = $all_sub_categories->where(["admin_id" => $admin->id])->all();
             $sub_categories_assoc = [];
             foreach ($all_sub_categories as $item){

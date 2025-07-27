@@ -13,7 +13,7 @@
         if((isset($_POST["subCategoryId"])) && (!empty($_POST["subCategoryId"]))) {
             $subCategoryId = $_POST["subCategoryId"];
         }
-		$allSubCategory = (array) $subCategory->where(["category_id" => $categoryId])->orderBy($sort_by)->orderType($sort_type)->all();
+		$allSubCategory = (array) $subCategory->whereIn(["category_id" => $categoryId])->orderBy($sort_by)->orderType($sort_type)->all();
 	}
 ?>
 <select class="form-control select2 select2-danger" id="eventSubCategory" name="eventSubCategory" data-dropdown-css-class="select2-danger" style="width: 100%;" multiple>

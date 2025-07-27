@@ -125,8 +125,25 @@ function eventCategoryImage(eventCategoryId) {
     });
 }  
 
+function eventSubCategoryImage(eventCategoryId) {
+    $.ajax({
+        url: "event-subcategory-images.php",
+        cache: false,
+        type: "POST",
+        data: {eventCategoryId: eventCategoryId},
+        beforeSend: function() {
+            $('#eventSubCategoryFileSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#eventSubCategoryFileSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#eventSubCategoryImagePreview").html(html);
+        }
+    });
+}  
+
 function eventSubCategory(categoryId, subCategoryId) {
-    //var parentCategoryId = $("#eventCategory").val();
     $.ajax({
         url: "sub_category.php",
         cache: false,

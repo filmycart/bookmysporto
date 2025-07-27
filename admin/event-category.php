@@ -335,7 +335,7 @@
                   <tbody>
                     <?php 
                         if(count($all_event_category) > 0){
-                            foreach ($all_event_category as $item){ 
+                            foreach ($all_event_category as $item){
                     ?>
                               <tr>
                                 <td>
@@ -598,7 +598,7 @@
                 var formData = {};
                 formData = {eventCategoryAction:eventCatAction, eventCategoryId:eventCatId};
 
-                $('#view-modal-title-text').text('View Event Category');               
+                $('#view-modal-title-text').text('View Event Category');            
                 
                 if(eventCatAction == "view") {
                     $.ajax({

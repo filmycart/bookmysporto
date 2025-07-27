@@ -91,6 +91,8 @@
 	require_once('models/Search_Terms.php');
 	require_once('models/Slider.php');
 	require_once('models/Event.php');
+	require_once('models/Event_SubCategory.php');
+	require_once('models/EventSubCategoryCatId.php');	
 	require_once('models/Venue.php');
 	require_once('models/Countries.php');
 	require_once('models/City.php');

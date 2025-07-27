@@ -50,7 +50,6 @@ abstract class Database{
             $this->sql = " WHERE " . key($column) . " IN (" . $this->formatSql($column[key($column)]) . ")";
             $this->condition_str = key($column) . " IN (" . $this->formatSql($column[key($column)]) . ")";
         }
-
         return $this;
     }
 
@@ -470,12 +469,13 @@ abstract class Database{
 
     private function multiple_rows(){
         $result = mysqli_query($this->db_conn, $this->sql);
-        $this->confirm_result_set($result);
+        //$this->confirm_result_set($result);
         $rows = [];
         while($row = mysqli_fetch_assoc($result)){
             array_push($rows, Helper::arrayToObject($row, strtolower(get_called_class())));
         }
         mysqli_free_result($result);
+
         return $rows;
     }
 
