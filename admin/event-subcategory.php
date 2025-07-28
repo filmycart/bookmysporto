@@ -793,22 +793,6 @@
                 }
             }
         ?>
-        <script type="text/javascript">
-            $("#eventCategory").change(function() {
-                var eventTypeId = $("#eventType").val();
-                var categoryId = $("#eventCategoryHidden").val();
-                $.ajax({
-                    url: "sub_category.php",
-                    cache: false,
-                    type: "POST",
-                    data: {categoryId : categoryId},
-                    success: function(html){
-                        $("#eventSubCategoryDiv").html(html);
-                    }
-                });
-            });
-        </script>
-
 
 
 

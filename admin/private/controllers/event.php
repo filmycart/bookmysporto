@@ -26,7 +26,33 @@
     }    
 
     $viewEventArray = array();
-    if((Helper::is_get()) && (!empty($pgEventId)) && ($pgEventAction == "edit")) {
+    if((Helper::is_get()) && (!empty($pgEventId)) && ($pgEventAction == "view")) {
+        $column = "";
+        $column = "event.id AS eventId, event.title AS eventTitle, event.description AS eventDescription, event.venue AS eventVenue, event.address AS eventAddress, event.start_date AS eventStartDate, event.end_date AS eventEndDate, event.state_id AS eventState, event.city_id AS eventCityId, event.country_id AS eventCountryId, event.type_id AS eventTypeId, event.category_id AS eventCategoryId, event.category_type_id AS eventCategoryTypeId, event.sub_category_id AS eventSubCategoryId, event.image_name AS eventImageName, event.status AS eventStatus, event.admin_id AS eventAdminId, ";
+        $column .= "countries.id AS countryId, countries.shortname AS countryShortName, countries.name AS countryName, countries.phonecode AS countryPhoneCode, ";
+        $column .= "state.id AS stateId, state.name AS stateName, state.country_id AS stateCountryId, ";
+        $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId, ";
+        $column .= "venue.id AS venueId, venue.title AS venueTitle, venue.description AS venueDescription, venue.address AS venueAddress, venue.state AS venueStateId, venue.city AS venueCity, venue.country AS venueCountry, venue.is_featured AS venueIsFeatured, venue.owner AS venueOwner, venue.image AS venueImage, venue.status AS venueStatus ";
+
+        $joinColumn['join_table_name1'] = "event";
+        $joinColumn['join_table_name2'] = "countries";
+        $joinColumn['join_table_name3'] = "state";
+        $joinColumn['join_table_name4'] = "city";
+        $joinColumn['join_table_name5'] = "venue";
+
+        $joinColumn['join_column_name1'] = "country_id";
+        $joinColumn['join_column_name2'] = "state_id";
+        $joinColumn['join_column_name3'] = "city_id";
+        $joinColumn['join_column_name4'] = "venue";
+        $joinColumn['join_column_city_state_country_id'] = "id";
+
+        $idStr = $joinColumn['join_table_name1'].".".$joinColumn['join_column_city_state_country_id'];
+
+        $viewEventArray = (array) $viewEvent->where([$idStr => $pgEventId])->oneLeftJoin($column, $joinColumn);
+
+        echo json_encode($viewEventArray);
+        exit;
+    } else if((Helper::is_get()) && (!empty($pgEventId)) && ($pgEventAction == "edit")) {
         $viewEvent->id = $pgEventId;
         $viewEventArray = (array) $viewEvent->where(["id" => $viewEvent->id])->andwhere(["admin_id" => $admin->id])->one();
         echo json_encode($viewEventArray);
@@ -126,22 +152,21 @@
                     Helper::redirect_to("../../events.php?msg=4");
                 } else {
                     $event->title = trim($_POST['eventTitle']);
-                    $event->state_id = $_POST['state'];
-                    $event->city_id = $_POST['city'];
-                    $event->country_id = $_POST['eventCountry'];
-                    $event->address = trim($_POST['eventVenue']);
+                    $event->description = trim($_POST['eventDescription']);                    
+                    $event->venue = trim($_POST['venue']);
                     $event->start_date = trim($_POST['eventStartDate']);
                     $event->end_date = trim($_POST['eventEndDate']);
                     $event->status = (isset($_POST['status'])) ? 1 : 1;
                     $event->admin_id = $admin->id;
                     $event->type_id = ((isset($_POST['eventType'])) && (!empty($_POST['eventType'])))?$_POST['eventType']:'';
-                    $event->category_id = ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))?implode(",",$_POST['eventCategory']):'';
+                    $event->category_id = ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))?$_POST['eventCategoryHidden']:'';
                     $event->category_type_id = ((isset($_POST['eventCategoryType'])) && (!empty($_POST['eventCategoryType'])))?$_POST['eventCategoryType']:'';
+                    $event->sub_category_id = ((isset($_POST['eventSubCategoryHidden'])) && (!empty($_POST['eventSubCategoryHidden'])))?$_POST['eventSubCategoryHidden']:'';
                     $event->image_name = $_POST['eventFileHidden'];
 
                     $eventSubCategoryStr = "";
                    
-                    $event->sub_category_id = $_POST['eventSubCategory'];
+                    //$event->sub_category_id = $_POST['eventSubCategory'];
 
                     $errors = $event->get_errors();
 
@@ -175,18 +200,16 @@
                 } else {*/
                     $event->id = $pgEventId;
                     $event->title = trim($_POST['eventTitle']);
-                    $event->state_id = $_POST['state'];
-                    $event->city_id = $_POST['city'];
-                    $event->country_id = $_POST['eventCountry'];
-                    $event->address = trim($_POST['eventVenue']);
+                    $event->description = trim($_POST['eventDescription']);
+                    $event->venue = trim($_POST['venue']);
                     $event->start_date = trim($_POST['eventStartDate']);
                     $event->end_date = trim($_POST['eventEndDate']);
                     $event->status = (isset($_POST['status'])) ? 1 : 1;
                     $event->admin_id = $admin->id;
                     $event->type_id = ((isset($_POST['eventType'])) && (!empty($_POST['eventType'])))?$_POST['eventType']:'';
-                    $event->category_id = ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))?implode(",",$_POST['eventCategory']):'';
+                    $event->category_id = ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))?$_POST['eventCategoryHidden']:'';
                     $event->category_type_id = ((isset($_POST['eventCategoryType'])) && (!empty($_POST['eventCategoryType'])))?$_POST['eventCategoryType']:'';
-                    $event->sub_category_id = ((isset($_POST['eventSubCategory'])) && (!empty($_POST['eventSubCategory'])))?$_POST['eventSubCategory']:'';
+                    $event->sub_category_id = ((isset($_POST['eventSubCategoryHidden'])) && (!empty($_POST['eventSubCategoryHidden'])))?$_POST['eventSubCategoryHidden']:'';
                     $event->image_name = $_POST['eventFileHidden'];
 
                     //$event->validate_except(["id", "image_resolution", "sell", "group_by"]);

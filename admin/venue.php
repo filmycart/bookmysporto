@@ -326,13 +326,13 @@
                                         <div class="eventFormSpacerDiv">&nbsp;</div>
                                         <div class="eventFormCol">
                                             <div id="venueFileSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                            <div id="eventImagePreview"></div>
+                                            <div id="venueImagePreview"></div>
                                             <div class="form-group" id="eventFileLabelDiv">
                                                 <label>Image</label>
                                             </div>
                                             <div class="form-group" id="eventFileDiv">
-                                                <input name="eventFile" id="eventFile" type="file" multiple />
-                                                <input type="hidden" name="eventFileHidden" id="eventFileHidden" />
+                                                <input name="venueFile" id="venueFile" type="file" multiple />
+                                                <input type="hidden" name="venueFileHidden" id="venueFileHidden" />
                                             </div>
                                         </div>
                                     </div>
@@ -478,9 +478,24 @@
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
+                                        <label>Owner</label>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <span id="viewVenueOwner" name="viewVenueOwner"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="venueFormRow">
+                                    <div class="eventFormCol">
+                                        <label>Image</label>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <span id="viewVenueImage" name="viewVenueImage" data-target="#viewVenueImage"></span>
+                                        </div>
+                                    </div>
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
+                                    <div class="eventFormCol">
                                         <label>State</label>
                                         <div class="form-group" data-target-input="nearest">
-                                            <span id="viewVenueState" name="viewVenueState"></span>
+                                            <span id="viewVenueState" name="viewVenueState" data-target="#viewVenueState"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -766,12 +781,13 @@
                     success: function(php_script_response) {
                         respArray = php_script_response['venueImage'];
                         respArray1 = "'"+php_script_response['venueImage']+"'";
+
                         var fileCount = respArray.length;
                         for (var index = 0; index < fileCount; index++) {
                             var src = "'"+respArray[index]+"'";
                             var src1 = respArray[index];
                             var delVenueImage = 'onclick="delVenueImage('+src+','+respArray1+')"';
-                            $('#venueImagePreview').append('<div><a href ="uploads/venues/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;</div>');
+                            $('#venueImagePreview').append('<div><a href ="uploads/venues/'+src1+'" target="_blank" class="deleteVenueImage" id="'+src1+'">'+src1+'</a>&nbsp;</div>');
                             respFileNameArray[index] = src1;
                         }   
 
@@ -818,9 +834,21 @@
                             $("#viewVenueDescription").text(respArr.venueDescription);
                             $("#viewVenueAddress").text(respArr.venuAddress);
                             $("#viewVenueOwner").text(respArr.venuOwner);
-                            $("#viewVenueImage").text(respArr.venuImage);
                             $("#viewVenueState").text(respArr.stateName);
                             $("#viewVenueCity").text(respArr.cityName);
+
+                            var viewVenueImage = "";
+                            var hostname = location.hostname;
+                            var viewVenueImageLink = "";
+                            if(hostname == "localhost"){
+                                viewVenueImageLink = "<a href='http://localhost/sportifyv2/admin/uploads/venues/"+respArr.venuImage+"' target='_blank'>"+respArr.venuImage+"</a>";
+                            } else {
+                                viewVenueImageLink = "<a href='https://bookmysporto.com/admin/uploads/venues/"+respArr.venuImage+"' target='_blank'>"+respArr.venuImage+"</a>";
+                            }
+
+                            console.log("viewVenueImageLink",viewVenueImageLink);
+
+                            $("#viewVenueImage").html(viewVenueImageLink);
 
                             var venueStatus = "";
                             if(respArr.venueStatus) {
@@ -864,6 +892,10 @@
                 $("#venueCountry").val(countryId);
 
                 eventState(countryId, cityId, stateId);
+
+                if(venueAction == "edit") {
+                    venueImage(venueId);
+                }
      
                 var formData = {};
                 if(venueAction == "delete") {

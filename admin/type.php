@@ -23,6 +23,7 @@
 	}
 ?>
 <select class="form-control select2 select2-danger" id="eventType" name="eventType" data-dropdown-css-class="select2-danger" style="width: 100%;">
+    <option value="">Select Type</option>
     <?php
     	if(!empty($allType)){
     		foreach($allType as $allTypeVal) {

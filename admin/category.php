@@ -16,7 +16,7 @@
             $eventTypeId = $_POST["eventTypeId"];
         }
 
-		$allCategory = (array) $category->where(["type_id" => $eventTypeId])->andWhere(["status" => 1])->orderBy($sort_by)->orderType($sort_type)->all();
+        $allCategory = (array) $category->where(["status" => 1])->orderBy($sort_by)->orderType($sort_type)->all();
 	}
 ?>
 <select class="form-control select2 select2-danger" id="eventCategory" name="eventCategory" data-dropdown-css-class="select2-danger" style="width: 100%;" multiple>

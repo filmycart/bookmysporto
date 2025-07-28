@@ -631,7 +631,7 @@
                                     viewEventStatus = "In-Active";
                                 }
                                 $("#viewEventCategoryStatus").html(viewEventStatus);
-                            }                    
+                            }                   
                         }
                     });
                } 

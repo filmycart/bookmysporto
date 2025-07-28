@@ -108,7 +108,7 @@
                    $newfile = rand().".".$ext; 
                    //Check Extension
                    if(!in_array($ext, $valid_ext)) {
-                        $errorArray['eventImageInvalid'] = "Error: Invalid file format upload only files with format png, jpeg ,jpg.";
+                        $errorArray['venueImageInvalid'] = "Error: Invalid file format upload only files with format png, jpeg ,jpg.";
                         echo json_encode($errorArray);
                         die;
                    } elseif(in_array($ext, $valid_ext)) {
@@ -118,9 +118,9 @@
                         if(!file_exists($upload_location.$newfile)) {
                             //Upload File
                             if(move_uploaded_file($_FILES['files']['tmp_name'][$index], $upload_location.$newfile)) {
-                                $errorArray['eventImage'][] = $newfile;
+                                $errorArray['venueImage'][] = $newfile;
                             } else {
-                                $errorArray['eventImageUploadDup'] = "Error: Image already exist.";
+                                $errorArray['venueImageUploadDup'] = "Error: Image already exist.";
                             }
                         }
                    }
@@ -152,7 +152,7 @@
                     $venue->description = $_POST['venueDescription'];                    
                     $venue->address = trim($_POST['venueAddress']);
                     $venue->owner = trim($_POST['venueOwner']);
-                    $venue->image = trim($_POST['venueAddress']);
+                    $venue->image = trim($_POST['venueFileHidden']);
                     $venue->state = $_POST['state'];
                     $venue->city = $_POST['city'];
                     $venue->country = $_POST['venueCountry'];
@@ -229,6 +229,8 @@
                         $venue->title = trim($_POST['venueTitle']);
                         $venue->description = $_POST['venueDescription'];
                         $venue->address = trim($_POST['venueAddress']);
+                        $venue->owner = trim($_POST['venueOwner']);
+                        $venue->image = trim($_POST['venueFileHidden']);
                         $venue->state = $_POST['state'];
                         $venue->city = $_POST['city'];
                         $venue->country = $_POST['venueCountry'];
@@ -373,5 +375,4 @@
             //Helper::redirect_to("../../".ADMIN_FOLER_NAME."/events.php?delmsg=".$message->message);
         }
     }
-
 ?>

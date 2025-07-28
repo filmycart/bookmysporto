@@ -1,19 +1,28 @@
 <?php require_once('./private/init.php'); ?>
 <?php
-	$allCategory = array();
+	$allCategory = $subCategoryIdArr = array();
     $category = new Category();
-    $subCategory = new Sub_Category();
+    $subCategory = new Event_SubCategory();
 
     $sort_by = "title";
     $sort_type = "ASC";
     $subCategoryId = "";
 
-	if(Helper::is_post() && isset($_POST["categoryId"])) {
+    if(Helper::is_post() && isset($_POST["categoryId"])) {
         $categoryId = $_POST["categoryId"];        
         if((isset($_POST["subCategoryId"])) && (!empty($_POST["subCategoryId"]))) {
             $subCategoryId = $_POST["subCategoryId"];
         }
-		$allSubCategory = (array) $subCategory->whereIn(["category_id" => $categoryId])->orderBy($sort_by)->orderType($sort_type)->all();
+
+        if((!empty($subCategoryId))) {
+            $subCategoryIdArr = explode(",",$subCategoryId);            
+        }
+
+        /*print"<pre>";
+        print_r($subCategoryIdArr);
+        exit;*/
+
+        $allSubCategory = (array) $subCategory->where(["status" => 1])->orderBy($sort_by)->orderType($sort_type)->all();
 	}
 ?>
 <select class="form-control select2 select2-danger" id="eventSubCategory" name="eventSubCategory" data-dropdown-css-class="select2-danger" style="width: 100%;" multiple>
@@ -21,7 +30,11 @@
     	if(!empty($allSubCategory)){
     		foreach($allSubCategory as $allSubCategoryVal) {
                 $sel_sub_category = "";
-                if($allSubCategoryVal->id == $subCategoryId) {
+                /*if($allSubCategoryVal->id == $subCategoryId) {
+                    $sel_sub_category = "selected";
+                }*/
+
+                if(in_array($allSubCategoryVal->id, $subCategoryIdArr)){
                     $sel_sub_category = "selected";
                 }
     ?>	
@@ -31,3 +44,9 @@
     	}
     ?>
 </select>
+<script type="text/javascript">
+    $("#eventSubCategory").change(function() {
+        var eventSubCategorySelMultiValues = $(this).val();
+        $("#eventSubCategoryHidden").val(eventSubCategorySelMultiValues);
+    });
+</script>

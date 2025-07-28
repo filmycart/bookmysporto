@@ -321,7 +321,7 @@
                                         <label>ID</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="contactID" name="contactID" class="form-control" data-target="#contactID" />
+                                            <input type="text" disabled id="contactID" name="contactID" class="form-control" data-target="#contactID" />
                                         </div>
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>

@@ -17,6 +17,24 @@ function eventState(countryId, cityId, stateId) {
     });
 }
 
+function eventVenue(venueId) {
+    $.ajax({
+        url: "event_venue.php",
+        cache: false,
+        type: "POST",
+        data: {venueId : venueId},
+        beforeSend: function() {
+            $('#eventVenueSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#eventVenueSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#eventVenueDiv").html(html);
+        }
+    });
+}  
+
 function eventCity(cityId, stateId) {
     $.ajax({
         url: "city.php",
@@ -103,6 +121,24 @@ function eventImage(eventId) {
         },
         success: function(html){
             $("#eventImagePreview").html(html);
+        }
+    });
+}
+
+function venueImage(venueId) {
+    $.ajax({
+        url: "venue-images.php",
+        cache: false,
+        type: "POST",
+        data: {venueId: venueId},
+        beforeSend: function() {
+            $('#venueFileSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#venueFileSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#venueImagePreview").html(html);
         }
     });
 }

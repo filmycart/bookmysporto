@@ -146,7 +146,7 @@
         $panel_setting = new Setting();
         $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
 
-        $all_sub_categories = new Sub_Category();
+        $all_sub_categories = new Event_SubCategory();
         $all_sub_categories = $all_sub_categories->where(["admin_id" => $admin->id])->all();
         $sub_categories_assoc = [];
         foreach ($all_sub_categories as $item){
@@ -198,8 +198,8 @@
                     <div style="width:30%;float:left;">
                         <h3 class="card-title">Events</h3>
                     </div>  
-                    <div style="width:9%;float:right;">  
-                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEvent('create','','101','4183','35','20','37','171','174')">Add Event</a>
+                    <div style="width:9%;float:right;"> 
+                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEvent('create','','','','','','')">Add Event</a>
                     </div>
                 </div>
               </div>
@@ -316,6 +316,7 @@
                             <input type="hidden" id="eventId" name="eventId" value="<?php echo (!empty($eventId)?$eventId:''); ?>" />
                             <input type="hidden" id="eventAction" name="eventAction" value="<?php echo (!empty($pgAction)?$pgAction:''); ?>" />
                             <input type="hidden" id="eventCategoryHidden" name="eventCategoryHidden" value="" />
+                            <input type="hidden" id="eventSubCategoryHidden" name="eventSubCategoryHidden" value="" />
                             <input type="hidden" id="eventCountry" name="eventCountry" value="101" />
                             <div id="eventSucResponseDiv" style="color:green;"></div>
                             <div id="eventErrResponseDiv" style="color:green;"></div>
@@ -330,13 +331,14 @@
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
-                                        <label>Venue</label>
-                                        <span class="required-field">*</span>
-                                        <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="eventVenue" name="eventVenue" class="form-control" data-target="#eventVenue" />
+                                        <div id="eventVenueSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                        <div class="form-group">
+                                            <label>Venue</label>
+                                            <span class="required-field">*</span>
+                                            <div id="eventVenueDiv"></div>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
                                         <label>Start Date</label>
@@ -375,25 +377,6 @@
                                 </div>
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
-                                        <div id="stateSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div class="form-group">
-                                            <label>State</label>
-                                            <span class="required-field">*</span>
-                                            <div id="stateDiv"></div>
-                                        </div>
-                                    </div>
-                                    <div class="eventFormSpacerDiv">&nbsp;</div>
-                                    <div class="eventFormCol">
-                                        <div id="citySpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div class="form-group">
-                                            <label>City</label>
-                                            <span class="required-field">*</span>
-                                            <div id="cityDiv"></div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <div class="eventFormRow">
-                                    <div class="eventFormCol">
                                         <div id="categoryTypeSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
                                         <div class="form-group">
                                             <label>Sub-Category</label>
@@ -414,12 +397,104 @@
                                             <input type="hidden" name="eventFileHidden" id="eventFileHidden" />
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
+                                <div class="eventFormRow">
+                                    <label>Description</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <textarea type="text" id="eventDescription" name="eventDescription" rows="5" class="form-control" data-target="#eventDescription"></textarea> 
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer right-content-between">
                                 <button type="submit" id="eventSubmit" name="eventSubmit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
+                    </div>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
+              <div class="modal fade" id="view-event-form-modal">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title"><span id="view-event-modal-title-text"></span></h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="eventFormMainDiv" id="modal-div">
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>ID</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventId" name="viewEventId" data-target="#viewEventId"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Title</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventTitle" name="viewEventTitle" data-target="#viewEventTitle"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Description</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventDescription" name="viewEventDescription" data-target="#viewEventDescription"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Venue</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventVenue" name="viewEventVenue" data-target="#viewEventVenue"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Start Date</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventStartDate" name="viewEventStartDate" data-target="#viewEventStartDate"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>End Date</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventEndDate" name="viewEventEndDate" data-target="#viewEventEndDate"></span>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Image</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventImage" name="viewEventImage" data-target="#viewEventImage"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Status</label>
+                                    <span class="required-field">*</span>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventStatus" name="viewEventStatus"></span>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
                     </div>
                   </div>
                   <!-- /.modal-content -->
@@ -433,8 +508,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Title</th>
-                        <th>Category</th>
                         <th>Venue</th>
+                        <th>Category</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>
@@ -447,14 +522,20 @@
                             foreach ($all_events as $item){
                     ?>
                               <tr>
-                                <!-- <td>
-                                    <img class="p-15" src="<?php echo UPLOADED_FOLDER . DIRECTORY_SEPARATOR . UPLOADED_THUMB_FOLDER . DIRECTORY_SEPARATOR . $item->image_name; ?>" alt="image" />
-                                </td> -->
                                 <td>
                                     <?php echo $item->id; ?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><?php echo $item->title; ?></a>
+                                    <a href="#" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->id; ?>')"><?php echo $item->title; ?></a>
+                                </td>
+                                <td>
+                                    <?php 
+                                        $address = "";
+                                        if((isset($item->address)) && (!empty($item->address))){
+                                            $address = $item->address;
+                                        }     
+                                    ?>
+                                    <?php echo $address; ?>
                                 </td>
                                 <?php 
                                     $current_category = $eventDispCat = "";
@@ -473,15 +554,6 @@
                                 ?>
                                 <td>
                                     <?php echo $current_category; ?>
-                                </td>
-                                <td>
-                                    <?php 
-                                        $address = "";
-                                        if((isset($item->address)) && (!empty($item->address))){
-                                            $address = $item->address;
-                                        }     
-                                    ?>
-                                    <?php echo $address; ?>
                                 </td>
                                 <td>
                                     <?php 
@@ -508,15 +580,19 @@
                                         if($item->status == 1){
                                             $status_class = "active";
                                             $status = '<span class="badge badge-success">Active</span>';
-                                        }     
+                                        }   
+
+                                        /*print"<pre>";
+                                        print_r($item->venue);
+                                        exit; */ 
                                     ?>
                                     <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
                                 </td>
                                 <td style="width:100px;">
-                                    <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="fa fa-credit-card" aria-hidden="true"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->id; ?>','<?php echo $item->admin_id; ?>')"><i class="ion-trash-a"></i></a>
-                                    <!-- <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#venue-form-modal-msg" onclick="deleteEvent('delete','<?php echo $item->venueId; ?>')"><i class="ion-trash-a"></i></a> -->
+                                    <!-- <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="fa fa-credit-card" aria-hidden="true"></i></a> -->
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->id; ?>')"><i class="ion-eye"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->venue; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->id; ?>','<?php echo $item->venue; ?>','<?php echo $item->admin_id; ?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
                   <?php 
@@ -528,8 +604,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Title</th>
-                        <th>Category</th>
                         <th>Venue</th>
+                        <th>Category</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>
@@ -732,8 +808,9 @@
                  });      
             });
 
-            $('#stateSpinnerDiv').show();
-            $('#citySpinnerDiv').hide();
+            /*$('#stateSpinnerDiv').show();
+            $('#citySpinnerDiv').hide();*/            
+            $('#eventVenueSpinnerDiv').hide();
             $('#typeSpinnerDiv').hide(); 
             $('#categorySpinnerDiv').hide();
             $('#categoryTypeSpinnerDiv').hide();            
@@ -744,18 +821,18 @@
                 window.location.href='private/controllers/event.php?eventAction='+eventAction+'&eventId='+eventId;
             }
            
-            function addEventBooking(eventAction, eventId, countryId, cityId, stateId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
+            function addEventBooking(eventAction, eventId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
                 $(".eventImagePreview").html('');
                 $(".eventSucResponseDiv").html('');
                 $(".eventErrResponseDiv").html('');                
                 $(".stateDiv").html('');
                 $(".cityDiv").html('');
+                $(".eventVenueDiv").html('');
                 $(".eventTypeDiv").html('');
                 $(".eventCategoryDiv").html('');
                 $(".eventCategoryTypeDiv").html('');
-                $(".eventSubCategoryDiv").html('');
+                $("#eventSubCategoryDiv").html('');
 
-                eventState(countryId, cityId, stateId);
                 eventCategory(categoryId, eventTypeId);
                 eventType(eventTypeId);
                 eventSubCategory(categoryId, subCategoryId);
@@ -788,18 +865,16 @@
                 });
             }
 
-            function addEditEvent(eventAction, eventId, countryId, cityId, stateId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
+            function addEditEvent(eventAction, eventId, eventVenueId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
                 $("#eventImagePreview").html('');
                 $("#eventSucResponseDiv").html('');
                 $("#eventErrResponseDiv").html('');                
-                $("#stateDiv").html('');
-                $("#cityDiv").html('');
                 $("#eventTypeDiv").html('');
                 $("#eventCategoryDiv").html('');
                 $("#eventCategoryTypeDiv").html('');
                 $("#eventSubCategoryDiv").html('');
 
-                eventState(countryId, cityId, stateId);
+                eventVenue(eventVenueId);
                 eventCategory(categoryId, eventTypeId);
                 eventType(eventTypeId);
                 eventSubCategory(categoryId, subCategoryId);
@@ -846,6 +921,7 @@
                                 $("#eventId").val(respArr.id);
                                 $("#eventAction").val('update');
                                 $("#eventTitle").val(respArr.title);
+                                $("#eventDescription").val(respArr.description);
                                 $("#eventStartDate").val(respArr.start_date);
                                 $("#eventEndDate").val(respArr.end_date);
                                 $("#eventVenue").val(respArr.address);
@@ -854,6 +930,61 @@
                         }
                     });
                 } 
+            }
+
+            function viewEvent(eventAction, eventId) {
+
+                $('#view-event-modal-title-text').text('View Event');
+
+                var formData = {};
+                if(eventAction == "view") {
+                    formData = {
+                        "eventId": eventId,
+                        "eventAction": eventAction
+                    };
+                
+                    $.ajax({
+                        url: "../admin/private/controllers/event.php",
+                        cache: false,
+                        type: "GET",
+                        datatype:"JSON",
+                        data: formData,
+                        success: function(html) {
+                            respArr = JSON.parse(html);
+                            $("#viewEventId").text(respArr.eventId);
+                            $("#viewEventTitle").html(respArr.eventTitle);
+                            $("#viewEventDescription").text(respArr.eventDescription);
+                            $("#viewEventVenue").text(respArr.venueTitle);
+                            $("#viewEventStartDate").text(respArr.eventStartDate);
+                            $("#viewEventEndDate").text(respArr.eventEndDate);
+                            $("#viewVenueStatus").text(respArr.eventStatus);
+
+                            //$event->venue = trim($_POST['venue']);    
+
+                            var viewEventImage = "";
+                            var hostname = location.hostname;
+                            var viewEventImageLink = "";
+                            if(hostname == "localhost"){
+                                viewEventImageLink = "<a href='http://localhost/sportifyv2/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
+                            } else {
+                                viewEventImageLink = "<a href='https://bookmysporto.com/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
+                            }
+
+                            $("#viewEventImage").html(viewEventImageLink);
+
+                            var eventStatus = "";
+                            if(respArr.eventStatus) {
+                                if(respArr.eventStatus == 1) {
+                                    eventStatus = "Active";
+                                } else if(respArr.venueStatus == 2) {
+                                    eventStatus = "In-Active";
+                                }
+                            }
+
+                            $("#viewEventStatus").text(eventStatus);                            
+                        }
+                    });
+                }
             }
 
             jQuery.noConflict();
@@ -866,16 +997,31 @@
                                 minlength: 5,
                                 maxlength: 50
                             },
-                            eventVenue: {
+                            eventDescription: {
                                 required: true,
-                                minlength: 5,
+                                minlength: 10,
                                 maxlength: 200
+                            },
+                            eventVenue: {
+                                required: true
                             },
                             eventStartDate: {
                                 required: true
                             },
                             eventEndDate: {
                                 required: true
+                            },
+                            eventCategory: {
+                                required: true
+                            },
+                            eventSubCategory: {
+                                required: true    
+                            },
+                            eventType: {
+                                required: true    
+                            },
+                            venue: {
+                                required: true    
                             }
                         },
                         messages: {
@@ -884,17 +1030,32 @@
                                 minlength: "Event Title should be minimum of 5 characters.",
                                 maxlength: "Event Title should not be beyond 50 characters."
                             },
-                            eventVenue: {
+                            eventDescription: {
                                 required: "Event Venue should not be empty.",
-                                minlength: "Event Venue should be minimum of 5 characters.",
+                                minlength: "Event Venue should be minimum of 10 characters.",
                                 maxlength: "Event Venue should not be beyond 200 characters."
+                            },
+                            eventVenue: {
+                                required: "Event Venue should not be empty."
                             },
                             eventStartDate: {
                                 required: "Enter Start Date and Time."
                             },
                             eventEndDate: {
                                 required: "Enter End Date and Time."
-                            }                   
+                            },
+                            eventCategory: {
+                                required: "Select Category."
+                            },
+                            eventSubCategory: {
+                                required: "Select Sub Category."
+                            },
+                            eventType: {
+                                required: "Select Type."
+                            },
+                            venue: {
+                                required: "Select Venue."
+                            }                      
                         },
                         errorElement: 'span',
                         errorClass: "has-error",

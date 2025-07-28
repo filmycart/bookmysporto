@@ -70,7 +70,6 @@
 	require_once('models/Smtp_Config.php');
 	require_once('models/Favourite.php');
 	require_once('models/Review.php');
-	//require_once('models/Attribute.php');
 	require_once('models/Attribute_Value.php');
 	require_once('models/Product.php');
 	require_once('models/Cms.php');
@@ -92,7 +91,7 @@
 	require_once('models/Slider.php');
 	require_once('models/Event.php');
 	require_once('models/Event_SubCategory.php');
-	require_once('models/EventSubCategoryCatId.php');	
+	require_once('models/Event_Subcategory_Cat_Id.php');	
 	require_once('models/Venue.php');
 	require_once('models/Countries.php');
 	require_once('models/City.php');
