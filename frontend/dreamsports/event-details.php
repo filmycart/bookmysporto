@@ -1,145 +1,353 @@
 		<?php
-			include("includes/page_header.php");
-		?>
-		<!-- Breadcrumb -->
-		<div class="breadcrumb breadcrumb-list mb-0">
-			<span class="primary-right-round"></span>
-			<div class="container">
-				<h1 class="text-white">Event Details</h1>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li>Event Details</li>
-				</ul>
+			include("includes/details_page_header.php");
+
+			$curlEvent = curl_init();
+
+			$pgEventId = "";
+		    if((isset($_GET["eid"])) && (!empty($_GET["eid"]))) {
+		        $pgEventId = $_GET['eid'];
+		    }
+
+		    $eventDetailsUrl = "";
+		    if($hostName == "localhost") {
+		        $eventDetailsUrl = $requestScheme.'://localhost/sportifyv2/api/event/event_details.php';
+		    } else {
+		        $eventDetailsUrl = $requestScheme.'://bookmysporto.com/api/event/event_details.php';
+		    }
+
+		    $postValArray = array(
+		                            'api_token' => '123456789',
+		                            'id' => $pgEventId
+		                        );
+
+		    curl_setopt_array($curlEvent, array(
+		      CURLOPT_URL => $eventDetailsUrl,
+		      CURLOPT_RETURNTRANSFER => true,
+		      CURLOPT_ENCODING => '',
+		      CURLOPT_MAXREDIRS => 10,
+		      CURLOPT_TIMEOUT => 0,
+		      CURLOPT_FOLLOWLOCATION => true,
+		      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		      CURLOPT_CUSTOMREQUEST => 'POST',
+		      CURLOPT_POSTFIELDS => $postValArray,
+		      CURLOPT_HTTPHEADER => array(
+		        'Cookie: PHPSESSID=u3igrqn5stlv226gqh17mokl9s'
+		      ),
+		    ));
+
+		    $eventDetailsResponse = curl_exec($curlEvent);
+
+		    $eventDetailsResponseArr = array();
+		    if(!empty($eventDetailsResponse)){
+		        $eventDetailsResponseArr = json_decode($eventDetailsResponse, true);
+		    }
+
+		    curl_close($curlVenue);
+
+		    $eventDetailData = array();
+		    if((isset($eventDetailsResponseArr['data'])) && (!empty($eventDetailsResponseArr['data']))) {
+		    	$eventDetailData = $eventDetailsResponseArr['data'];
+		    }
+
+			$eventImage = "";
+			if((isset($eventDetailData['eventImage'])) && (!empty($eventDetailData['eventImage']))) {
+				$eventImage = $eventDetailData['eventImage'];
+			} else {
+				$eventImage = $eventNoImage;
+			}
+		?>		
+		<script type="text/javascript">
+			jQuery.noConflict();
+			jQuery( document ).ready(function( $ ) {
+				$(".eventCategoryDiv").html('');
+				$(".eventCategoryDispDiv").html('');	
+
+				eventCategory();			
+
+				//validate the register form when it is submitted
+                $.validator.addMethod(
+                    "attendeAge",
+                    function(value, element) {
+                        return !/^-?\d+$/.test(value) ? false : true;
+                    },
+                    "Age invalid"
+                );
+
+                $.validator.addMethod(
+                    "attendePhoneNumber",
+                    function(value, element) {
+                        return !/^\d{8}$|^\d{10}$/.test(value) ? false : true;
+                    },
+                    "Mobile number invalid"
+                );
+                
+                //validate signup form on keyup and submit
+                $("#formEventBook").validate({
+                    rules: {
+                        eventCategory: {
+                            required: true
+                        },
+                        attendeName: {
+                            required: true,
+                            minlength: 5
+                        },
+                        attendeAge: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 2,
+                            attendeAge: $("#attendeAge").val()
+                        },
+                        attendePhoneNumber: {
+                            required: true,
+                            minlength: 10,
+                            maxlength: 25,
+                            attendePhoneNumber: $("#attendePhoneNumber").val()
+                        }
+                    },
+                    messages: {
+                        eventCategory: {
+                            required: "Please select Category."
+                        },
+                        attendeName: {
+                            required: "Please enter your Name.",
+                            minlength: "Please enter minimum 5 character for Name."
+                        },
+                        attendeAge: {
+                            required: "Please enter your Age.",
+                            minlength: "Please enter minimum 1 character for Age.",
+                            maxlength: "Please enter minimum 2 character for Age."
+                        },
+                        attendePhoneNumber: {
+                            required: "Please enter your Phone Number.",
+                            minlength: "Please enter minimum 10 character for Phone Number.",
+                            maxlength: "Please enter minimum 25 character for Phone Number."
+                        }              
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            type: "POST",
+                            url: "./api/event/book_event.php",
+                            data: $(form).serialize(),
+                            success: function (resp) {
+                                /*if(resp.status_code == 200) {
+                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
+                                    $('#message').html(resp.message);
+                                } else if(resp.status_code == 201) {
+                                    $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
+                                    $('#err_message').html(resp.message);
+                                }
+
+                                $('#haveanaccount').hide();                                
+
+                                setTimeout(function () {
+                                    window.location.href='index.php';
+                                }, 1500);*/
+                            }
+                        });
+                        return false; // required to block normal submit since you used ajax
+                    }
+                });
+			});			
+
+			function eventBookForm() {
+				$("#register-form-modal").modal('hide');
+				$('#login-form-modal').modal('hide');
+				$('#event-book-form-modal').modal('show');
+				$('#event-book-form-modal-title-text').text('Book');
+				eventCategorySelectBox();
+			}
+
+			function eventBookFormClose() {
+				$("#event-book-form-modal").modal('hide');
+			}
+
+			function eventCategorySelectBox() {
+			    $.ajax({
+			        url: "api/category/category.php",
+			        cache: false,
+			        type: "POST",
+			        data: {},
+			        beforeSend: function() {
+			            $('#categorySpinnerDiv').show();
+			        },
+			        complete: function(){
+			            $('#categorySpinnerDiv').hide();
+			        },
+			        success: function(html){
+			            $("#eventCategoryDiv").html(html);
+			        }
+			    });
+			}
+
+			// Read a page's GET URL variables and return them as an associative array.
+			function getUrlVars() {
+			    var vars = [], hash;
+			    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			    for(var i = 0; i < hashes.length; i++) {
+			        hash = hashes[i].split('=');
+			        vars.push(hash[0]);
+			        vars[hash[0]] = hash[1];
+			    }
+			    return vars;
+			}
+
+			function eventCategory() {
+				var getQueryParameter = getUrlVars();
+				var eid = getQueryParameter['eid'];
+
+			    $.ajax({
+			        url: "api/category/event_category.php",
+			        cache: false,
+			        type: "POST",
+			        data: {eid : eid},
+			        beforeSend: function() {
+			            $('#eventCategorySpinnerDiv').show();
+			        },
+			        complete: function(){
+			            $('#eventCategorySpinnerDiv').hide();
+			        },
+			        success: function(html){
+			            $("#eventCategoryDispDiv").html(html);
+			        }			        
+			    });
+			}
+		</script>	
+		<!-- /.modal -->
+		<div class="modal fade" id="event-book-form-modal">
+		    <div class="modal-dialog modal-lg">
+		      	<div class="modal-content">
+			        <div class="modal-body">
+			        	<div class="row">
+			                <div class="col-xl-12">
+			                    <button type="button" class="close" onclick="eventBookFormClose()" data-dismiss="modal" aria-label="Close">
+			                        <span aria-hidden="true">&times;</span>
+			                    </button>   
+			                </div>    
+			            </div>
+			            <div class="tab-content" id="myTabContent">
+			                <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+			                    <form id="formEventBook" name="formEventBook" method="POST" enctype="multipart/form-data" action="./././api/event/book_event.php">
+			                        <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+	                                <div class="row">   
+			                            <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+			                            	<div id="categorySpinnerDiv"><img src="./admin/assets/images/spinner.png" class="spinner"></div>
+			                                <div id="eventCategoryDiv"></div>
+			                            </div>
+			                        </div>
+			                        <div class="spacer-div"></div>
+	                                <div class="row">   
+	                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+	                                        <input type="text" class="form-control" name="attendeName" id="attendeName" placeholder="Enter Name">
+	                                    </div>
+	                                </div>  
+	                                <div class="spacer-div"></div>
+	                                <div class="row">   
+	                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+	                                        <input type="text" class="form-control" name="attendeAge" id="attendeAge" placeholder="Enter Age">
+	                                    </div>
+	                                </div>
+	                                <div class="spacer-div"></div>
+	                                <div class="row">   
+	                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+	                                        <input type="text" class="form-control" name="attendePhoneNumber" id="attendePhoneNumber" placeholder="Enter Phone Number">
+	                                    </div>
+	                                </div>   
+	                                <div class="spacer-div"></div>
+			                        <div class="row">   
+			                            <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+			                                <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Submit<i class="feather-arrow-right-circle ms-2"></i></button>
+			                            </div>
+			                        </div>                         
+			                    </form>
+			                </div>                            
+			            </div>
+		        	</div>                     
+		    	</div>
 			</div>
 		</div>
-		<!-- /Breadcrumb -->
 		<!-- Page Content -->
 		<div class="content">
-			<section class="detail-info">
-				<div class="container">
-					<div class="row">
-						<div class="col-12 col-sm-12 offset-md-1 col-md-10 col-lg-10">
-							<div class="wrapper">
-								<div class="banner">
-									<div class="text-center">
-										<img src="assets/img/events/banner-01.jpg" class="img-fluid" alt="Banner">
-									</div>
-									<div class="white-bg info d-lg-flex justify-content-between align-items-center">
-										<div class="description">
-											<h6>Quisq commodo simply free ornare tortor. If you are going to use a passage. Quisq commodo simply free ornare tortor. If you are going</h6>
-										</div>
-										<div class="d-flex align-items-center time">
-											<i class="feather-clock d-flex justify-content-center align-items-center"></i>
-											<div class="text">
-												<h6>20 Sep, 2023</h6>
-												<span>08:00 AM</span>
-											</div>
-										</div>
-										<div class="d-flex align-items-center address">
-											<i class="feather-map-pin d-flex justify-content-center align-items-center"></i>
-											<div class="text">
-												<h6>66 Broklyn Golden Street <br> New York, USA</h6>
-											</div>
-										</div>
-									</div>
+			<div class="container">
+				<!-- Row -->
+				<div class="white-bg row move-top card_new">
+					<div class="card_new2 col-12 col-sm-12 col-md-12 col-lg-8">
+						<div class="corner-radius-10 coach-info justify-content-start align-items-start">
+							<div>
+								<h1 class="d-flex align-items-center justify-content-start mb-0">
+									<?=(!empty($eventDetailData['eventTitle'])?$eventDetailData['eventTitle']:'')?>
+								</h1>
+								<div class="clearfix"></div>
+								<div class="profile-pic">
+									<a href="javascript:void(0);"><img alt="User" class="corner-radius-10" src="<?=$eventFrontEndImageUploadPath?><?=$eventImage?>"></a>
 								</div>
-								<div class="seat-booking">
-									<div class="row">
-										<div class="col-12 col-sm-12 col-md-6 col-lg-6">
-											<h3>Battle at the Net</h3>
-											<p>Lorem ipsum dolor sit amet, con adipiscing elit tiam convallis elit id impedie. Quisq commodo simply free ornare tortor. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.</p>
-
-											<p>Lorem ipsum is simply free text used by copytyping refreshing. Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-
-											<p>There are many people variation of passages of lorem Ipsum available in the majority sed do eius tempor incididunt ut labore etq uiaolor sit amet alteration in some. Quuntur magni dolores eos qui ratione voluptatem sequi nesciunt</p>
-											<button type="button" class="btn btn-primary">Book A Seat</button>
-										</div>
-										<div class="col-12 col-sm-12 col-md-6 col-lg-6">
-											<div class="google-maps">
-											    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2967.8862835683544!2d-73.98256668525309!3d41.93829486962529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89dd0ee3286615b7%3A0x42bfa96cc2ce4381!2s132%20Kingston%20St%2C%20Kingston%2C%20NY%2012401%2C%20USA!5e0!3m2!1sen!2sin!4v1670922579281!5m2!1sen!2sin" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-											</div>
-										</div>
-									</div>
-								</div>
+							</div>
+							<div class="clearfix">&nbsp;</div>
+							<div class="card corner-radius-10 coach-info justify-content-start align-items-start">
+								<div class="font-semibold text-md"><h6>Overview: </h6></div>
+								<?=(!empty($eventDetailData['eventDescription'])?$eventDetailData['eventDescription']:'')?>
+							</div>
+							<div class="clearfix">&nbsp;</div>
+							<div class="card corner-radius-10 coach-info justify-content-start align-items-start">
+								<div class="font-semibold text-md"><h6>Categories: </h6></div>
+								<div id="eventCategorySpinnerDiv"><img src="./admin/assets/images/spinner.png" class="spinner"></div>
+				                <div id="eventCategoryDispDiv"></div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</section>
-			<section class="section event-booking">
-				<div class="container">
-					<div class="row">
-						<div class="col-12 offset-sm-12 offset-md-2 col-md-8 col-lg-8">
-							<div class="text-center mb-40">
-								<h3>Book an Event</h3>
-								<p>Hi, we are always open for cooperation and suggestions, <br> contact us in one of the ways below</p>
-							</div>
-							<form>
-								<div class="card">
-									<h3 class="border-bottom">Enter Details</h3>
-									<div class="mb-10">
-										<label for="name" class="form-label">Name</label>
-			  							<input type="text" class="form-control" id="name" placeholder="Enter Name">
-									</div>
-									<div class="mb-10">
-									  	<label for="email" class="form-label">Email</label>
-			  							<input type="email" class="form-control" id="email" placeholder="Enter Email Address">
-									</div>
-									<div class="mb-10">
-										<label for="name" class="form-label">Phone Number</label>
-			  							<input type="text" class="form-control" id="phonenumber" placeholder="Enter Phone Number">
-									</div>
-									<div class="mb-10">
-										<label for="name" class="form-label">Your Address</label>
-			  							<input type="text" class="form-control" id="address" placeholder="Enter Address">
-									</div>
-									<div>
-										<label for="comments" class="form-label">Comments</label>
-										<textarea class="form-control" id="comments" rows="3" placeholder="Enter Comments"></textarea>
-									</div>
-									<div class="d-flex align-items-center justify-content-center">
-										<a href="cage-details.html" class="btn btn-secondary btn-icon">Pay Now<i class="feather-arrow-right-circle ms-1"></i></a>
-									</div>
-								</div>
-							</form>
+					<aside class="col-12 col-sm-12 col-md-12 col-lg-4 theiaStickySidebar">
+						<?php
+                            if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
+                        ?>
+                                <div class="clearfix">&nbsp;</div>
+								<button type="button" class="btn btn-success" onclick="eventBookForm()">Book Ticket</button>
+                        <?php        
+                            } 
+                        ?>
+						<div class="clearfix">&nbsp;</div>
+						<div class="card book-coach">
+							<h4 class="border-bottom">Date & Time</h4>
+							<h6>Starts At</h6>
+							<p class="form-label"><?=(!empty($eventDetailData['eventStartDate'])?$eventDetailData['eventStartDate']:'')?></p>
+							<h6>Ends At</h6>
+							<p class="form-label"><?=(!empty($eventDetailData['eventEndDate'])?$eventDetailData['eventEndDate']:'')?></p>
 						</div>
-					</div>
+						<div class="clearfix">&nbsp;</div>
+						<div class="card">
+							<?php
+								$venueLat = "";
+								$venueLon = "";
+								if((isset($eventDetailData['venueLat'])) && (!empty($eventDetailData['venueLat']))){
+									$venueLat = $eventDetailData['venueLat'];
+								}
+
+								if((isset($eventDetailData['venueLon'])) && (!empty($eventDetailData['venueLon']))){
+									$venueLon = $eventDetailData['venueLon']; 
+								}
+							?>							
+							<h4 class="border-bottom">Location</h4>
+							<h6 class="form-label"><?=(!empty($eventDetailData['venueTitle'])?$eventDetailData['venueTitle']:'')?></h6>
+							<span class="form-label"><?=(!empty($eventDetailData['venueAddress'])?$eventDetailData['venueAddress']:'')?></span>
+							<div class="spacer-div"></div>
+							<div id="googleMap" style="width:100%;height:400px;"></div>
+							<script>
+								function myMap() {
+									var mapProp = {
+										center:new google.maps.LatLng(<?=$venueLat?>,<?=$venueLon?>),
+										zoom:15,
+									};
+									var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+								}
+							</script>
+							<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmssLDIr2k4I89ZsR3CjZDe0rQouWxFIs&callback=myMap"></script>
+						</div>						
+						<div class="clearfix">&nbsp;</div>
+					</aside>
 				</div>
-			</section>
-			<section class="section">
-				<div class="container">
-					<h3 class="mb-40 text-center">Events Sponsor</h3>
-					<!-- Testimonials Slide -->
-					<div class="brand-slider-group" >
-			        	<div class="owl-carousel testimonial-brand-slider owl-theme">
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-01.svg" alt="Icon">
-							</div>
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-04.svg" alt="Icon">
-							</div>
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-03.svg" alt="Icon">
-							</div>
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-04.svg" alt="Icon">
-							</div>
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-05.svg" alt="Icon">
-							</div>
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-03.svg" alt="Icon">
-							</div>
-							<div class="brand-logos">
-								<img  src="assets/img/testimonial-icon-04.svg" alt="Icon">
-							</div>
-						</div>
-					</div>	
-					<!-- /Testimonials Slide -->
-				</div>
-			</section>
+				<!-- /Row -->
+			</div>
+			<!-- /container -->			
 		</div>
 		<!-- /Page Content -->
 		<?php
-			include("includes/page_footer.php");
+			include("includes/details_page_footer.php");
 		?>

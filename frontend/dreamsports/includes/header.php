@@ -13,12 +13,12 @@
 	<meta name="author" content="<?=($siteAuthor)?$siteAuthor:''?>">
 
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@sportify">
+	<meta name="twitter:site" content="@bookmysporto">
 	<meta name="twitter:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta name="twitter:image" content="<?=$frontendAssetUrl?>assets/img/meta-image.jpg">
 	<meta name="twitter:image:alt" content="<?=($siteTitle)?$siteTitle:''?>">
 
-	<meta property="og:url" content="https://dev.sportify.filmycart.in">
+	<meta property="og:url" content="https://www.bookmysporto.com">
 	<meta property="og:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta property="og:description" content="<?=($siteDescription)?$siteDescription:''?>">
 	<meta property="og:image" content="<?=$frontendAssetUrl?>/assets/img/meta-image.jpg">
@@ -133,8 +133,8 @@
 								<a href="#">Book <i class="fas fa-chevron-down"></i></a>
 								<ul class="submenu">
 									<li><a href="index.php?pg-nm=events">Event</a></li>
-									<li><a href="index.php?pg-nm=venues">Court</a></li>
-									<li><a href="index.php?pg-nm=coaches">Coach</a></li>
+									<!-- <li><a href="index.php?pg-nm=venues">Court</a></li>
+									<li><a href="index.php?pg-nm=coaches">Coach</a></li> -->
 								</ul>
 							</li>		
 							<li <?=$pgAboutActive?>><a href="index.php?pg-nm=about-us">About Us</a></li>

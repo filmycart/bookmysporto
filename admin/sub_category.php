@@ -18,10 +18,6 @@
             $subCategoryIdArr = explode(",",$subCategoryId);            
         }
 
-        /*print"<pre>";
-        print_r($subCategoryIdArr);
-        exit;*/
-
         $allSubCategory = (array) $subCategory->where(["status" => 1])->orderBy($sort_by)->orderType($sort_type)->all();
 	}
 ?>
@@ -30,10 +26,6 @@
     	if(!empty($allSubCategory)){
     		foreach($allSubCategory as $allSubCategoryVal) {
                 $sel_sub_category = "";
-                /*if($allSubCategoryVal->id == $subCategoryId) {
-                    $sel_sub_category = "selected";
-                }*/
-
                 if(in_array($allSubCategoryVal->id, $subCategoryIdArr)){
                     $sel_sub_category = "selected";
                 }

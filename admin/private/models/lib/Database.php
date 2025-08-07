@@ -292,8 +292,25 @@ abstract class Database{
 		
         return $this->multiple_rows();
     }
-	
-    public function allWithJoin($column = null, $joinColumn = null) {
+
+     public function allWithJoin($columns = null, $joinColumn = null){
+        $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_city_state_country_id'];
+        $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name3']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name2']." = ".$joinColumn['join_table_name3'].".".$joinColumn['join_column_city_state_country_id'];
+        $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name4']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name3']." = ".$joinColumn['join_table_name4'].".".$joinColumn['join_column_city_state_country_id'];
+
+        if((isset($joinColumn['join_table_name5'])) && (!empty($joinColumn['join_table_name5'])) && (isset($joinColumn['join_column_name4'])) && (!empty($joinColumn['join_column_name4'])) ){
+            $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name5']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name4']." = ".$joinColumn['join_table_name5'].".".$joinColumn['join_column_city_state_country_id'];
+        }
+        
+        $this->joinSql = $joinSql;
+
+        if(!empty($columns)) $this->sql = "SELECT " . $columns . " FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->extended_where . $this->order_by . $this->limit;
+        else $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->extended_where . $this->order_by . $this->limit;
+
+        return $this->multiple_rows();
+    }
+
+    public function allWithJoinSingle($column = null, $joinColumn = null) {
 
         if(!empty($this->by_distance)){
             $this->sql = "SELECT * " . $this->by_distance ."FROM " . strtolower(get_called_class()) . $this->sql . $this->having . $this->order_by . $this->limit;
@@ -304,6 +321,10 @@ abstract class Database{
             $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_child'];
             $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name3']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name2']." = ".$joinColumn['join_table_name3'].".".$joinColumn['join_column_child'];
             $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name4']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name3']." = ".$joinColumn['join_table_name4'].".".$joinColumn['join_column_child'];
+
+            if((isset($joinColumn['join_table_name5'])) && (!empty($joinColumn['join_table_name5']))){
+                $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name5']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name4']." = ".$joinColumn['join_table_name5'].".".$joinColumn['join_column_child'];
+            }
 
             $this->order_by = " ORDER BY ". $joinColumn['join_table_name1'].".".$joinColumn['join_column_child'];
             
@@ -316,7 +337,7 @@ abstract class Database{
             }
         }
         
-        return $this->multiple_rows();
+        return $this->single_row();
     }
 
     public function allWithJoinTwoTables($column = null, $joinColumn = null) {
@@ -364,7 +385,7 @@ abstract class Database{
             }
         }
         
-        return $this->multiple_rows();
+        return $this->single_row();
     }
 
     public function allWithJoinTwoTablesSigleRecord($column = null, $joinColumn = null) {

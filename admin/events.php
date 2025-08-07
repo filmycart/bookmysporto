@@ -23,12 +23,28 @@
         $events = new Event();
         $category = new Category();
 
-        $sort_by = "id";
-        $sort_type = "desc";
-        $all_events = $events->where(["admin_id" => $admin->id])
-                            ->orderBy($sort_by)->orderType($sort_type)->all();
+        $column = "";
+        $column = "event.id AS eventId, event.title AS eventTitle, event.description AS eventDescription, event.venue AS eventVenue, event.address AS eventAddress, event.start_date AS eventStartDate, event.end_date AS eventEndDate, event.state_id AS eventState, event.city_id AS eventCityId, event.country_id AS eventCountryId, event.type_id AS eventTypeId, event.category_id AS eventCategoryId, event.category_type_id AS eventCategoryTypeId, event.sub_category_id AS eventSubCategoryId, event.image_name AS eventImageName, event.status AS eventStatus, event.admin_id AS eventAdminId, ";
+        $column .= "countries.id AS countryId, countries.shortname AS countryShortName, countries.name AS countryName, countries.phonecode AS countryPhoneCode, ";
+        $column .= "state.id AS stateId, state.name AS stateName, state.country_id AS stateCountryId, ";
+        $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId, ";
+        $column .= "venue.id AS venueId, venue.title AS venueTitle, venue.description AS venueDescription, venue.address AS venueAddress, venue.state AS venueStateId, venue.city AS venueCity, venue.country AS venueCountry, venue.is_featured AS venueIsFeatured, venue.owner AS venueOwner, venue.image AS venueImage, venue.status AS venueStatus ";
 
-        $all_category = $category->where(["admin_id" => $admin->id])
+        $joinColumn['join_table_name1'] = "event";
+        $joinColumn['join_table_name2'] = "countries";
+        $joinColumn['join_table_name3'] = "state";
+        $joinColumn['join_table_name4'] = "city";
+        $joinColumn['join_table_name5'] = "venue";
+
+        $joinColumn['join_column_name1'] = "country_id";
+        $joinColumn['join_column_name2'] = "state_id";
+        $joinColumn['join_column_name3'] = "city_id";
+        $joinColumn['join_column_name4'] = "venue";
+        $joinColumn['join_column_city_state_country_id'] = "id";
+
+        $all_events = (array) $events->where(["event.admin_id" => 1])->allWithJoin($column, $joinColumn);
+
+        $all_category = (array) $category->where(["admin_id" => $admin->id])
                             ->orderBy($sort_by)->orderType($sort_type)->all();    
 
         $eventCategory = array();
@@ -162,7 +178,6 @@
     }
 ?>
 <link rel="stylesheet" href="./plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-
 <?php require("common/php/php-head.php"); ?>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -400,10 +415,8 @@
                                 </div>
                                 <div class="eventFormRow">
                                     <label>Description</label>
-                                    <span class="required-field">*</span>
-                                    <div class="form-group" data-target-input="nearest">
-                                        <textarea type="text" id="eventDescription" name="eventDescription" rows="5" class="form-control" data-target="#eventDescription"></textarea> 
-                                    </div>
+                                    <div id="eventDescSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                    <div id="eventDescDiv"></div>
                                 </div>
                             </div>
                             <div class="modal-footer right-content-between">
@@ -523,28 +536,29 @@
                     ?>
                               <tr>
                                 <td>
-                                    <?php echo $item->id; ?>
+                                    <?php echo $item->eventId; ?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->id; ?>')"><?php echo $item->title; ?></a>
+                                    <a href="#" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->eventId; ?>')"><?php echo $item->eventTitle; ?></a>
                                 </td>
                                 <td>
-                                    <?php 
-                                        $address = "";
-                                        if((isset($item->address)) && (!empty($item->address))){
-                                            $address = $item->address;
+                                    <?php
+                                        $venueTitle = "";
+                                        if((isset($item->venueTitle)) && (!empty($item->venueTitle))){
+                                            $venueTitle = $item->venueTitle;
                                         }     
                                     ?>
-                                    <?php echo $address; ?>
+                                    <?php echo $venueTitle; ?>
                                 </td>
                                 <?php 
                                     $current_category = $eventDispCat = "";
-                                    $eventCategoryIdArray = explode(",",$item->category_id);
+                                    $eventCategoryIdArray = explode(",",$item->eventCategoryId);
+
                                     if(!empty($eventCategoryIdArray)) {
                                         foreach($eventCategoryIdArray as $eventCategoryIdVal) {
                                             if((isset($eventCategory[$eventCategoryIdVal]->title)) && (!empty($eventCategory[$eventCategoryIdVal]->title))) {
                                                 $eventDispCat = $eventCategory[$eventCategoryIdVal]->title; 
-                                                $cat_param = $url_current . "category_id=" . $eventCategoryIdVal;
+                                                $cat_param = "event-category.php";
                                                 $current_category .= "<div style='border:0px solid red;float:left;width:100%;'><div style='border:0px solid red;float:left;width:50%;'><a href='" . $cat_param . "'>" . $eventDispCat . "</a></div></div>";
                                             }
                                         }
@@ -558,8 +572,8 @@
                                 <td>
                                     <?php 
                                         $startDate = "";
-                                        if((isset($item->start_date)) && (!empty($item->start_date))){
-                                            $startDate = date("d/m/Y h:i:s A",strtotime($item->start_date));
+                                        if((isset($item->eventStartDate)) && (!empty($item->eventStartDate))){
+                                            $startDate = date("d/m/Y h:i:s A",strtotime($item->eventStartDate));
                                         }     
                                     ?>
                                     <?php echo $startDate; ?>
@@ -567,8 +581,8 @@
                                 <td>
                                     <?php 
                                         $endDate = "";
-                                        if((isset($item->end_date)) && (!empty($item->end_date))){
-                                            $endDate = date("d/m/Y h:i:s A",strtotime($item->end_date));
+                                        if((isset($item->eventEndDate)) && (!empty($item->eventEndDate))){
+                                            $endDate = date("d/m/Y h:i:s A",strtotime($item->eventEndDate));
                                         }     
                                     ?>
                                     <?php echo $endDate; ?>
@@ -577,22 +591,18 @@
                                     <?php 
                                         $status_class = "";
                                         $status = '<span class="badge badge-secondary">In-Active</span>';
-                                        if($item->status == 1){
+                                        if($item->eventStatus == 1){
                                             $status_class = "active";
                                             $status = '<span class="badge badge-success">Active</span>';
-                                        }   
-
-                                        /*print"<pre>";
-                                        print_r($item->venue);
-                                        exit; */ 
+                                        }
                                     ?>
                                     <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
                                 </td>
                                 <td style="width:100px;">
                                     <!-- <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="fa fa-credit-card" aria-hidden="true"></i></a> -->
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->id; ?>')"><i class="ion-eye"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->venue; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->id; ?>','<?php echo $item->venue; ?>','<?php echo $item->admin_id; ?>')"><i class="ion-trash-a"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->eventId; ?>')"><i class="ion-eye"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->eventId; ?>','<?php echo $item->eventVenue; ?>','<?php echo $item->eventCategoryId; ?>','<?php echo $item->eventSubCategoryId; ?>','<?php echo $item->eventTypeId; ?>','<?php echo $item->eventCategoryTypeId; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->eventId; ?>','<?php echo $item->eventVenue; ?>','<?php echo $item->eventAdminId; ?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
                   <?php 
@@ -648,10 +658,23 @@
         <!-- AdminLTE for demo purposes -->
         <script src="../admin/dist/js/demo.js"></script>
         <!-- Page specific script -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../admin/dist/css/richtext.min.css">
+        <script src="../admin/dist/js/jquery.richtext.js"></script> -->
         <script>
             jQuery.noConflict();
             (function( $ ) {
               $(function() {
+                /*$('.content').richText({
+                    useTabForNext: true,
+                    maxlength: 1000,
+                    maxlengthIncludeHTML: true
+                });*/
+
+                /*$('.content2').richText({
+                    useTabForNext: true
+                });*/
+
                 // More code using $ as alias to jQuery
                 $("#eventsList").DataTable({
                     "responsive": true, "lengthChange": false, "autoWidth": false,
@@ -692,6 +715,7 @@
             $('#del-msg-div').hide();
             $('#upd-uniq-msg-div').hide();
             $('#add-uniq-msg-div').hide();
+            $(".jqte_editor").html('');
 
             function removeA(arr, eventFileName) {
                 const myArray = arr.split(",");
@@ -807,9 +831,7 @@
                     }
                  });      
             });
-
-            /*$('#stateSpinnerDiv').show();
-            $('#citySpinnerDiv').hide();*/            
+      
             $('#eventVenueSpinnerDiv').hide();
             $('#typeSpinnerDiv').hide(); 
             $('#categorySpinnerDiv').hide();
@@ -871,8 +893,12 @@
                 $("#eventErrResponseDiv").html('');                
                 $("#eventTypeDiv").html('');
                 $("#eventCategoryDiv").html('');
+                $("#eventDescDiv").html('');
                 $("#eventCategoryTypeDiv").html('');
                 $("#eventSubCategoryDiv").html('');
+                $(".jqte_editor").html('');
+
+                eventDescription(eventId);
 
                 eventVenue(eventVenueId);
                 eventCategory(categoryId, eventTypeId);
@@ -884,16 +910,18 @@
                     eventImage(eventId);
                 }
 
+                $("#eventId").val('');
+                $("#eventTitle").val('');
+                $("#eventStartDate").val('');
+                $("#eventEndDate").val('');
+                $("#eventVenue").val('');
+                $("#eventDescription").val('');
+
                 var formData = {};
                 if(eventAction == "create") {
                     $("#eventAction").val(eventAction);
                     $('#modal-title-text').text('Add Event');
-                    $("#eventId").val('');
                     $("#eventAction").val('add');
-                    $("#eventTitle").val('');
-                    $("#eventStartDate").val('');
-                    $("#eventEndDate").val('');
-                    $("#eventVenue").val('');
                 } else if(eventAction == "edit") {
                     $("#eventAction").val(eventAction);
                     $('#modal-title-text').text('Update Event');
@@ -922,6 +950,7 @@
                                 $("#eventAction").val('update');
                                 $("#eventTitle").val(respArr.title);
                                 $("#eventDescription").val(respArr.description);
+                                $(".jqte_editor").html(respArr.description);
                                 $("#eventStartDate").val(respArr.start_date);
                                 $("#eventEndDate").val(respArr.end_date);
                                 $("#eventVenue").val(respArr.address);
@@ -952,14 +981,12 @@
                         success: function(html) {
                             respArr = JSON.parse(html);
                             $("#viewEventId").text(respArr.eventId);
-                            $("#viewEventTitle").html(respArr.eventTitle);
-                            $("#viewEventDescription").text(respArr.eventDescription);
+                            $("#viewEventTitle").text(respArr.eventTitle);
+                            $("#viewEventDescription").html(respArr.eventDescription);
                             $("#viewEventVenue").text(respArr.venueTitle);
                             $("#viewEventStartDate").text(respArr.eventStartDate);
                             $("#viewEventEndDate").text(respArr.eventEndDate);
                             $("#viewVenueStatus").text(respArr.eventStatus);
-
-                            //$event->venue = trim($_POST['venue']);    
 
                             var viewEventImage = "";
                             var hostname = location.hostname;
@@ -997,11 +1024,11 @@
                                 minlength: 5,
                                 maxlength: 50
                             },
-                            eventDescription: {
+                            /*eventDescription: {
                                 required: true,
                                 minlength: 10,
-                                maxlength: 200
-                            },
+                                maxlength: 1000
+                            },*/
                             eventVenue: {
                                 required: true
                             },
@@ -1030,11 +1057,11 @@
                                 minlength: "Event Title should be minimum of 5 characters.",
                                 maxlength: "Event Title should not be beyond 50 characters."
                             },
-                            eventDescription: {
+                            /*eventDescription: {
                                 required: "Event Venue should not be empty.",
                                 minlength: "Event Venue should be minimum of 10 characters.",
-                                maxlength: "Event Venue should not be beyond 200 characters."
-                            },
+                                maxlength: "Event Venue should not be beyond 1000 characters."
+                            },*/
                             eventVenue: {
                                 required: "Event Venue should not be empty."
                             },

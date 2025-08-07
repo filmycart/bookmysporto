@@ -3,7 +3,7 @@
 	if(!empty($admin->id)) {
 	    $s_config = $s_config->where(["admin_id" => $admin->id])->one();
 	}else{
-	    $s_config->title = "Sportify";
+	    $s_config->title = "Bookmy Sporto";
 	    $s_config->tag_line = "A Simple Website";
 	    $s_config->favicon_image_name = "";
 	}

@@ -54,6 +54,7 @@ function eventCity(cityId, stateId) {
 }   
 
 function eventType(eventTypeId) {
+    console.log("eventTypeId",eventTypeId);
     $.ajax({
         url: "type.php",
         cache: false,
@@ -103,6 +104,24 @@ function eventCategory(categoryId, eventTypeId) {
         },
         success: function(html){
             $("#eventCategoryDiv").html(html);
+        }
+    });
+}
+
+function eventDescription(eventId) {
+    $.ajax({
+        url: "event-description.php",
+        cache: false,
+        type: "POST",
+        data: {eventId : eventId},
+        beforeSend: function() {
+            $('#eventDescSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#eventDescSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#eventDescDiv").html(html);
         }
     });
 }

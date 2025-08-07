@@ -14,27 +14,26 @@
 
             if(!empty($setting)) {
                 $events = new Event();
+                
+                $sort_by = "id";
+                $sort_type = "desc";        
 
                 $column = "";
-                $column = "event.id AS eventId, event.title AS eventTitle, event.description AS eventDescription, event.venue AS eventVenue, event.address AS eventAddress, event.start_date AS eventStartDate, event.end_date AS eventEndDate, event.state_id AS eventState, event.city_id AS eventCityId, event.country_id AS eventCountryId, event.type_id AS eventTypeId, event.category_id AS eventCategoryId, event.category_type_id AS eventCategoryTypeId, event.sub_category_id AS eventSubCategoryId, event.image_name AS eventImageName, event.status AS eventStatus, event.admin_id AS eventAdminId, ";
+                $column = "event.id AS eventId, event.title AS eventTitle, event.venue AS eventVenue, event.address AS eventAddress, event.start_date AS eventStartDate, event.end_date AS eventEndDate, event.image_name AS eventImage, event.status AS eventStatus, event.state_id AS eventState, event.city_id AS eventCity, event.country_id AS eventCountry, event.admin_id AS eventAdminId, ";
                 $column .= "countries.id AS countryId, countries.shortname AS countryShortName, countries.name AS countryName, countries.phonecode AS countryPhoneCode, ";
                 $column .= "state.id AS stateId, state.name AS stateName, state.country_id AS stateCountryId, ";
-                $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId, ";
-                $column .= "venue.id AS venueId, venue.title AS venueTitle, venue.description AS venueDescription, venue.address AS venueAddress, venue.state AS venueStateId, venue.city AS venueCity, venue.country AS venueCountry, venue.is_featured AS venueIsFeatured, venue.owner AS venueOwner, venue.image AS venueImage, venue.status AS venueStatus ";
+                $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId ";
 
                 $joinColumn['join_table_name1'] = "event";
                 $joinColumn['join_table_name2'] = "countries";
                 $joinColumn['join_table_name3'] = "state";
                 $joinColumn['join_table_name4'] = "city";
-                $joinColumn['join_table_name5'] = "venue";
-
                 $joinColumn['join_column_name1'] = "country_id";
                 $joinColumn['join_column_name2'] = "state_id";
                 $joinColumn['join_column_name3'] = "city_id";
-                $joinColumn['join_column_name4'] = "venue";
-                $joinColumn['join_column_city_state_country_id'] = "id";
+                $joinColumn['join_column_child'] = "id";
 
-                $all_events = (array) $events->where(["event.admin_id" => 1])->allWithJoin($column, $joinColumn);
+                $all_events = (array) $events->where(["admin_id" => 1])->orderBy($sort_by)->orderType($sort_type)->allWithJoin($column, $joinColumn);
             
                 $eventsArray = array();
                 if(!empty($all_events)) {
@@ -46,7 +45,7 @@
                         $eventsArray[$key]['eventAddress'] = $eventVal->eventAddress;
                         $eventsArray[$key]['eventStartDate'] = $eventVal->eventStartDate;
                         $eventsArray[$key]['eventEndDate'] = $eventVal->eventEndDate;
-                        $eventsArray[$key]['eventImage'] = $eventVal->eventImageName;
+                        $eventsArray[$key]['eventImage'] = $eventVal->eventImage;
                         $eventsArray[$key]['eventStatus'] = $eventVal->eventStatus;
                         $eventsArray[$key]['countryName'] = $eventVal->countryName;
                         $eventsArray[$key]['stateName'] = $eventVal->stateName;

@@ -10,16 +10,13 @@
 	if(Helper::is_post()) {
         if((isset($_POST["eventTypeId"])) && (!empty($_POST["eventTypeId"]))) {
             $eventTypeId = $_POST["eventTypeId"];
-        } 
+        }
 
-        /*if((isset($_POST["eventTypeId"])) && (!empty($_POST["eventTypeId"]))) {
-            $eventTypeId = explode("','", $_POST["eventTypeId"]);
-            $allType = (array) $eventType->where(["type_id" => $eventTypeId])->orderBy($sort_by)->orderType($sort_type)->all();
+        if((isset($eventTypeId)) && (!empty($eventTypeId))) {
+            $allType = (array) $eventType->where(["id" => $eventTypeId])->orderBy($sort_by)->orderType($sort_type)->all();
         } else{
             $allType = (array) $eventType->where(["status" => 1])->orderBy($sort_by)->orderType($sort_type)->all();
-        }*/
-
-        $allType = (array) $eventType->where(["status" => 1])->orderBy($sort_by)->orderType($sort_type)->all();
+        }
 	}
 ?>
 <select class="form-control select2 select2-danger" id="eventType" name="eventType" data-dropdown-css-class="select2-danger" style="width: 100%;">

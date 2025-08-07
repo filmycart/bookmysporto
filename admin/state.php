@@ -15,6 +15,7 @@
 	}
 ?>
 <select class="form-control select2 select2-danger" id="state" name="state" data-dropdown-css-class="select2-danger" style="width: 100%;">
+    <option value="">Select State</option>
     <?php
     	if(!empty($allState)) {
     		foreach($allState as $allStateVal){

@@ -23,7 +23,10 @@
 	if(!empty($eventImageNameArr)) {
 		foreach($eventImageNameArr as $singleEventImgVal) {
 ?>	
-		    <div><a href ="uploads/events/<?php echo $singleEventImgVal ?>" target="_blank" id="<?php echo $singleEventImgVal; ?>"><?php echo $singleEventImgVal ?></a></div>
+		    <div>
+                <a href="<?php $eventAdminImageUploadPath; ?><?php echo $singleEventImgVal; ?>" target="_blank" id="<?php echo $singleEventImgVal; ?>"><?php echo $singleEventImgVal ?>
+                </a>
+            </div>
 <?php
 		}
 	}

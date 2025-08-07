@@ -95,7 +95,7 @@
 									<div class="col-12 col-sm-12 col-md-6 col-lg-4">
 										<div class="listing-item">
 											<div class="listing-img">
-												<a href="index.php?pg-nm=event-details?eid=<?=(!empty($eventResponseVal['eventId'])?$eventResponseVal['eventId']:'')?>"><?=(!empty($eventResponseVal['eventTitle'])?$eventResponseVal['eventTitle']:'')?>
+												<a href="index.php?pg-nm=event-details&eid=<?=(!empty($eventResponseVal['eventId'])?$eventResponseVal['eventId']:'')?>"><?=(!empty($eventResponseVal['eventTitle'])?$eventResponseVal['eventTitle']:'')?>
 													<img src="<?=$eventImage?>" class="img-fluid" alt="Event">
 												</a>
 												<div class="date-info text-center">
@@ -113,7 +113,7 @@
 													</li>
 												</ul>
 												<h4 class="listing-title">
-													<a href="index.php?pg-nm=event-details?eid=<?=(!empty($eventResponseVal['eventId'])?$eventResponseVal['eventId']:'')?>"><?=(!empty($eventResponseVal['eventTitle'])?$eventResponseVal['eventTitle']:'')?></a>
+													<a href="index.php?pg-nm=event-details&eid=<?=(!empty($eventResponseVal['eventId'])?$eventResponseVal['eventId']:'')?>"><?=(!empty($eventResponseVal['eventTitle'])?$eventResponseVal['eventTitle']:'')?></a>
 												</h4>
 											</div>
 										</div>

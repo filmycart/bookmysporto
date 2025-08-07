@@ -270,9 +270,6 @@
 			    							$eventImage = $eventNoImage;	
 			    						}
 
-			    						/*echo $eventImage;
-			    						exit;*/
-
 			    						$eventStartDay = "";   
 			    						if((isset($eventResponseHomePageVal['eventStartDate'])) && (!empty($eventResponseHomePageVal['eventStartDate']))) {
 			        						$eventStartDay = date("m", strtotime($eventResponseHomePageVal['eventStartDate']));

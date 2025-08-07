@@ -41,8 +41,8 @@
         
         $viewEventCategoryArray = (array) $viewEventCategory->where([$catId => $pgEventCategoryId])->andWhere([$adminId => $admin->id])->orderBy('id')->orderType('desc')->allWithJoinTwoTablesSingleRecord($column, $joinColumn);
 
-        if((isset($viewEventCategoryArray['0'])) && (!empty($viewEventCategoryArray['0']))){
-            echo json_encode($viewEventCategoryArray['0']);
+        if((isset($viewEventCategoryArray)) && (!empty($viewEventCategoryArray))){
+            echo json_encode($viewEventCategoryArray);
             exit;
         }
     }elseif((Helper::is_get()) && (!empty($pgEventCategoryId)) && ($pgEventCategoryAction == "edit")){

@@ -164,7 +164,7 @@
 						<div class="row align-items-center">
 							<div class="col-md-6">
 								<div class="copyright-text">
-									<p class="mb-0">&copy; 2025 Sportify  - All rights reserved.</p>
+									<p class="mb-0">&copy; 2025 Bookmysporto - All rights reserved.</p>
 								</div>
 							</div>
 							<div class="col-md-6">

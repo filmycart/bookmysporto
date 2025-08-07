@@ -8,6 +8,8 @@ class Venue extends Util {
     public $state;
     public $city;
     public $country;
+    public $lat;
+    public $lon;
     public $is_featured;
     public $title;
     public $description;

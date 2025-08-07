@@ -1,8 +1,8 @@
-		<!-- Footer -->
+<!-- Footer -->
 		<footer class="footer">
 			<div class="container">
 				<!-- Footer Join -->
-				<div class="footer-join aos" data-aos="fade-up">
+				<div class="footer-join">
 					<h2>We Welcome Your Passion And Expertise</h2>
 					<p class="sub-title">Join our empowering sports community today and grow with us.</p>
 					<?php
@@ -27,9 +27,11 @@
 								<h4 class="footer-title">Contact us</h4>
 								<div class="footer-address-blk">
 									<div class="footer-call">
+										<!--<span>Toll free Customer Care</span>-->
 										<p>+918105460391</p>
 									</div>
 									<div class="footer-call">
+										<!--<span>Need Live Suppot</span>-->
 										<p>contact@filmycart.in</p>
 									</div>
 								</div>
@@ -91,10 +93,68 @@
 							</div>
 							<!-- /Footer Widget -->
 						</div>
+						<!--<div class="col-lg-2 col-md-6">
+							<div class="footer-widget footer-menu">
+								<h4 class="footer-title">Other Links</h4>
+								<ul>
+									<li>
+										<a href="coaches-grid.html">Coaches</a>
+									</li>
+									<li>
+										<a href="listing-grid.html">Sports Venue</a>
+									</li>
+									<li>
+										<a href="coach-details.html">Join As Coach</a>
+									</li>
+									<li>
+										<a href="coaches-map.html">Add Venue</a>
+									</li>
+									<li>
+										<a href="my-profile.html">My Account</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-6">
+							<div class="footer-widget footer-menu">
+								<h4 class="footer-title">Our Locations</h4>
+								<ul>
+									<li>
+										<a href="javascript:void(0);">Germany</a>
+									</li>
+									<li>
+										<a href="javascript:void(0);">Russia</a>
+									</li>
+									<li>
+										<a href="javascript:void(0);">France</a>
+									</li>
+									<li>
+										<a href="javascript:void(0);">UK</a>
+									</li>
+									<li>
+										<a href="javascript:void(0);">Colombia</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-6">
+							<div class="footer-widget footer-menu">
+								<h4 class="footer-title">Download</h4>
+								<ul>
+									<li>
+										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/icon-apple.svg" alt="Icon"></a>
+									</li>
+									<li>
+										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/google-icon.svg" alt="Icon"></a>
+									</li>
+								</ul>
+							</div>
+						</div>-->
 					</div>
 				</div>
 				<!-- /Footer Top -->
-			</div>			
+			</div>
+			
 			<!-- Footer Bottom -->
 			<div class="footer-bottom">
 				<div class="container">
@@ -106,6 +166,33 @@
 									<p class="mb-0">&copy; 2025 Bookmysporto - All rights reserved.</p>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<!-- Copyright Menu -->
+								<!-- <div class="dropdown-blk">
+									<ul class="navbar-nav selection-list">
+										<li class="nav-item dropdown">
+											<div class="lang-select">
+												<span class="select-icon"><i class="feather-globe"></i></span>
+												<select class="select">
+													<option>English (US)</option>
+													<option>UK</option>
+													<option>Japan</option>
+												</select>
+											</div>
+										</li>
+										<li class="nav-item dropdown">
+											<div class="lang-select">
+												<span class="select-icon"></span>
+												<select class="select">
+													<option>$ USD</option>
+													<option>$ Euro</option>
+												</select>				
+											</div>	
+										</li>
+									</ul>
+								</div> -->
+								<!-- /Copyright Menu -->
+							</div>
 						</div>
 					</div>
 					<!-- /Copyright -->
@@ -116,35 +203,19 @@
 		<!-- /Footer -->
 	</div>
 	<!-- /Main Wrapper -->
-	<!-- scrollToTop start -->
-	<div class="progress-wrap active-progress">
-		<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919px, 307.919px; stroke-dashoffset: 228.265px;"></path>
-		</svg>
-	</div>
-	<!-- scrollToTop end -->
 	<!-- jQuery -->
 	<script src="<?=$frontendAssetUrl?>assets/js/jquery-3.7.1.min.js"></script>
-
 	<!-- Bootstrap Core JS -->
 	<script src="<?=$frontendAssetUrl?>assets/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Select JS -->
-	<script src="<?=$frontendAssetUrl?>assets/plugins/select2/js/select2.min.js"></script>
-
 	<!-- Owl Carousel JS -->
 	<script src="<?=$frontendAssetUrl?>assets/plugins/owl-carousel/owl.carousel.min.js"></script>
-
-	<!-- Aos -->
-	<script src="<?=$frontendAssetUrl?>assets/plugins/aos/aos.js"></script>
-
-	<!-- Counterup JS -->
-	<script src="<?=$frontendAssetUrl?>assets/js/jquery.waypoints.js"></script>
-	<script src="<?=$frontendAssetUrl?>assets/js/jquery.counterup.min.js"></script>
-
-	<!-- Top JS -->
-	<script src="<?=$frontendAssetUrl?>assets/js/backToTop.js"></script>
-
+	<!-- Select JS -->
+	<script src="<?=$frontendAssetUrl?>assets/plugins/select2/js/select2.min.js"></script>
+	<!-- Fancybox JS -->
+	<script src="<?=$frontendAssetUrl?>assets/plugins/fancybox/jquery.fancybox.min.js"></script>
+	<!-- Sticky Sidebar JS -->
+	<script src="<?=$frontendAssetUrl?>assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+	<script src="<?=$frontendAssetUrl?>assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 	<!-- Custom JS -->
 	<script src="<?=$frontendAssetUrl?>assets/js/script.js"></script>
 </body>

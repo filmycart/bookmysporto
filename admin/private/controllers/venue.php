@@ -156,6 +156,13 @@
                     $venue->state = $_POST['state'];
                     $venue->city = $_POST['city'];
                     $venue->country = $_POST['venueCountry'];
+                    if((isset($_POST['lat'])) && (!empty($_POST['lat']))){
+                        $venue->lat = trim($_POST['lat']);
+                    }
+
+                    if((isset($_POST['lon'])) && (!empty($_POST['lon']))){
+                        $venue->lon = trim($_POST['lon']);
+                    }
                     $venue->status = (isset($_POST['status'])) ? 1 : 1;
                     $venue->admin_id = $admin->id;
 
@@ -234,6 +241,15 @@
                         $venue->state = $_POST['state'];
                         $venue->city = $_POST['city'];
                         $venue->country = $_POST['venueCountry'];
+
+                        if((isset($_POST['lat'])) && (!empty($_POST['lat']))){
+                            $venue->lat = trim($_POST['lat']);
+                        }
+
+                        if((isset($_POST['lon'])) && (!empty($_POST['lon']))){
+                            $venue->lon = trim($_POST['lon']);
+                        }
+
                         $venue->status = (isset($_POST['venueStatus'])) ? $_POST['venueStatus'] : 1;
                         $venue->admin_id = $admin->id;
                         //$event->validate_except(["id", "image_resolution", "sell", "group_by"]);

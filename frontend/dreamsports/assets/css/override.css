@@ -145,7 +145,7 @@ h2 {
 }
 
 .modal-header .close {
-    margin-left: 88%;
+    margin-left: 80%;
     margin-top: -2px;
     border:0px solid #fff;
     background-color: #fff;
@@ -538,4 +538,58 @@ form input {
     border-bottom: 0px solid #ccc !important;
     border-top: 0px solid #666 !important;
     border-left: 0px solid #666 !important;
+}
+
+.d-md-flex {
+    display: block !important;
+}
+
+.card_new{
+    border-radius: 15px;
+}
+
+.card_new2{
+    border-radius: 15px;
+    border:0px solid red;
+    padding:0px 0px 0px 0px;
+}
+
+.white-bg{
+    background: #FFFFFF !important;
+    border:1px solid #E0E5E5;
+}
+
+.start-date-end-date{
+    color:#452D35;
+}
+
+.form-control2 {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem !important;
+    font-size: 12px;
+    font-weight: 100;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: var(--bs-body-bg);
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.event-cat-parent-div{
+    width:100%;
+    float:left;
+    border:0px solid red;
+}
+
+.event-cat-child-div{
+    width:38%;
+    height:40px;
+    float:left;
+    border:0px solid red;
 }

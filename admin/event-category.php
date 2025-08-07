@@ -84,7 +84,7 @@
                         <h3 class="card-title">Event Category</h3>
                     </div>  
                     <div style="width:14%;float:right;">  
-                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventCategory('create','20','171')">Add Event Category</a>
+                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventCategory('create','20','')">Add Event Category</a>
                     </div>
                 </div>
               </div>
@@ -333,7 +333,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
+                    <?php
                         if(count($all_event_category) > 0){
                             foreach ($all_event_category as $item){
                     ?>
@@ -368,7 +368,7 @@
                                 </td>
                                 <td style="width:100px;">
                                     <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventCategory('view','<?php echo $item->categoryId; ?>')"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventCategory('edit','<?php echo $item->categoryId; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventCategory('edit','<?php echo $item->categoryId; ?>','<?php echo $item->categoryTypeId; ?>')"><i class="ion-compose"></i></a>
                                     <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEventCategory('delete','<?php echo $item->categoryId; ?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
@@ -609,6 +609,7 @@
                         data: formData,
                         success: function(html) {
                             respArr = JSON.parse(html);
+
                             if(eventCatAction == "view") {
                                 $("#viewEventCategoryId").html(respArr.categoryId);
                                 $("#viewEventCategoryTitle").html(respArr.categoryTitle);
@@ -638,6 +639,7 @@
             }
             
             function addEditEventCategory(eventCategoryAction, eventCategoryId, eventTypeId) {
+                $('#eventCategoryImagePreview').html('');
                 var formData = {};
                 if(eventCategoryAction == "create") {
                     $("#eventCategoryAction").val(eventCategoryAction);
@@ -703,6 +705,9 @@
                                 minlength: 5,
                                 maxlength: 50
                             },
+                            eventType: {
+                                required: true
+                            },
                             eventCategoryStatus: {
                                 required: true
                             }
@@ -712,6 +717,9 @@
                                 required: "Event Category Title should not be empty.",
                                 minlength: "Event Category Title should be minimum of 5 characters.",
                                 maxlength: "Event Category Title should not be beyond 20 characters."
+                            },
+                            eventType: {
+                                required: "Select Event Type."
                             },
                             eventCategoryStatus: {
                                 required: "Select Event Category Status."

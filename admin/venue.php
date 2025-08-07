@@ -25,7 +25,7 @@
             $sort_type = "desc";        
 
             $column = "";
-            $column = "venue.id AS venueId, venue.title AS venueTitle, venue.address AS venuAddress, venue.state AS venueState, venue.city AS venueCity, venue.country AS venueCountry, venue.status AS venueStatus, venue.admin_id AS venueAdminId, ";
+            $column .= "venue.id AS venueId, venue.title AS venueTitle, venue.description AS venueDescription, venue.address AS venueAddress, venue.state AS venueStateId, venue.city AS venueCity, venue.country AS venueCountry, venue.is_featured AS venueIsFeatured, venue.owner AS venueOwner, venue.image AS venueImage, venue.status AS venueStatus, ";
             $column .= "countries.id AS countryId, countries.shortname AS countryShortName, countries.name AS countryName, countries.phonecode AS countryPhoneCode, ";
             $column .= "state.id AS stateId, state.name AS stateName, state.country_id AS stateCountryId, ";
             $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId ";
@@ -38,9 +38,9 @@
             $joinColumn['join_column_name1'] = "country";
             $joinColumn['join_column_name2'] = "state";
             $joinColumn['join_column_name3'] = "city";
-            $joinColumn['join_column_child'] = "id";
+            $joinColumn['join_column_city_state_country_id'] = "id";
 
-            $all_venues = $venues->where(["admin_id" => $admin->id])->orderBy($sort_by)->orderType($sort_type)->allWithJoin($column, $joinColumn);
+            $all_venues = (array) $venues->where(["venue.admin_id" => 1])->allWithJoin($column, $joinColumn);
 
             $all_products = new Product();
             $pagination = "";
@@ -53,7 +53,7 @@
                 $sort_type = Helper::get_val("sort_type");;
                 $sub_category_id = Helper::get_val("sub_category_id");
                 
-                if($search)                                                                                               {
+                if($search) {
                     if($sub_category_id) {
                         $url_for_pagination = $url_current . "sub_category_id=" . $sub_category_id . "&&";
                         $item_count = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])
@@ -295,6 +295,8 @@
                                 <input type="hidden" id="venueId" name="venueId" value="" />
                                 <input type="hidden" id="venueAction" name="venueAction" value="" />
                                 <input type="hidden" id="venueCountry" name="venueCountry" value="" />
+                                <input type="hidden" id="lat" name="lat">
+                                <input type="hidden" id="lon" name="lon">
                                 <div id="venueSucResponseDiv" style="color:green;"></div>
                                 <div id="venueErrResponseDiv" style="color:green;"></div>
                                 <div class="venueFormMainDiv" id="modal-div">    
@@ -594,7 +596,7 @@
                                     </td>
                                     <td style="width:100px;">
                                         <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#venue-view-modal" onclick="viewVenue('view','<?php echo $item->venueId; ?>')"><i class="ion-eye"></i></a>
-                                        <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#venue-form-modal" onclick="addEditVenue('edit','<?php echo $item->venueId; ?>','<?php echo $item->venueCountry; ?>','<?php echo $item->venueCity; ?>','<?php echo $item->venueState; ?>')"><i class="ion-compose"></i></a>
+                                        <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#venue-form-modal" onclick="addEditVenue('edit','<?php echo $item->venueId; ?>','<?php echo $item->venueCountry; ?>','<?php echo $item->venueCity; ?>','<?php echo $item->venueStateId; ?>')"><i class="ion-compose"></i></a>
                                         <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#venue-form-modal-msg" onclick="deleteVenue('delete','<?php echo $item->venueId; ?>')"><i class="ion-trash-a"></i></a>
                                     </td>
                                   </tr>
@@ -677,6 +679,7 @@
         <?php require("common/php/php-footer.php"); ?>
         <!-- jQuery -->
         <script src="../admin/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmssLDIr2k4I89ZsR3CjZDe0rQouWxFIs"></script>
         <!-- jquery-validation -->
         <script src="../admin/plugins/jquery-validation/jquery.validate.min.js"></script>
         <script src="../admin/plugins/jquery-validation/additional-methods.min.js"></script>
@@ -866,6 +869,9 @@
             }
 
             function addEditVenue(venueAction, venueId, countryId, cityId, stateId) {
+
+                $('#venueImagePreview').html('');
+                
                 $("#venueSucResponseDiv").html('');
                 $("#venueErrResponseDiv").html('');                
                 $("#stateDiv").html('');
@@ -943,6 +949,27 @@
                 }
             }
 
+            $("#venueAddress").change(function() {
+                var venueAddress = $("#venueAddress").val();
+                var venueState = $("#state").val();
+                var venueCity = $("#city").val();
+                var venueCountry = $("#venueCountry").val();
+                var venueFullAddress = venueAddress+""+venueState+""+venueCity+""+venueCountry;
+
+                if((venueAddress != "") && (venueState != "") && (venueCity != "") && (venueCountry != "")){
+                    var geocoder =  new google.maps.Geocoder();
+                    geocoder.geocode( { 'address': venueAddress}, function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            $('#lat').val(results[0].geometry.location.lat()); 
+                            $('#lon').val(results[0].geometry.location.lng());
+                        } else {
+                            console.log("Something got wrong " + status);
+                            console.log("Something got wrong " + status);
+                        }
+                    });
+                }
+            });
+
             jQuery.noConflict();
             (function( $ ) {
                 $(function() {
@@ -957,6 +984,11 @@
                                 letterswithspace: true
                             },
                             venueAddress: {
+                                required: true,
+                                minlength: 10,
+                                maxlength: 150,
+                            },
+                            venueOwner: {
                                 required: true,
                                 minlength: 10,
                                 maxlength: 50,
@@ -978,6 +1010,11 @@
                                 letterswithspace: "Please enter a description with letters and spaces only."
                             },
                             venueAddress: {
+                                required: "Please enter Address.",
+                                minlength: "Please enter minimum 10 characters.",
+                                maxlength: "Please enter maximum 150 characters."
+                            },
+                            venueOwner: {
                                 required: "Please enter Address.",
                                 minlength: "Please enter minimum 10 characters.",
                                 maxlength: "Please enter maximum 50 characters."

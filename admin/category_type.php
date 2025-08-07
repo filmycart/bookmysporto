@@ -34,9 +34,3 @@
     	}
     ?>
 </select>
-<script type="text/javascript">
-    $("#eventCategory").change(function() {
-        var eventCategorySelMultiValues = $(this).val();
-        $("#eventCategoryHidden").val(eventCategorySelMultiValues);
-    });
-</script>

@@ -12,7 +12,7 @@
 	<meta name="keywords" content="<?=($siteKeyword)?$siteKeyword:''?>">
 	<meta name="author" content="<?=($siteAuthor)?$siteAuthor:''?>">
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@bookmysporto">
+	<meta name="twitter:site" content="@dreamguystech">
 	<meta name="twitter:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta name="twitter:image" content="<?=$frontendAssetUrl?>assets/img/meta-image.jpg">
 	<meta name="twitter:image:alt" content="<?=($siteTitle)?$siteTitle:''?>">
@@ -32,21 +32,24 @@
 	<!-- Owl Carousel CSS -->
 	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/owl-carousel/owl.carousel.min.css">
 	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/owl-carousel/owl.theme.default.min.css">
+	<!-- Select CSS -->
+	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/select2/css/select2.min.css">
 	<!-- Fontawesome CSS -->
 	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/fontawesome/css/fontawesome.min.css">
 	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/fontawesome/css/all.min.css">
-	<!-- Select CSS -->
-	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/select2/css/select2.min.css">
 	<!-- Feathericon CSS -->
 	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/css/feather.css">
+	<!-- Fancybox CSS -->
+	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/plugins/fancybox/jquery.fancybox.min.css">
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/css/style.css">
-	<!-- Override CSS -->
+    <!-- Override CSS -->
     <link rel="stylesheet" href="<?=$frontendAssetUrl?>assets/css/override.css">
 </head>
 <body>
-    <?php
-        $curlUserProfile = curl_init();
+	<?php
+        if((isset($_SESSION['userName'])) && (!empty($_SESSION['userName']))) {
+            $curlUserProfile = curl_init();
 
             $userProfileUrl = "";
             if($hostName == "localhost") {
@@ -83,6 +86,7 @@
             }
 
             curl_close($curlUserProfile);
+        }
     ?>
 	<div id="global-loader" >
 		<div class="loader-img">
@@ -90,7 +94,7 @@
 		</div>
 	</div>
 	<!-- Main Wrapper -->
-	<div class="main-wrapper aboutus-page">
+	<div class="main-wrapper venue-coach-details coach-detail">
 		<!-- Header -->
 		<header class="header header-sticky">
 			<div class="container-fluid">
@@ -205,6 +209,10 @@
 			</div>
 		</header>
 		<!-- /Header -->
+		<!-- Banner -->
+		<div class="banner">
+			<img src="<?=$frontendAssetUrl?>assets/img/bg/coach-detail-bg.jpg" alt="Banner" >
+		</div>		
 		<script type="text/javascript">
 			function registerForm() {
                 $("#login-form-modal").modal('hide');

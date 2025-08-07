@@ -23,6 +23,10 @@
 
 	$eventImagePath = $requestScheme.$baseUrl."admin/uploads/events/";
 	$eventNoImage = $requestScheme.$baseUrl."admin/assets/images/event-01.jpg";
+
+	$adminImageUploadPath = "uploads/";
+	$eventAdminImageUploadPath = $adminImageUploadPath."events/"; 
+	$eventFrontEndImageUploadPath = "././admin/".$adminImageUploadPath."events/"; 
 	
 	$curl = curl_init();
 

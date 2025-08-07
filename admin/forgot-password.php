@@ -4,13 +4,13 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>Admin</b>LTE</a>
+    <a href="../../index.php"><b>Bookmy</b>SPORTO</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
-      <form action="recover-password.html" method="post">
+      <form action="../private/controllers/admin_forgot_password.php" method="post">
         <div class="input-group mb-3">
           <input type="email" class="form-control" placeholder="Email">
           <div class="input-group-append">

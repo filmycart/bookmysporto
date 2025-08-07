@@ -16,6 +16,7 @@
 	}
 ?>
 <select class="form-control select2 select2-danger" id="city" name="city" data-dropdown-css-class="select2-danger" style="width: 100%;">
+    <option value="">Select City</option>
     <?php
     	if(!empty($allCity)){
     		foreach($allCity as $allCityVal){
