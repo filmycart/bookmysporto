@@ -54,7 +54,6 @@ function eventCity(cityId, stateId) {
 }   
 
 function eventType(eventTypeId) {
-    console.log("eventTypeId",eventTypeId);
     $.ajax({
         url: "type.php",
         cache: false,

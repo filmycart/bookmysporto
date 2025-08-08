@@ -550,25 +550,40 @@
                                     ?>
                                     <?php echo $venueTitle; ?>
                                 </td>
-                                <?php 
-                                    $current_category = $eventDispCat = "";
-                                    $eventCategoryIdArray = explode(",",$item->eventCategoryId);
+                                <?php
+                                    /*print"<pre>";
+                                    print_r($item);
+                                    exit;*/
 
-                                    if(!empty($eventCategoryIdArray)) {
-                                        foreach($eventCategoryIdArray as $eventCategoryIdVal) {
-                                            if((isset($eventCategory[$eventCategoryIdVal]->title)) && (!empty($eventCategory[$eventCategoryIdVal]->title))) {
-                                                $eventDispCat = $eventCategory[$eventCategoryIdVal]->title; 
-                                                $cat_param = "event-category.php";
-                                                $current_category .= "<div style='border:0px solid red;float:left;width:100%;'><div style='border:0px solid red;float:left;width:50%;'><a href='" . $cat_param . "'>" . $eventDispCat . "</a></div></div>";
+                                    $categoryTitleStr = "";
+                                    $categoryIdArray = explode(",",$item->eventCategoryId);
+                                    $categoryTitleArray = array();
+
+                                    $current_category_str = "";
+                                    if(!empty($categoryIdArray)) {
+                                        foreach($categoryIdArray as $categoryIdVal) {
+                                            if((isset($eventCategory[$categoryIdVal])) && (!empty($eventCategory[$categoryIdVal]))) {
+                                                $categoryTitleArray[] = $eventCategory[$categoryIdVal]->title; 
                                             }
                                         }
                                     } else {
                                         $current_category = "Unknown";
                                     }
+
+                                    /*print"<pre>";
+                                    print_r($categoryTitleArray);
+                                    exit;*/
+
+                                    if(!empty($categoryTitleArray)) {
+                                        $categoryTitleStr = implode(",",$categoryTitleArray);
+                                    }
+
+                                    $current_category .= "<div style='border:0px solid red;float:left;width:26%;'><a href='" . $cat_param . "'>" . $categoryTitleStr . "</a></div>";
                                 ?>
-                                <td>
-                                    <?php echo $current_category; ?>
+                                <td>    
+                                    <?php echo $categoryTitleStr; ?>
                                 </td>
+
                                 <td>
                                     <?php 
                                         $startDate = "";

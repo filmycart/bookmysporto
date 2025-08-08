@@ -17,22 +17,22 @@
 
     if(!empty($admin)) {
         $event_sub_category = new Event_SubCategory();
+        $category = new Category();
 
         $sort_by = "id";
         $sort_type = "desc";
         
-        //$all_event_sub_category = (array) $event_sub_category->where(["admin_id" => $admin->id])->orderBy('id')->orderType('desc')->all();
-
         $all_event_sub_category = $event_sub_category->where(["admin_id" => $admin->id])->orderBy('id')->orderType('desc')->all();
 
-/*        print"<pre>";
-        print_r($all_event_sub_category['0']);
-        exit;*/
-        //$all_event_sub_category['0']?->image_name = null;
-        /*if($all_event_sub_category['0']?->image_name){
-            echo $all_event_sub_category['0']->image_name;
-            exit;
-        }*/
+        $all_category = (array) $category->where(["admin_id" => $admin->id])
+                            ->orderBy($sort_by)->orderType($sort_type)->all();    
+
+        $categoryData = array();
+        if(!empty($all_category)) {
+            foreach($all_category as $category_val) {
+                $categoryData[$category_val->id] = $category_val; 
+            }
+        }
 
         $panel_setting = new Setting();
         $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
@@ -333,9 +333,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
+                    <?php
                         if(count($all_event_sub_category) > 0){
-                            foreach ($all_event_sub_category as $item){ 
+                            foreach ($all_event_sub_category as $item){
+                                /*print"<pre>";
+                                print_r($item);
+                                exit;*/
                     ?>
                               <tr>
                                 <td>
@@ -343,9 +346,32 @@
                                 </td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventSubCategory('view','<?php echo $item->id; ?>')"><?php echo $item->title; ?></a>
-                                </td>
-                                <td>
-                                    &nbsp;
+                                </td>                                
+                                <?php
+                                    $categoryTitleStr = "";
+                                    $categoryIdArray = explode(",",$item->category_id);
+                                    $categoryTitleArray = array();
+
+                                    $current_category_str = "";
+                                    if(!empty($categoryIdArray)) {
+                                        foreach($categoryIdArray as $categoryIdVal) {
+                                            if((isset($categoryData[$categoryIdVal])) && (!empty($categoryData[$categoryIdVal]))) {
+                                                $categoryTitleArray[] = $categoryData[$categoryIdVal]->title; 
+                                            }
+                                        }
+                                    } else {
+                                        $current_category = "Unknown";
+                                    }
+
+                                    if(!empty($categoryTitleArray)) {
+                                        $categoryTitleStr = implode(",",$categoryTitleArray);
+                                    }
+
+                                    $current_category .= "<div style='border:0px solid red;float:left;width:26%;'><a href='" . $cat_param . "'>" . $categoryTitleStr . "</a></div>";
+
+                                ?>
+                                <td>    
+                                    <?php echo $categoryTitleStr; ?>
                                 </td>
                                 <td>
                                     <?php 
@@ -360,7 +386,7 @@
                                 </td>
                                 <td style="width:100px;">
                                     <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view-event-modal" onclick="viewEventSubCategory('view','<?php echo $item->id; ?>')"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventSubCategory('edit','<?php echo $item->id; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEventSubCategory('edit','<?php echo $item->category_id; ?>','<?php echo $item->id; ?>')"><i class="ion-compose"></i></a>
                                     <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEventSubCategory('delete','<?php echo $item->id; ?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
@@ -625,9 +651,9 @@
                } 
             }
             
-            function addEditEventSubCategory(eventSubCategoryAction, eventSubCategoryId) {
+            function addEditEventSubCategory(eventSubCategoryAction, eventCategoryId, eventSubCategoryId) {
 
-                eventCategory('','171');
+                eventCategory(eventCategoryId,'');
 
                 var formData = {};
                 if(eventSubCategoryAction == "create") {
@@ -636,7 +662,7 @@
                     $("#eventSubCategoryAction").val('add');
                     $("#eventSubCategoryTitle").val('');
                 } else if(eventSubCategoryAction == "edit") {
-                    $("#eventSubCategoryAction").val(eventSubCategoryAction);
+                    //$("#eventSubCategoryAction").val(eventSubCategoryAction);
                     $('#modal-title-text').text('Update Event Sub Category');
                     formData = {
                         "eventSubCategoryId": eventSubCategoryId,

@@ -131,21 +131,6 @@
         die;
     }
 
-    /*public function map_event_subcategory_cat_id($eventCategory, $eventSubCategoryId){
-        $eventCategoryArray = array();
-        if(!empty($eventCategory)){
-            $eventCategoryArray = explode(",",$eventCategory);
-        }
-
-        $eventSubCategoryCatId = new Event_Sub_Category_Cat_Id();
-
-        for($i=0;$i<count($eventCategoryArray);$i++) {
-            $eventSubCategoryCatId->cat_id = $eventCategoryArray[$i];
-            $eventSubCategoryCatId->sub_cat_id = $eventSubCategoryId;
-            $eventSubCategoryCatId->save();
-        }
-    }*/
-
     if(empty($admin)){
         Helper::redirect_to("admin_login.php");
     } else {
@@ -168,6 +153,7 @@
                     $addEventSubCategory->title = trim($_POST['eventSubCategoryTitle']);
                     $addEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);
                     $addEventSubCategory->status = (isset($_POST['eventSubCategoryStatus'])) ? 1 : 1;
+                    $addEventSubCategory->category_id = trim($_POST['eventCategoryHidden']);
                     $addEventSubCategory->admin_id = $admin->id;
 
                     $errors = $addEventSubCategory->get_errors();
@@ -175,37 +161,6 @@
                     if($errors->is_empty()) {
                         if($errors->is_empty()) {
                             $id = $addEventSubCategory->save();
-
-                            if((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden']))){
-                                //map_event_subcategory_cat_id($_POST['eventCategoryHidden'],$id);
-                                $eventCategoryArray = array();
-                                if(!empty($_POST['eventCategoryHidden'])){
-                                    $eventCategoryArray = explode(",",$_POST['eventCategoryHidden']);
-                                }
-
-                                $viewEventSubCategoryCatId = new Event_Subcategory_Cat_Id();
-                                $eventSubCategoryCatId = new Event_Subcategory_Cat_Id();
-
-                                $eventSubCategoryCatIdArray = (array) $viewEventSubCategoryCatId->where(["sub_cat_id" => $id])->one();
-
-                                if(!empty($viewEventSubCategoryCatId)) {
-                                    $delEventSubCategoryCatId = new Event_Subcategory_Cat_Id();
-                                    if($delEventSubCategoryCatId->where(["id" => $delEventSubCategoryCatId->id])->delete()){
-                                        for($i=0;$i<count($eventCategoryArray);$i++) {
-                                            $eventSubCategoryCatId->cat_id = $eventCategoryArray[$i];
-                                            $eventSubCategoryCatId->sub_cat_id = $id;
-                                            $eventSubCategoryCatId->save();
-                                        }
-                                    }
-                                } else {
-                                    for($i=0;$i<count($eventCategoryArray);$i++) {
-                                        $eventSubCategoryCatId->cat_id = $eventCategoryArray[$i];
-                                        $eventSubCategoryCatId->sub_cat_id = $id;
-                                        $eventSubCategoryCatId->save();
-                                    }
-                                }                                
-                            }
-
                             $has_error_creation = false;
                             Helper::redirect_to("../../event-subcategory.php?msg=1");
                             exit;
@@ -222,45 +177,17 @@
                     Helper::redirect_to("../../event-subcategory.php?msg=5");
                     exit;
                 } else {
-                    $updEventSubCategory->id = $pgEventCategoryId;
+                    $updEventSubCategory->id = $pgEventSubCategoryId;
                     $updEventSubCategory->title = trim($_POST['eventSubCategoryTitle']);
-                    $updEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);
+                    $updEventSubCategory->category_id = trim($_POST['eventCategoryHidden']);
+                    $updEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);                    
                     $updEventSubCategory->status = (isset($_POST['eventSubCategoryStatus'])) ? 1 : 1;
                     $updEventSubCategory->admin_id = $admin->id;
-        
+
                     $errors = $updEventSubCategory->get_errors();
 
                     if($errors->is_empty()){
                         if($updEventSubCategory->where(["id"=>$updEventSubCategory->id])->andWhere(["admin_id" => $updEventSubCategory->admin_id])->update()){
-
-                            if((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden']))){
-                                $eventCategoryArray = array();
-                                if(!empty($_POST['eventCategoryHidden'])){
-                                    $eventCategoryArray = explode(",",$_POST['eventCategoryHidden']);
-                                }
-
-                                $viewEventSubCategoryCatId = new Event_Subcategory_Cat_Id();
-                                $eventSubCategoryCatId = new Event_Subcategory_Cat_Id();
-
-                                $eventSubCategoryCatIdArray = (array) $viewEventSubCategoryCatId->where(["sub_cat_id" => $_POST['eventSubCategoryId']])->one();
-                                if(!empty($eventSubCategoryCatIdArray)) {
-                                    $delEventSubCategoryCatId = new Event_Subcategory_Cat_Id();
-                                    if($delEventSubCategoryCatId->where(["sub_cat_id" => $_POST['eventSubCategoryId']])->delete()){
-                                        for($i=0;$i<count($eventCategoryArray);$i++) {
-                                            $eventSubCategoryCatId->cat_id = $eventCategoryArray[$i];
-                                            $eventSubCategoryCatId->sub_cat_id = $_POST['eventSubCategoryId'];
-                                            $eventSubCategoryCatId->save();
-                                        }
-                                    }
-                                } else {
-                                    for($i=0;$i<count($eventCategoryArray);$i++) {
-                                        $eventSubCategoryCatId->cat_id = $eventCategoryArray[$i];
-                                        $eventSubCategoryCatId->sub_cat_id = $id;
-                                        $eventSubCategoryCatId->save();
-                                    }
-                                }                                
-                            }
-
                             Helper::redirect_to("../../event-subcategory.php?msg=2");
                             exit;
                         }
