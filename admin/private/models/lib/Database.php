@@ -47,9 +47,10 @@ abstract class Database{
 
         if(count($column) == 1){
             $this->where_col .= key($column);
-            $this->sql = " WHERE " . key($column) . " IN (" . $this->formatSql($column[key($column)]) . ")";
-            $this->condition_str = key($column) . " IN (" . $this->formatSql($column[key($column)]) . ")";
+            $this->sql = " WHERE " . key($column) . " IN (" . $column[key($column)] . ")";
+            $this->condition_str = key($column) . " IN (" . $column[key($column)] . ")";
         }
+
         return $this;
     }
 

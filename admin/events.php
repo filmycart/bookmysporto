@@ -476,6 +476,25 @@
                             </div>
                             <div class="eventFormRow">
                                 <div class="eventFormCol">
+                                    <div id="viewCategorySpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <span class="required-field">*</span>
+                                        <div id="viewCategoryDiv"></div>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <div id="viewSubCategorySpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                    <div class="form-group">
+                                        <label>Sub-Category</label>
+                                        <span class="required-field">*</span>
+                                        <div id="viewSubCategoryDiv"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
                                     <label>Start Date</label>
                                     <span class="required-field">*</span>
                                     <div class="form-group" data-target-input="nearest">
@@ -490,7 +509,7 @@
                                         <span id="viewEventEndDate" name="viewEventEndDate" data-target="#viewEventEndDate"></span>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="eventFormRow">
                                 <div class="eventFormCol">
                                     <label>Image</label>
@@ -506,7 +525,7 @@
                                         <span id="viewEventStatus" name="viewEventStatus"></span>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>                            
                         </div>
                     </div>
                   </div>
@@ -551,10 +570,6 @@
                                     <?php echo $venueTitle; ?>
                                 </td>
                                 <?php
-                                    /*print"<pre>";
-                                    print_r($item);
-                                    exit;*/
-
                                     $categoryTitleStr = "";
                                     $categoryIdArray = explode(",",$item->eventCategoryId);
                                     $categoryTitleArray = array();
@@ -570,10 +585,6 @@
                                         $current_category = "Unknown";
                                     }
 
-                                    /*print"<pre>";
-                                    print_r($categoryTitleArray);
-                                    exit;*/
-
                                     if(!empty($categoryTitleArray)) {
                                         $categoryTitleStr = implode(",",$categoryTitleArray);
                                     }
@@ -583,7 +594,6 @@
                                 <td>    
                                     <?php echo $categoryTitleStr; ?>
                                 </td>
-
                                 <td>
                                     <?php 
                                         $startDate = "";
@@ -1002,6 +1012,9 @@
                             $("#viewEventStartDate").text(respArr.eventStartDate);
                             $("#viewEventEndDate").text(respArr.eventEndDate);
                             $("#viewVenueStatus").text(respArr.eventStatus);
+
+                            viewEventCategory(respArr.eventCategoryId);
+                            viewEventSubCategory(respArr.eventSubCategoryId);
 
                             var viewEventImage = "";
                             var hostname = location.hostname;

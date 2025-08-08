@@ -107,6 +107,42 @@ function eventCategory(categoryId, eventTypeId) {
     });
 }
 
+function viewEventCategory(categoryId) {
+    $.ajax({
+        url: "view_category.php",
+        cache: false,
+        type: "POST",
+        data: {categoryId : categoryId},
+        beforeSend: function() {
+            $('#viewCategorySpinnerDiv').show();
+        },
+        complete: function(){
+            $('#viewCategorySpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#viewCategoryDiv").html(html);
+        }
+    });
+}
+
+function viewEventSubCategory(subCategoryId) {
+    $.ajax({
+        url: "view_sub_category.php",
+        cache: false,
+        type: "POST",
+        data: {subCategoryId : subCategoryId},
+        beforeSend: function() {
+            $('#viewSubCategorySpinnerDiv').show();
+        },
+        complete: function(){
+            $('#viewSubCategorySpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#viewSubCategoryDiv").html(html);
+        }
+    });
+}
+
 function eventDescription(eventId) {
     $.ajax({
         url: "event-description.php",

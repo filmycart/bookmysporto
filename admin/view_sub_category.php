@@ -1,29 +1,29 @@
 <?php 
     require_once('./private/init.php'); 
-    
+	
     $viewSubCategory = $subCategoryIdArray = array();
-    $category = new Category();
+    $subCategory = new Event_SubCategory();
 
-    $subCategoryId = $viewSubCat = "";
+    $subCategoryId = $viewCat = "";
 
-    if(Helper::is_post()) {
-        if((isset($_POST["subCatId"])) && (!empty($_POST["subCatId"]))) {
-            $subCategoryIdArray = explode(",",$_POST["subCatId"]);
+	if(Helper::is_post()) {
+        if((isset($_POST["subCategoryId"])) && (!empty($_POST["subCategoryId"]))) {
+            $subCategoryIdArray = explode(",",$_POST["subCategoryId"]);
         }
 
         if(!empty($subCategoryIdArray)){
             $subCategoryId = "'".implode("','",$subCategoryIdArray)."'";
         }
 
-        $viewSubCategory = (array) $category->whereIn(["id" => $subCategoryId])->all();
-    }
+        $viewSubCategory = (array) $subCategory->whereIn(["id" => $subCategoryId])->all();
+	}
 
     $viewSubCategoryTitleArray = array();
-    if(!empty($viewSubCategory)){
-        foreach($viewSubCategory as $viewSubCategoryVal) {
+	if(!empty($viewSubCategory)){
+		foreach($viewSubCategory as $viewSubCategoryVal) {
             $viewSubCategoryTitleArray[] = $viewSubCategoryVal->title;
-        }
-    }    
+		}
+	}    
 
     $viewSubCategoryTitleStr = "";
     if(!empty($viewSubCategoryTitleArray)){
