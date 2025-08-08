@@ -102,6 +102,7 @@ function eventCategory(categoryId, eventTypeId) {
             $('#categorySpinnerDiv').hide();
         },
         success: function(html){
+            console.log("html",html);
             $("#eventCategoryDiv").html(html);
         }
     });
@@ -215,12 +216,12 @@ function eventCategoryImage(eventCategoryId) {
     });
 }  
 
-function eventSubCategoryImage(eventCategoryId) {
+function eventSubCategoryImage(eventSubCategoryId) {
     $.ajax({
         url: "event-subcategory-images.php",
         cache: false,
         type: "POST",
-        data: {eventCategoryId: eventCategoryId},
+        data: {eventSubCategoryId: eventSubCategoryId},
         beforeSend: function() {
             $('#eventSubCategoryFileSpinnerDiv').show();
         },

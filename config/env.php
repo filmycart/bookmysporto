@@ -26,6 +26,7 @@
 
 	$adminImageUploadPath = "uploads/";
 	$eventAdminImageUploadPath = $adminImageUploadPath."events/"; 
+	$eventSubCatAdminImageUploadPath = $adminImageUploadPath."event_subcategory/"; 
 	$eventFrontEndImageUploadPath = "././admin/".$adminImageUploadPath."events/"; 
 	
 	$curl = curl_init();
