@@ -8,5 +8,6 @@ class Event_SubCategory extends Util{
     public $status;
     public $image_name;
     public $image_resolution;
+    public $price;
     public $created;
 }

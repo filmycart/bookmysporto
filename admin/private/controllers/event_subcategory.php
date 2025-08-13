@@ -151,6 +151,7 @@
                 } else {
                     $addEventSubCategory = new Event_SubCategory();
                     $addEventSubCategory->title = trim($_POST['eventSubCategoryTitle']);
+                    $addEventSubCategory->price = trim($_POST['eventSubCategoryPrice']);
                     $addEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);
                     $addEventSubCategory->status = (isset($_POST['eventSubCategoryStatus'])) ? 1 : 1;
                     $addEventSubCategory->category_id = trim($_POST['eventCategoryHidden']);
@@ -179,6 +180,7 @@
                 } else {
                     $updEventSubCategory->id = $pgEventSubCategoryId;
                     $updEventSubCategory->title = trim($_POST['eventSubCategoryTitle']);
+                    $updEventSubCategory->price = trim($_POST['eventSubCategoryPrice']);
                     $updEventSubCategory->category_id = trim($_POST['eventCategoryHidden']);
                     $updEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);                    
                     $updEventSubCategory->status = (isset($_POST['eventSubCategoryStatus'])) ? 1 : 1;

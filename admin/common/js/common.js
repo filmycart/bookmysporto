@@ -102,7 +102,6 @@ function eventCategory(categoryId, eventTypeId) {
             $('#categorySpinnerDiv').hide();
         },
         success: function(html){
-            console.log("html",html);
             $("#eventCategoryDiv").html(html);
         }
     });

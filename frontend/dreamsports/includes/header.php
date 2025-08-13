@@ -146,6 +146,9 @@
                                         <a class="dropdown-item" href="index.php?pg-nm=my-profile">My Profile</a>
                                     </li>
                                     <li class="login-link">
+                                        <a class="dropdown-item" href="index.php?pg-nm=my-booking">Logout</a>
+                                    </li>
+                                    <li class="login-link">
                                         <a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a>
                                     </li>
 
@@ -193,6 +196,7 @@
                                                 <a href="index.php?pg-nm=my-profile" class="text-profile mb-0">Go to Profile</a>
                                             </div>
                                         </div>
+                                        <p><a class="dropdown-item" href="index.php?pg-nm=my-booking">My Booking</a></p>
                                         <p><a class="dropdown-item" href="index.php?pg-nm=logout">Logout</a></p>
                                     </div>
                                 </li>

@@ -294,7 +294,7 @@
 			        					<div class="featured-venues-item aos" data-aos="fade-up">
 											<div class="listing-item mb-0">										
 												<div class="listing-img">
-													<a href="index.php?pg-nm=event-details">
+													<a href="index.php?pg-nm=event-details&id=<?=$eventResponseHomePageVal['eventId']?>">
 														<img src="<?=$eventImage?>" alt="Event">
 													</a>
 													<div class="fav-item-venues">

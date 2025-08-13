@@ -234,7 +234,7 @@
                                         </div>
                                         <div class="form-group" id="eventFileDiv">
                                             <input name="eventSubCategoryFile" id="eventSubCategoryFile" type="file" multiple />
-                                            <input type="text" name="eventSubCategoryFileHidden" id="eventSubCategoryFileHidden" />
+                                            <input type="hidden" name="eventSubCategoryFileHidden" id="eventSubCategoryFileHidden" />
                                         </div>
                                     </div>     
                                     <div class="eventFormSpacerDiv">&nbsp;</div>                               
@@ -257,6 +257,17 @@
                                         </div>
                                     </div>
                                 </div>  
+                                <div class="eventFormRow">
+                                    <div class="eventFormCol">
+                                        <label>Price</label>
+                                        <span class="required-field">*</span>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <input type="text" id="eventSubCategoryPrice" name="eventSubCategoryPrice" class="form-control" data-target="#eventSubCategoryPrice" />
+                                        </div>
+                                    </div>
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
+
+                                </div> 
                             </div>
                             <div class="modal-footer right-content-between">
                                 <button type="submit" id="eventSubCategorySubmit" name="eventSubCategorySubmit" class="btn btn-primary">Save</button>
@@ -311,12 +322,18 @@
                             </div>
                             <div class="eventFormRow">
                                 <div class="eventFormCol">
+                                    <label>Price</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewEventSubCategoryPrice" name="viewEventSubCategoryPrice" data-target="#viewEventSubCategoryPrice"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormCol">
                                     <label>Status</label>
                                     <div class="form-group" data-target-input="nearest">
                                         <span id="viewEventSubCategoryStatus" name="viewEventSubCategoryStatus" data-target="#viewEventSubCategoryStatus"></span>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                   </div>
@@ -499,7 +516,6 @@
             }
 
             function delEventImage(eventFileName, respArray) {
-
                 $('#eventSubCategoryImagePreview').html('');
 
                 respArr = removeA(respArray, eventFileName);
@@ -637,6 +653,8 @@
                             if(eventSubCatAction == "view") {
                                 $("#viewEventSubCategoryId").html(respArr.id);
                                 $("#viewEventSubCategoryTitle").html(respArr.title);
+                                $("#viewEventSubCategoryPrice").html(respArr.price);
+                                
 
                                 var hostname = location.hostname;
                                 var viewEventSubCategoryImageLink = "";
@@ -697,7 +715,8 @@
                             if(eventSubCategoryAction == "edit") {
                                 $("#eventSubCategoryId").val(respArr.id);
                                 $("#eventSubCategoryAction").val('update');
-                                $("#eventSubCategoryTitle").val(respArr.title);                            
+                                $("#eventSubCategoryTitle").val(respArr.title);  
+                                $("#eventSubCategoryPrice").val(respArr.price);
 
                                 if(respArr.status == 1) {
                                     $("#eventSubCategoryStatusActive").prop( "checked", true );
@@ -727,6 +746,12 @@
                                 minlength: 5,
                                 maxlength: 50
                             },
+                            eventSubCategoryPrice: {
+                                required: true,
+                                minlength: 1,
+                                maxlength: 4,
+                                number: true
+                            },
                             eventSubCategoryStatus: {
                                 required: true
                             }
@@ -736,6 +761,11 @@
                                 required: "Event Sub Category Title should not be empty.",
                                 minlength: "Event Sub Category Title should be minimum of 5 characters.",
                                 maxlength: "Event Sub Category Title should not be beyond 20 characters."
+                            },
+                            eventSubCategoryPrice: {
+                                required: "Event Sub Category Price should not be empty.",
+                                minlength: "Event Sub Category Price should be minimum of 1 characters.",
+                                maxlength: "Event Sub Category Price should not be beyond 4 characters."
                             },
                             eventSubCategoryStatus: {
                                 required: "Select Event Sub Category Status."

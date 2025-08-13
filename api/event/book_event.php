@@ -4,7 +4,11 @@
     $response = new Response();
     $errors = new Errors();
 
-    if(Helper::is_post()){
+    if((Helper::is_post())){
+
+        print"<pre>";
+        print_r($_POST);
+        exit;
 
         $api_token = Helper::post_val("api_token");
 
@@ -13,57 +17,68 @@
             $setting = $setting->where(["api_token" => $api_token])->one();
 
             if(!empty($setting)) {
-                $events = new Event();
-                
-                $sort_by = "id";
-                $sort_type = "desc";        
+                $booking = new Bookings();
 
-                $column = "";
-                $column = "event.id AS eventId, event.title AS eventTitle, event.venue AS eventVenue, event.address AS eventAddress, event.start_date AS eventStartDate, event.end_date AS eventEndDate, event.image_name AS eventImage, event.status AS eventStatus, event.state_id AS eventState, event.city_id AS eventCity, event.country_id AS eventCountry, event.admin_id AS eventAdminId, ";
-                $column .= "countries.id AS countryId, countries.shortname AS countryShortName, countries.name AS countryName, countries.phonecode AS countryPhoneCode, ";
-                $column .= "state.id AS stateId, state.name AS stateName, state.country_id AS stateCountryId, ";
-                $column .= "city.id AS cityId, city.name AS cityName, city.state_id AS cityCountryId ";
+                $event->title = trim($_POST['eventTitle']);
+                $event->description = trim($_POST['eventDescription']);                    
+                $event->venue = trim($_POST['venue']);
+                $event->start_date = trim($_POST['eventStartDate']);
+                $event->end_date = trim($_POST['eventEndDate']);
+                $event->status = (isset($_POST['status'])) ? 1 : 1;
+                $event->admin_id = $admin->id;
+                $event->type_id = ((isset($_POST['eventType'])) && (!empty($_POST['eventType'])))?$_POST['eventType']:'';
+                $event->category_id = ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))?$_POST['eventCategoryHidden']:'';
+                $event->category_type_id = ((isset($_POST['eventCategoryType'])) && (!empty($_POST['eventCategoryType'])))?$_POST['eventCategoryType']:'';
+                $event->sub_category_id = ((isset($_POST['eventSubCategoryHidden'])) && (!empty($_POST['eventSubCategoryHidden'])))?$_POST['eventSubCategoryHidden']:'';
+                $event->image_name = $_POST['eventFileHidden'];
 
-                $joinColumn['join_table_name1'] = "event";
-                $joinColumn['join_table_name2'] = "countries";
-                $joinColumn['join_table_name3'] = "state";
-                $joinColumn['join_table_name4'] = "city";
-                $joinColumn['join_column_name1'] = "country_id";
-                $joinColumn['join_column_name2'] = "state_id";
-                $joinColumn['join_column_name3'] = "city_id";
-                $joinColumn['join_column_child'] = "id";
 
-                $all_events = (array) $events->where(["admin_id" => 1])->orderBy($sort_by)->orderType($sort_type)->allWithJoin($column, $joinColumn);
-            
-                $eventsArray = array();
-                if(!empty($all_events)) {
-                    foreach($all_events as $key=>$eventVal) {
-                        $eventsArray[$key]['eventId'] = $eventVal->eventId;
-                        $eventsArray[$key]['eventTitle'] = $eventVal->eventTitle;
-                        $eventsArray[$key]['eventDescription'] = (isset($eventVal->eventDescription)?$eventVal->eventDescription:'');                        
-                        $eventsArray[$key]['eventVenue'] = $eventVal->eventVenue;
-                        $eventsArray[$key]['eventAddress'] = $eventVal->eventAddress;
-                        $eventsArray[$key]['eventStartDate'] = $eventVal->eventStartDate;
-                        $eventsArray[$key]['eventEndDate'] = $eventVal->eventEndDate;
-                        $eventsArray[$key]['eventImage'] = $eventVal->eventImage;
-                        $eventsArray[$key]['eventStatus'] = $eventVal->eventStatus;
-                        $eventsArray[$key]['countryName'] = $eventVal->countryName;
-                        $eventsArray[$key]['stateName'] = $eventVal->stateName;
-                        $eventsArray[$key]['cityName'] = $eventVal->cityName;
+                /*$viewEvent = new Event();
+                $viewEvent->title = trim($_POST['eventTitle']);
+                $viewEventArray = (array) $viewEvent->where(["title" => $viewEvent->title])->one();*/
 
-                        $eventStatus = "In-Active";
-                        if($evenTypeVal->eventStatus == 1){
-                            $eventStatus = "Active";
-                        } elseif($evenTypeVal->eventStatus == 2){
-                            $eventStatus = "In-Active";
+                /*if((isset($viewEventArray['id'])) && (!empty($viewEventArray['id']))) {
+                    Helper::redirect_to("../../events.php?msg=4");
+                } else {*/
+                    $event->title = trim($_POST['eventTitle']);
+                    $event->description = trim($_POST['eventDescription']);                    
+                    $event->venue = trim($_POST['venue']);
+                    $event->start_date = trim($_POST['eventStartDate']);
+                    $event->end_date = trim($_POST['eventEndDate']);
+                    $event->status = (isset($_POST['status'])) ? 1 : 1;
+                    $event->admin_id = $admin->id;
+                    $event->type_id = ((isset($_POST['eventType'])) && (!empty($_POST['eventType'])))?$_POST['eventType']:'';
+                    $event->category_id = ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))?$_POST['eventCategoryHidden']:'';
+                    $event->category_type_id = ((isset($_POST['eventCategoryType'])) && (!empty($_POST['eventCategoryType'])))?$_POST['eventCategoryType']:'';
+                    $event->sub_category_id = ((isset($_POST['eventSubCategoryHidden'])) && (!empty($_POST['eventSubCategoryHidden'])))?$_POST['eventSubCategoryHidden']:'';
+                    $event->image_name = $_POST['eventFileHidden'];
+
+                    /*$eventSubCategoryStr = "";
+                   
+                    //$event->sub_category_id = $_POST['eventSubCategory'];
+
+                    $errors = $event->get_errors();
+
+                    if($errors->is_empty()) {
+                        if($errors->is_empty()) {
+                            $id = $event->save();
+                            $has_error_creation = false;
+
+                            Helper::redirect_to("../../index.php?pg-name=my-booking");
+                            exit;
                         }
+                    }*/
+                //}
 
-                        $eventsArray[$key]['eventStatus'] = $eventStatus;
-                    }
+
+                
+                
+                    
+                if (!empty($eventDetail)) {
+                    $response->create(200, "Success.", $eventDetail);
+                } else {
+                    $response->create(200, "No Item Found.", []);
                 }
-
-                if (!empty($eventsArray)) $response->create(200, "Success.", $eventsArray);
-                else $response->create(200, "No Item Found.", []);
 
             }else $response->create(201, "Invalid Api Token", null);
         }else $response->create(201, "No Api Token Found", null);
