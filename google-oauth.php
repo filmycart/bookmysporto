@@ -1,4 +1,4 @@
-<?php
+                                         zcHNs1th3400[5-<?php
 	// Initialize the session
 	session_start();
 	// Update the following variables

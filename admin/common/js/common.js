@@ -1,3 +1,33 @@
+function userTypeFunc(userTypeId) {
+    $.ajax({
+        url: "user_type.php",
+        cache: false,
+        type: "POST",
+        data: {userTypeId : userTypeId},
+        beforeSend: function() {
+            $('#userTypeSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#userTypeSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#userTypeDiv").html(html);
+        }
+    });
+}
+
+function userTypeFieldsFunc(userTypeId) {
+    $.ajax({
+        url: "user_type_fields.php",
+        cache: false,
+        type: "POST",
+        data: {userTypeId : userTypeId},
+        success: function(html){
+            $("#userTypeFieldsDiv").html(html);
+        }
+    });
+}
+
 function eventState(countryId, cityId, stateId) {
     $.ajax({
         url: "state.php",
@@ -175,6 +205,24 @@ function eventImage(eventId) {
         },
         success: function(html){
             $("#eventImagePreview").html(html);
+        }
+    });
+}
+
+function userImage(userId) {
+    $.ajax({
+        url: "user-images.php",
+        cache: false,
+        type: "POST",
+        data: {userId: userId},
+        beforeSend: function() {
+            $('#userImageSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#userImageSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#userImagePreview").html(html);
         }
     });
 }

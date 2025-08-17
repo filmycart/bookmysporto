@@ -90,7 +90,7 @@
                 </div>
               </div>
               <div class="modal fade" id="event-type-form-modal-msg">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="msg-modal-title-text"></span></h4>
@@ -111,7 +111,7 @@
                 <!-- /.modal-dialog -->
               </div>
                <div class="modal fade" id="del-event-form-modal">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="del-modal-title-text"></span></h4>
@@ -357,9 +357,6 @@
                     <?php
                         if(count($all_event_sub_category) > 0){
                             foreach ($all_event_sub_category as $item){
-                                /*print"<pre>";
-                                print_r($item);
-                                exit;*/
                     ?>
                               <tr>
                                 <td>
@@ -373,7 +370,7 @@
                                     $categoryIdArray = explode(",",$item->category_id);
                                     $categoryTitleArray = array();
 
-                                    $current_category_str = "";
+                                    $current_category = "";
                                     if(!empty($categoryIdArray)) {
                                         foreach($categoryIdArray as $categoryIdVal) {
                                             if((isset($categoryData[$categoryIdVal])) && (!empty($categoryData[$categoryIdVal]))) {
@@ -387,9 +384,6 @@
                                     if(!empty($categoryTitleArray)) {
                                         $categoryTitleStr = implode(",",$categoryTitleArray);
                                     }
-
-                                    $current_category .= "<div style='border:0px solid red;float:left;width:26%;'><a href='" . $cat_param . "'>" . $categoryTitleStr . "</a></div>";
-
                                 ?>
                                 <td>    
                                     <?php echo $categoryTitleStr; ?>
@@ -659,7 +653,7 @@
                                 var hostname = location.hostname;
                                 var viewEventSubCategoryImageLink = "";
                                 if(hostname == "localhost"){
-                                    viewEventCategoryImageLink = "<a href='http://localhost/sportifyv2/admin/uploads/event_subcategory/"+respArr.image_name+"' target='_blank'>"+respArr.image_name+"</a>";
+                                    viewEventCategoryImageLink = "<a href='http://localhost/bookmysporto/admin/uploads/event_subcategory/"+respArr.image_name+"' target='_blank'>"+respArr.image_name+"</a>";
                                 } else {
                                     viewEventCategoryImageLink = "<a href='https://bookmysporto.com/admin/uploads/event_subcategory/"+respArr.image_name+"' target='_blank'>"+respArr.image_name+"</a>";
                                 }

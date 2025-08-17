@@ -202,7 +202,7 @@
                 </div>
               </div>
               <div class="modal fade" id="contact-form-modal-msg">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="msg-modal-title-text"></span></h4>
@@ -223,7 +223,7 @@
                 <!-- /.modal-dialog -->
               </div>
                <div class="modal fade" id="del-contact-form-modal">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="del-modal-title-text"></span></h4>

@@ -17,31 +17,26 @@
     $sort_type_array["ASC"] = "Asc";
 
     $sort_by = $sort_type = $search = "";
-    $url_current = "users.php?";
+    $url_current = "events.php?";
 
-    if(!empty($admin)){
+    if(!empty($admin)) {
+        $users = new User();
+        
+        $column = "";
+        $column .= " user.id AS userId, user.username AS userUserName, user.name AS userName, user.mobile AS userMobile, user.email AS userEmail, user.password AS userPassword, user.image AS userImage, user.type AS userType, user.is_coach AS userIsCoach, user.social_id AS userSocialId, oauth_provider AS userOauthProvider, user.oauth_uid AS userOauthUid, user.verification_token AS userVerificationToken, user.status AS userStatus, user.image_name AS userImageName, user.image_resolution AS userImageResolution, user.admin_id AS userAdminId, user.created AS userCreated, ";
+        $column .= "admin.id AS adminId, admin.username AS adminUserName, admin.email AS adminEmail, admin.password AS adminPassword, admin.status AS adminStatus, ";
+        $column .= "user_type.id AS userTypeId, user_type.name AS userTypeName, user_type.status AS userTypeStatus, user_type.admin_id AS userTypeAdminId, user_type.created AS userTypeCreated ";
+        
+        $joinColumn['join_table_name1'] = "user";
+        $joinColumn['join_table_name2'] = "admin";
+        $joinColumn['join_table_name3'] = "user_type";        
+        $joinColumn['join_column_name1'] = "admin_id";
+        $joinColumn['join_column_name3'] = "type";
+        $joinColumn['join_column_city_state_country_id'] = "id";
+        $joinColumn['join_column_child'] = "id";
 
-        $events = new Event();
-        $category = new Category();
-
-        $sort_by = "id";
-        $sort_type = "desc";
-        //$all_events = (array) $events->orderBy('id')->orderType('desc')->all();
-        $all_events = $events->where(["admin_id" => $admin->id])
-                            //->like(["title" => $search])->like(["tags" => $search])->search()
-                            ->orderBy($sort_by)->orderType($sort_type)->all();
-                            //->limit($start, BACKEND_PAGINATION)->all();
-
-        $all_category = $category->where(["admin_id" => $admin->id])
-                            ->orderBy($sort_by)->orderType($sort_type)->all();    
-
-        $eventCategory = array();
-        if(!empty($all_category)) {
-            foreach($all_category as $category_val) {
-                $eventCategory[$category_val->id] = $category_val; 
-            }
-        }
-
+        $all_users = (array) $users->allWithJoinThreeTables($column, $joinColumn);
+   
         $all_products = new Product();
         $pagination = "";
         $pagination_msg = "";
@@ -150,60 +145,22 @@
         $panel_setting = new Setting();
         $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
 
-        $all_sub_categories = new Sub_Category();
+        $all_sub_categories = new Event_SubCategory();
         $all_sub_categories = $all_sub_categories->where(["admin_id" => $admin->id])->all();
         $sub_categories_assoc = [];
         foreach ($all_sub_categories as $item){
             $sub_categories_assoc[$item->id] = $item->title;
         }
-    /*
-        $eventId = "";
-        $pgEventId = "";
-        $pgEventAction = "";
-        if((isset($_GET["eventId"])) && (!empty($_GET["eventId"]))) {
-            $pgEventId = $_GET['eventId'];
-        } elseif((isset($_POST["id"])) && (!empty($_POST["id"]))) {
-            $pgEventId = $_POST['id'];
-        } 
-
-        if((isset($_GET["eventAction"])) && (!empty($_GET["eventAction"]))) {
-            $pgEventAction = $_GET['eventAction'];
-        } 
-         elseif((isset($_POST["eventAction"])) && (!empty($_POST["eventAction"]))) {
-            $pgEventAction = $_POST['eventAction'];
-        }*/
-
-    /*    print"<pre>";
-        print_r($_GET);
-        exit;*/
-
-    /*    $viewEvent = new Event();
-        $viewEventArray = array();
-        if((Helper::is_get()) && (!empty($pgEventId)) && ($pgEventAction == "view")) {
-            $viewEvent->id = $pgEventId;
-            $viewEventArray = (array) $viewEvent->where(["id" => $viewEvent->id])->andwhere(["admin_id" => $admin->id])->one();
-            
-            print"<pre>";
-            print_r($viewEventArray);
-            exit;
-        }*/
-
-        /*if(!empty($eventId)) {
-            $pgEventAction = "update";
-        } else {
-            //$pgAction = "create"; 
-        }*/
     }else {
         Helper::redirect_to("login.php");
     }
 
     $delMsg = '';
     if((isset($_GET['delmsg'])) && (!empty($_GET['delmsg']))) {
-        $delMsg = 'Event Deleted Successfully.';
+        $delMsg = 'User Deleted Successfully.';
     }
 ?>
 <link rel="stylesheet" href="./plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-
 <?php require("common/php/php-head.php"); ?>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -221,7 +178,7 @@
           <div class="col-sm-12">
             <ol class="breadcrumb float-sm-left">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">Events</li>
+              <li class="breadcrumb-item active">Users</li>
             </ol>
           </div>
         </div>
@@ -237,15 +194,15 @@
               <div class="card-header">
                 <div style="width:100%;float:left;">
                     <div style="width:30%;float:left;">
-                        <h3 class="card-title">Events</h3>
+                        <h3 class="card-title">Users</h3>
                     </div>  
-                    <div style="width:9%;float:right;">  
-                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEvent('create','','101','4183','35','20','37','171','174')">Add Event</a>
+                    <div style="width:9%;float:right;"> 
+                        <a href="#" data-toggle="modal" data-target="#user-form-modal" class="btn btn-primary btn-sm" onclick="addEditUser('create','','')">Add User</a>
                     </div>
                 </div>
               </div>
               <div class="modal fade" id="event-form-modal-msg">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="msg-modal-title-text"></span></h4>
@@ -254,19 +211,15 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                        <div id="add-msg-div" style="color:green;">Event Created Successfully.</div>
-                        <div id="upd-msg-div" style="color:green;">Event Updated Successfully.</div>
-                        <div id="del-msg-div" style="color:green;">Event Deleted Successfully.</div>
-                        <div id="add-uniq-msg-div" style="color:red;">Event Title Already Exist.</div>
-                        <div id="upd-uniq-msg-div" style="color:red;">Event Title Already Exist.</div>
+                        <div id="msg-div" style="color:green;"></div>
                     </div>
                   </div>
                   <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
               </div>
-               <div class="modal fade" id="del-event-form-modal">
-                <div class="modal-dialog modal-lg">
+               <div class="modal fade" id="del-user-modal">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="del-modal-title-text"></span></h4>
@@ -283,7 +236,7 @@
                 <!-- /.modal-dialog -->
               </div>
               <!-- /.modal -->
-              <div class="modal fade" id="event-form-modal">
+              <div class="modal fade" id="user-form-modal">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -325,6 +278,7 @@
                                  float:left;
                                  width:1%;
                             }
+
                             .bootstrap-select > .dropdown-toggle {
                                 height: 38px ;
                             }
@@ -349,116 +303,100 @@
                                 color: red;  
                             }  
 
+                            .error {
+                                color: red;
+                            }
+
                             .required-field{
                                 color:red;
                             }
                         </style>
-                        <form id="eventForm" name="eventForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/event.php">
-                            <input type="hidden" id="eventId" name="eventId" value="<?php echo (!empty($eventId)?$eventId:''); ?>" />
-                            <input type="hidden" id="eventAction" name="eventAction" value="<?php echo (!empty($pgAction)?$pgAction:''); ?>" />
-                            <input type="hidden" id="eventCategoryHidden" name="eventCategoryHidden" value="" />
-                            <input type="hidden" id="eventCountry" name="eventCountry" value="101" />
+                        <form id="userForm" name="userForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/users.php">
+                            <input type="hidden" id="userId" name="userId" value="" />
+                            <input type="hidden" id="userAction" name="userAction" value="" />   
+                            <input type="hidden" id="userImageHidden" name="userImageHidden" value="" />
                             <div id="eventSucResponseDiv" style="color:green;"></div>
                             <div id="eventErrResponseDiv" style="color:green;"></div>
                             <div class="eventFormMainDiv" id="modal-div">
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
-                                        <label>Title</label>
+                                        <label>ID</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="eventTitle" name="eventTitle" class="form-control" data-target="#eventTitle" />
+                                            <input type="text" disabled id="userID" name="userID" class="form-control" data-target="#userID" />
                                         </div>
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
-                                        <label>Venue</label>
+                                        <label>User Name</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="eventVenue" name="eventVenue" class="form-control" data-target="#eventVenue" />
+                                            <input type="text" disabled id="userUserName" name="userUserName" class="form-control" data-target="#userUserName" />
                                         </div>
-                                    </div>
-                                </div> 
-                                <div class="eventFormRow">
-                                    <div class="eventFormCol">
-                                        <label>Start Date</label>
-                                        <span class="required-field">*</span>
-                                        <div class="form-group date" data-target-input="nearest">
-                                            <input type="text" id="eventStartDate" name="eventStartDate" class="form-control datetimepicker-input" data-target="#eventStartDate" />
-                                        </div>
-                                    </div>
-                                    <div class="eventFormSpacerDiv">&nbsp;</div>
-                                    <div class="eventFormCol">
-                                        <label>End Date</label>
-                                        <span class="required-field">*</span>
-                                        <div class="form-group date" data-target-input="nearest">
-                                            <input type="text" id="eventEndDate" name="eventEndDate" class="form-control datetimepicker-input" data-target="#eventEndDate" />
-                                        </div>
-                                    </div>
-                                </div> 
-                                <div class="eventFormRow">
-                                    <div class="eventFormCol">
-                                        <div id="typeSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div class="form-group">
-                                            <label>Type</label>
-                                            <span class="required-field">*</span>
-                                            <div id="eventTypeDiv"></div>
-                                        </div>
-                                    </div>
-                                    <div class="eventFormSpacerDiv">&nbsp;</div>
-                                    <div class="eventFormCol">
-                                        <div id="categorySpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div class="form-group">
-                                            <label>Category</label>
-                                            <span class="required-field">*</span>
-                                            <div id="eventCategoryDiv"></div>
-                                        </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
-                                        <div id="stateSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div class="form-group">
-                                            <label>State</label>
-                                            <span class="required-field">*</span>
-                                            <div id="stateDiv"></div>
+                                        <label>Name</label>
+                                        <span class="required-field">*</span>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <input type="text" id="userName" name="userName" class="form-control" data-target="#userName" />
                                         </div>
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
-                                        <div id="citySpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                        <div id="userTypeSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
                                         <div class="form-group">
-                                            <label>City</label>
+                                            <label>User Type</label>
                                             <span class="required-field">*</span>
-                                            <div id="cityDiv"></div>
+                                            <div id="userTypeDiv"></div>
                                         </div>
-                                    </div>
-                                </div> 
+                                    </div>                                    
+                                </div>
+                                <div class="eventFormRow">
+                                    <div id="userTypeFieldsSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                    <div id="userTypeFieldsDiv"></div>
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
+                                    <div class="eventFormCol">
+                                        <label>Image</label>
+                                        <div id="userImageSpinnerDiv">
+                                            <img src="./assets/images/spinner.png" class="loader">
+                                        </div>
+                                        <div id="userImagePreview"></div>
+                                        <div id="userImageError" style="color:red;"></div>
+                                        <input name="userImage" id="userImage" type="file" class="form-control" />
+                                    </div>                                    
+                                </div>
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
-                                        <div id="categoryTypeSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                        <label>Status</label>
+                                        <span class="required-field">*</span>
                                         <div class="form-group">
-                                            <label>Sub-Category</label>
-                                            <span class="required-field">*</span>
-                                            <div id="eventSubCategoryDiv"></div>
+                                            <div class="form-check">
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <input class="form-check-input" type="radio" value="1" id="userStatusActive" name="userStatusActive" checked="">
+                                                        <label class="form-check-label">Active</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <input class="form-check-input" type="radio" value="2" id="userStatusInActive" name="userStatusInActive">
+                                                        <label class="form-check-label">In-Active</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
-                                        <div id="evenFileSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div id="eventImagePreview"></div>
-                                        <div id="eventImageError" style="color:red;"></div>
-                                        <div class="form-group" id="eventFileLabelDiv">
-                                            <label>Image</label>
+                                        <label>Is Coach</label>
+                                        <div class="form-group" data-target-input="nearest">
+                                            <input type="checkbox" id="isCoach" name="isCoach" value="1" />
                                         </div>
-                                        <div class="form-group" id="eventFileDiv">
-                                            <input name="eventFile" id="eventFile" type="file" multiple />
-                                            <input type="hidden" name="eventFileHidden" id="eventFileHidden" />
-                                        </div>
-                                    </div>
-                                </div>  
+                                    </div>                                  
+                                </div>
                             </div>
                             <div class="modal-footer right-content-between">
-                                <button type="submit" id="eventSubmit" name="eventSubmit" class="btn btn-primary">Save</button>
+                                <button type="submit" id="userSubmit" name="userSubmit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
@@ -467,97 +405,205 @@
                 </div>
                 <!-- /.modal-dialog -->
               </div>
+              <div class="modal fade" id="view-user-modal">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title"><span id="view-user-modal-title-text"></span></h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="eventFormMainDiv" id="modal-div">
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>ID</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserId" name="viewUserId" data-target="#viewUserId"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Name</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserName" name="viewUserName" data-target="#viewUserName"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>User Name</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserUserName" name="viewUserUserName" data-target="#viewUserUserName"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Mobile</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserMobile" name="viewUserMobile" data-target="#viewUserMobile"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>E-Mail</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserEmail" name="viewUserEmail" data-target="#viewUserEmail"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Type</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserType" name="viewUserType" data-target="#viewUserType"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Is Coach</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewIsCoach" name="viewIsCoach" data-target="#viewIsCoach"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Social Id</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewSocialId" name="viewSocialId" data-target="#viewSocialId"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Oauth Provider</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserOauthProvider" name="viewUserOauthProvider" data-target="#viewUserOauthProvider"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Oauth Uid</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserOauthUid" name="viewUserOauthUid" data-target="#viewUserOauthUid"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Image</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserImage" name="viewUserImage" data-target="#viewUserImage"></span>
+                                    </div>
+                                </div>
+                                <div class="eventFormSpacerDiv">&nbsp;</div>
+                                <div class="eventFormCol">
+                                    <label>Verification Token</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserVerificationToken" name="viewUserVerificationToken" data-target="#viewUserVerificationToken"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventFormRow">
+                                <div class="eventFormCol">
+                                    <label>Status</label>
+                                    <div class="form-group" data-target-input="nearest">
+                                        <span id="viewUserStatus" name="viewUserStatus"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="eventsList" class="table table-bordered table-striped">
+                <table id="usersList" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Venue</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Name</th>
+                        <th>User Name</th>
+                        <th>E-Mail</th>
+                        <th>Mobile</th>
+                        <th>Type</th>
                         <th>Status</th>
-                        <th class="width20">Action</th>
+                        <th class="width40">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php 
-                        if(count($all_events) > 0){
-                            foreach ($all_events as $item){ 
+                        if(count($all_users) > 0){
+                            foreach ($all_users as $item){
+                                $userId = "";
+                                if((isset($item->userId)) && (!empty($item->userId))){
+                                    $userId = $item->userId;
+                                }
+
+                                $userName = "";
+                                if((isset($item->userName)) && (!empty($item->userName))){
+                                    $userName = $item->userName;
+                                }
+
+                                $userUserName = "";
+                                if((isset($item->userUserName)) && (!empty($item->userUserName))){
+                                    $userUserName = $item->userUserName;
+                                }
+
+                                $userEmail = "";
+                                if((isset($item->userEmail)) && (!empty($item->userEmail))){
+                                    $userEmail = $item->userEmail;
+                                }
+
+                                $userMobile = "";
+                                if((isset($item->userMobile)) && (!empty($item->userMobile))){
+                                    $userMobile = $item->userMobile;
+                                }
+
+                                $userTypeName = "";
+                                if((isset($item->userTypeName)) && (!empty($item->userTypeName))){
+                                    $userTypeName = $item->userTypeName;
+                                }
                     ?>
                               <tr>
-                                <!-- <td>
-                                    <img class="p-15" src="<?php echo UPLOADED_FOLDER . DIRECTORY_SEPARATOR . UPLOADED_THUMB_FOLDER . DIRECTORY_SEPARATOR . $item->image_name; ?>" alt="image" />
-                                </td> -->
                                 <td>
-                                    <?php echo $item->id; ?>
+                                    <?=$userId;?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><?php echo $item->title; ?></a>
-                                </td>
-                                <?php 
-                                    $current_category = $eventDispCat = "";
-                                    $eventCategoryIdArray = explode(",",$item->category_id);
-                                    if(!empty($eventCategoryIdArray)) {
-                                        foreach($eventCategoryIdArray as $eventCategoryIdVal) {
-                                            if((isset($eventCategory[$eventCategoryIdVal]->title)) && (!empty($eventCategory[$eventCategoryIdVal]->title))) {
-                                                $eventDispCat = $eventCategory[$eventCategoryIdVal]->title; 
-                                                $cat_param = $url_current . "category_id=" . $eventCategoryIdVal;
-                                                $current_category .= "<div style='border:0px solid red;float:left;width:100%;'><div style='border:0px solid red;float:left;width:50%;'><a href='" . $cat_param . "'>" . $eventDispCat . "</a></div></div>";
-                                            }
-                                        }
-                                    } else {
-                                        $current_category = "Unknown";
-                                    }
-                                ?>
-                                <td>
-                                    <?php echo $current_category; ?>
+                                    <a href="#" data-toggle="modal" data-target="#view-user-modal" onclick="viewUser('view','<?=$userId;?>')"><?=$userName;?></a>
                                 </td>
                                 <td>
-                                    <?php 
-                                        $address = "";
-                                        if((isset($item->address)) && (!empty($item->address))){
-                                            $address = $item->address;
-                                        }     
-                                    ?>
-                                    <?php echo $address; ?>
+                                    <?=$userUserName;?>
                                 </td>
                                 <td>
-                                    <?php 
-                                        $startDate = "";
-                                        if((isset($item->start_date)) && (!empty($item->start_date))){
-                                            $startDate = date("d/m/Y h:i:s A",strtotime($item->start_date));
-                                        }     
-                                    ?>
-                                    <?php echo $startDate; ?>
+                                    <?=$userEmail;?>
                                 </td>
                                 <td>
-                                    <?php 
-                                        $endDate = "";
-                                        if((isset($item->end_date)) && (!empty($item->end_date))){
-                                            $endDate = date("d/m/Y h:i:s A",strtotime($item->end_date));
-                                        }     
-                                    ?>
-                                    <?php echo $endDate; ?>
+                                    <?=$userMobile;?>
+                                </td>
+                                <td>
+                                    <?=$userTypeName;?>
                                 </td>
                                 <td>
                                     <?php 
                                         $status_class = "";
                                         $status = '<span class="badge badge-secondary">In-Active</span>';
-                                        if($item->status == 1){
+                                        if($item->userStatus == 1){
                                             $status_class = "active";
                                             $status = '<span class="badge badge-success">Active</span>';
-                                        }     
+                                        }
                                     ?>
                                     <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
                                 </td>
-                                <td style="width:100px;">
-                                    <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="fa fa-credit-card" aria-hidden="true"></i></a>
-                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->id; ?>','<?php echo $item->country_id; ?>','<?php echo $item->city_id; ?>','<?php echo $item->state_id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="ion-compose"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->id; ?>','<?php echo $item->admin_id; ?>')"><i class="ion-trash-a"></i></a>
-                                    <!-- <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#venue-form-modal-msg" onclick="deleteEvent('delete','<?php echo $item->venueId; ?>')"><i class="ion-trash-a"></i></a> -->
+                                <td style="width:150px;">
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-user-modal" onclick="viewUser('view','<?=$userId?>')"><i class="ion-eye"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#user-form-modal" onclick="addEditUser('edit','<?=$userId?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-user-modal" onclick="deleteUser('delete','<?=$userId?>')"><i class="ion-trash-a"></i></a>
                                 </td>
                               </tr>
                   <?php 
@@ -568,13 +614,13 @@
                   <tfoot>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Venue</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Name</th>
+                        <th>User Name</th>
+                        <th>E-Mail</th>
+                        <th>Mobile</th>
+                        <th>Type</th>
                         <th>Status</th>
-                        <th>Action</th>
+                        <th class="width40">Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -613,26 +659,26 @@
         <!-- AdminLTE for demo purposes -->
         <script src="../admin/dist/js/demo.js"></script>
         <!-- Page specific script -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../admin/dist/css/richtext.min.css">
+        <script src="../admin/dist/js/jquery.richtext.js"></script> -->
         <script>
             jQuery.noConflict();
             (function( $ ) {
               $(function() {
-                // More code using $ as alias to jQuery
-                $("#eventsList").DataTable({
-                    "responsive": true, "lengthChange": false, "autoWidth": false,
+                $('#usersList').DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+                    "pageLength": 25, // Sets the initial number of records per page to 25
+                    "responsive": true, 
+                    "autoWidth": false,
                     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-                    "order":  [[0, 'desc']],
-                    "columnDefs": [{ "orderable": false, "targets": [6,7] }]
-                }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-                $('#example2').DataTable({
-                  "paging": true,
-                  "lengthChange": false,
-                  "searching": false,
-                  "ordering": true,
-                  "info": true,
-                  "autoWidth": false,
-                  "responsive": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
                 });
               });
             })(jQuery);
@@ -652,11 +698,7 @@
             });
         </script>
         <script>
-            $('#add-msg-div').hide();
-            $('#upd-msg-div').hide();
-            $('#del-msg-div').hide();
-            $('#upd-uniq-msg-div').hide();
-            $('#add-uniq-msg-div').hide();
+            $('#msg-div').hide();
 
             function removeA(arr, eventFileName) {
                 const myArray = arr.split(",");
@@ -665,24 +707,24 @@
                 return myArray;
             }
 
-            function delEventImage(eventFileName, respArray) {
+            function delUserImage(userFileName, respArray) {
 
-                $('#eventImagePreview').html('');
+                $('#userImagePreview').html('');
 
-                respArr = removeA(respArray, eventFileName);
+                respArr = removeA(respArray, userFileName);
                 respArray1 = "'"+respArr+"'";
 
                 var formdata = new FormData(); 
     
-                formdata.append("eventAction", "deleteEventImg");
-                formdata.append("eventFileName", eventFileName);
+                formdata.append("userAction", "deleteUserCatImg");
+                formdata.append("userFileName", userFileName);
     
                 var respArray = new Array();
                 var respFileNameArray = new Array();
                 var respFileName = "";
 
                 $.ajax({
-                    url: "./private/controllers/event.php", 
+                    url: "./private/controllers/users.php", 
                     cache: false,
                     contentType: false,
                     processData: false,
@@ -697,41 +739,42 @@
                             var src = "'"+respArr[index]+"'";
                             var src1 = respArr[index];
                             if((src != undefined) && (src1 != undefined)) {
-                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
-                                $('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+'><i class="ion-trash-a"><i></a></div>');
+                                var delUserImage = 'onclick="delUserImage('+src+','+respArray1+')"';
+                                $('#userImagePreview').append('<div><a href ="uploads/users/'+src1+'" target="_blank" class="deleteUserImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delUserImage+'><i class="ion-trash-a"><i></a></div>');
                                 respFileNameArray[index] = src1;
                             }
                         }  
 
                         respFileName = respFileNameArray.toString();
 
-                        $('#eventFileHidden').val(respFileName);                
+                        $('#userImageHidden').val(respFileName);                
                     }
                 });
             }
 
-            $('#eventFileDel').click(function(e) {
+            $('#userFileDel').click(function(e) {
                 console.log("delete file");
             });
 
-            $('#eventFile').change(function(e) {
+            $('#userImage').change(function(e) {
 
-                $('#eventImagePreview').html('');
-                $('#eventImageError').html('');
+                $('#userImagePreview').html('');
+                $('#userFileSpinnerDiv').hide();
+                $('#userImageError').html('');
 
-                var fileData = $('#eventFile').prop('files')[0];   
+                var fileData = $('#userImage').prop('files')[0];   
                 var formdata = new FormData(); 
 
                 // Read selected files
-                var totalfiles = document.getElementById('eventFile').files.length;
-                var eventTitle = $('#eventTitle').val();
+                var totalfiles = document.getElementById('userImage').files.length;
+                var userName = $('#userName').val();
                 for (var index = 0; index < totalfiles; index++) {
-                    formdata.append("files[]", document.getElementById('eventFile').files[index]);
+                    formdata.append("files[]", document.getElementById('userImage').files[index]);
                 }   
 
                 if (formdata) {
-                    formdata.append("eventAction", "upload");
-                    formdata.append("eventTitle", eventTitle);
+                    formdata.append("userAction", "upload");
+                    formdata.append("userName", userName);
                 }
 
                 var respArray = new Array();
@@ -739,7 +782,7 @@
                 var respFileNameArray = new Array();
                 var respFileName = "";
                 $.ajax({
-                    url: "./private/controllers/event.php", 
+                    url: "./private/controllers/users.php", 
                     cache: false,
                     contentType: false,
                     processData: false,
@@ -747,9 +790,9 @@
                     dataType: 'json',                         
                     type: 'POST',
                     success: function(php_script_response) {
-                        respArray = php_script_response['eventImage'];
-                        errorRespArray = php_script_response['eventImageInvalid'];
-                        respArray1 = "'"+php_script_response['eventImage']+"'";
+                        respArray = php_script_response['userImage'];
+                        errorRespArray = php_script_response['userImageInvalid'];
+                        respArray1 = "'"+php_script_response['userImage']+"'";
                         
                         if(respArray) {
                             var fileCount = respArray.length;
@@ -757,187 +800,260 @@
                             for (var index = 0; index < fileCount; index++) {
                                 var src = "'"+respArray[index]+"'";
                                 var src1 = respArray[index];
-                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
+                                var delUserImage = 'onclick="delUserImage('+src+','+respArray1+')"';
 
-                                $('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+'><i class="ion-trash-a"><i></a></div>');
+                                $('#userImagePreview').append('<div><a href ="uploads/users/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delUserImage+'><i class="ion-trash-a"><i></a></div>');
                                 respFileNameArray[index] = src1;
                             }   
 
                             respFileName = respFileNameArray.toString();
 
-                            $('#eventFileHidden').val(respFileName);
+                            $('#userImageHidden').val(respFileName);
                         } else if(errorRespArray) {
-                            $('#eventImageError').append(errorRespArray);
+                            $('#userImageError').append(errorRespArray);
                         }
                     }
                  });      
             });
-
-            $('#stateSpinnerDiv').show();
-            $('#citySpinnerDiv').hide();
-            $('#typeSpinnerDiv').hide(); 
-            $('#categorySpinnerDiv').hide();
-            $('#categoryTypeSpinnerDiv').hide();            
-            $('#subCategorySpinnerDiv').hide();
-            $('#evenFileSpinnerDiv').hide();
-
-            function deleteEvent(eventAction, eventId) {
-                window.location.href='private/controllers/event.php?eventAction='+eventAction+'&eventId='+eventId;
-            }
-           
-            function addEventBooking(eventAction, eventId, countryId, cityId, stateId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
-                $(".eventImagePreview").html('');
-                $(".eventSucResponseDiv").html('');
-                $(".eventErrResponseDiv").html('');                
-                $(".stateDiv").html('');
-                $(".cityDiv").html('');
-                $(".eventTypeDiv").html('');
-                $(".eventCategoryDiv").html('');
-                $(".eventCategoryTypeDiv").html('');
-                $(".eventSubCategoryDiv").html('');
-
-                eventState(countryId, cityId, stateId);
-                eventCategory(categoryId, eventTypeId);
-                eventType(eventTypeId);
-                eventSubCategory(categoryId, subCategoryId);
-                eventCategoryType(categoryId, eventTypeId, categoryTypeId);
-                
-                eventImage(eventId);             
-
-                var formData = {};
-               
-                $(".eventAction").val(eventAction);
-                formData = {
-                    "eventId": eventId,
-                    "eventAction": eventAction
-                };               
-
-                $.ajax({
-                    url: "./private/controllers/event.php",
-                    cache: false,
-                    type: "GET",
-                    datatype:"JSON",
-                    data: formData,
-                    success: function(html) {           
-                        respArr = JSON.parse(html);
-                        
-                        $(".eventId").val(respArr.id);
-                        $(".eventAction").val('booking');
-                        $(".eventTitle").val(respArr.title);                        
-                        $(".eventCountry").val(respArr.country_id);
-
-                       
-                    }
-                });
+      
+            $('#userFileSpinnerDiv').hide();
+            function deleteUser(userAction, userId) {
+                window.location.href='private/controllers/users.php?userAction='+userAction+'&userId='+userId;
             }
 
-            function addEditEvent(eventAction, eventId, countryId, cityId, stateId, categoryId, subCategoryId, eventTypeId, categoryTypeId) {
+            function addEditUser(userAction, userId) {
+                $('#userTypeFieldsSpinnerDiv').hide();
+                $('#userImageSpinnerDiv').hide();
                 $("#eventImagePreview").html('');
                 $("#eventSucResponseDiv").html('');
-                $("#eventErrResponseDiv").html('');                
-                $("#stateDiv").html('');
-                $("#cityDiv").html('');
-                $("#eventTypeDiv").html('');
-                $("#eventCategoryDiv").html('');
-                $("#eventCategoryTypeDiv").html('');
-                $("#eventSubCategoryDiv").html('');
 
-                eventState(countryId, cityId, stateId);
-                eventCategory(categoryId, eventTypeId);
-                eventType(eventTypeId);
-                eventSubCategory(categoryId, subCategoryId);
-                eventCategoryType(categoryId, eventTypeId, categoryTypeId);
-
-                if(eventAction == "edit") {
-                    eventImage(eventId);
+                if(userAction == "edit") {
+                    userImage(userId);
+                } else {
+                    userTypeFunc('');
                 }
 
-                var formData = {};
-                if(eventAction == "create") {
-                    $("#eventAction").val(eventAction);
-                    $('#modal-title-text').text('Add Event');
-                    $("#eventId").val('');
-                    $("#eventAction").val('add');
-                    $("#eventTitle").val('');
-                    $("#eventStartDate").val('');
-                    $("#eventEndDate").val('');
-                    $("#eventVenue").val('');
-                } else if(eventAction == "edit") {
-                    $("#eventAction").val(eventAction);
-                    $('#modal-title-text').text('Update Event');
-                    formData = {
-                        "eventId": eventId,
-                        "eventAction": eventAction
-                    };
-                } else if(eventAction == "delete") {
-                    formData = {
-                        "eventId": eventId,
-                        "eventAction": eventAction
-                    };
-                }           
+                $("#userId").val('');
+                $("#userName").val('');
+                $("#userUserName").val('');
+                $("#userMobile").val('');
 
-                if(eventAction == "edit") {
+                var formData = {};
+                if(userAction == "create") {
+                    $('#modal-title-text').text('Add User');
+                    $("#userAction").val('add');
+                } else if(userAction == "edit") {
+                    $("#userAction").val('update');
+                    $('#modal-title-text').text('Update User');
+                    formData = {
+                        "userId": userId,
+                        "userAction": userAction
+                    };
+                } else if(userAction == "delete") {
+                    formData = {
+                        "userId": userId,
+                        "userAction": userAction
+                    };
+                } 
+
+                if(userAction == "edit") {
                     $.ajax({
-                        url: "./private/controllers/event.php",
+                        url: "./private/controllers/users.php",
                         cache: false,
                         type: "GET",
                         datatype:"JSON",
                         data: formData,
                         success: function(html) {
                             respArr = JSON.parse(html);
-                            if(eventAction == "edit") {
-                                $("#eventId").val(respArr.id);
-                                $("#eventAction").val('update');
-                                $("#eventTitle").val(respArr.title);
-                                $("#eventStartDate").val(respArr.start_date);
-                                $("#eventEndDate").val(respArr.end_date);
-                                $("#eventVenue").val(respArr.address);
-                                $("#eventCountry").val(respArr.country_id);
-                            }                    
+
+                            $("#userId").val(respArr.userId);
+                            $("#userID").val(respArr.userId);                                
+                            $("#userAction").val('update');
+                            $("#userName").val(respArr.userName);
+                            $("#userUserName").val(respArr.userUserName);
+                            $("#userEmail").val(respArr.userEmail);
+                            $("#userType").val(respArr.userType);
+                            $("#userIsCoach").val(respArr.userIsCoach);
+
+                            userTypeFunc(respArr.userType);
+                            userTypeFieldsFunc(respArr.userType);
+
+                            setTimeout(function() {
+                                $("#userMobile").val(respArr.userMobile);
+                            }, 100);
+
+                            if(respArr.userIsCoach == 1) {
+                                $('#isCoach').prop('checked',true); 
+                            } else if(respArr.userIsCoach == 2) {
+                                $("#isCoach").prop( "checked", false );
+                            } else {
+                                $("#isCoach").prop( "checked", false );
+                            }
+
+                            if(respArr.userStatus == 1) {
+                                $("#userStatusActive").prop( "checked", true );
+                                $("#userStatusInActive").prop( "checked", false );
+                            } else if(respArr.userStatus == 2) {
+                                $("#userStatusActive").prop( "checked", false );
+                                $("#userStatusInActive").prop( "checked", true );
+                            } else {
+                                $("#userStatusActive").prop( "checked", false );
+                                $("#userStatusInActive").prop( "checked", true );
+                            }           
                         }
                     });
                 } 
             }
 
+            function viewUser(userAction, userId) {
+
+                $('#view-user-modal-title-text').text('View User');
+
+                var formData = {};
+                if(userAction == "view") {
+                    formData = {
+                        "userId": userId,
+                        "userAction": userAction
+                    };
+                
+                    $.ajax({
+                        url: "../admin/private/controllers/users.php",
+                        cache: false,
+                        type: "GET",
+                        datatype:"JSON",
+                        data: formData,
+                        success: function(html) {
+                            respArr = JSON.parse(html);
+                            $("#viewUserId").text(respArr.userId);
+                            $("#viewUserName").text(respArr.userName);
+                            $("#viewUserUserName").html(respArr.userUserName);
+                            $("#viewUserMobile").text(respArr.userMobile);
+                            $("#viewUserEmail").text(respArr.userEmail);
+
+                            var userType = "";
+                            if(respArr.userType) {
+                                if(respArr.userType == 1) {
+                                    userType = "E-mail User";
+                                } else if(respArr.userType == 2) {
+                                    userType = "Facebook User";
+                                } else if(respArr.userType == 3) {
+                                    userType = "Google User";
+                                } else if(respArr.userType == 4) {
+                                    userType = "Number User";
+                                } else if(respArr.userType == 5) {
+                                    userType = "Apple User";
+                                }
+                            }
+
+                            var userIsCoach = "No";
+                            if(respArr.userIsCoach) {
+                                if(respArr.userIsCoach == 1) {
+                                    userIsCoach = "Yes";
+                                } else if(respArr.userIsCoach == 2) {
+                                    userIsCoach = "No";
+                                }
+                            }
+
+                            $("#viewUserOauthProvider").text(respArr.userOauthProvider);
+                            $("#viewUserOauthUid").text(respArr.userOauthUid);
+                            $("#viewUserVerificationToken").text(respArr.userVerificationToken);
+                            $("#viewIsCoach").text(userIsCoach);
+                            $("#viewUserType").text(userType);
+                            $("#viewUserStatus").text(respArr.userStatus);
+
+                            var viewEventImage = "";
+                            var hostname = location.hostname;
+                            var viewUserImageLink = "";
+                            if(hostname == "localhost"){
+                                viewUserImageLink = "<a href='http://localhost/bookmysporto/admin/uploads/users/"+respArr.userImage+"' target='_blank'>"+respArr.userImage+"</a>";
+                            } else {
+                                viewUserImageLink = "<a href='https://bookmysporto.com/admin/uploads/users/"+respArr.userImage+"' target='_blank'>"+respArr.userImage+"</a>";
+                            }
+
+                            $("#viewUserImage").html(viewUserImageLink);
+
+                            var userStatus = "";
+                            if(respArr.userStatus) {
+                                if(respArr.userStatus == 1) {
+                                    userStatus = "Active";
+                                } else if(respArr.venueStatus == 2) {
+                                    userStatus = "In-Active";
+                                }
+                            }
+
+                            $("#viewUserStatus").text(userStatus);                            
+                        }
+                    });
+                }
+            }            
+
             jQuery.noConflict();
             (function( $ ) {
                 $(function () {
-                    $('#eventForm').validate({
+                    $('#userForm').validate({
                         rules: {
-                            eventTitle: {
+                            userName: {
                                 required: true,
-                                minlength: 5,
+                                minlength: 10,
                                 maxlength: 50
                             },
-                            eventVenue: {
+                            userType: {
+                                required: true
+                            },
+                            userEmail: {
                                 required: true,
-                                minlength: 5,
-                                maxlength: 200
+                                minlength: 10,
+                                maxlength: 25,
+                                email: true
                             },
-                            eventStartDate: {
-                                required: true
+                            userPassword: {
+                                required: true,
+                                minlength: 10,
+                                maxlength: 30
                             },
-                            eventEndDate: {
-                                required: true
+                            userMobile: {
+                                required: true,
+                                minlength: 10,
+                                maxlength: 15,
+                                number: true
+                            },
+                            userSocialId: {
+                                required: true,
+                                minlength: 10,
+                                maxlength: 50
                             }
                         },
                         messages: {
-                            eventTitle: {
-                                required: "Event Title should not be empty.",
-                                minlength: "Event Title should be minimum of 5 characters.",
-                                maxlength: "Event Title should should not be beyond 50 characters."
+                            userName: {
+                                required: "Name should not be empty.",
+                                minlength: "Name should be minimum of 10 characters.",
+                                maxlength: "Name should not be beyond 50 characters."
                             },
-                            eventVenue: {
-                                required: "Event Venue should not be empty.",
-                                minlength: "Event Venue should be minimum of 5 characters.",
-                                maxlength: "Event Venue should should not be beyond 200 characters."
+                            userType: {
+                                required: "Select User Type."
                             },
-                            eventStartDate: {
-                                required: "Enter Start Date and Time."
+                            userEmail: {
+                                required: "E-Mail should not be empty.",
+                                minlength: "E-Mail should be minimum of 10 characters.",
+                                maxlength: "E-Mail should not be beyond 25 characters.",
+                                email: "Invalid E-Mail."
                             },
-                            eventEndDate: {
-                                required: "Enter End Date and Time."
-                            }                   
+                            userPassword: {
+                                required: "Password should not be empty.",
+                                minlength: "E-Mail should be minimum of 10 characters.",
+                                maxlength: "E-Mail should not be beyond 30 characters."
+                            },
+                            userMobile: {
+                                required: "Mobile Number should not be empty.",
+                                minlength: "Mobile Number should be minimum of 10 characters.",
+                                maxlength: "Mobile Number should not be beyond 50 characters.",
+                                email: "Invalid Mobile Number."
+                            },
+                            userSocialId: {
+                                required: "Social ID cannot not be empty.",
+                                minlength: "Social ID should be minimum of 10 characters.",
+                                maxlength: "Social ID should not be beyond 50 characters."
+                            }
                         },
                         errorElement: 'span',
                         errorClass: "has-error",
@@ -965,74 +1081,68 @@
                 if($pgMsg == 1) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Create Event');
+                        $('#msg-modal-title-text').text('Create User');
                         $('#event-form-modal-msg').modal('show');
-                        $('#add-msg-div').show();
+                        $('#msg-div').text('User Created Successfully.');
+                        $('#msg-div').show();
                         setTimeout(function() {
                             $('#event-form-modal-msg').modal('hide');
-                            $('#add-msg-div').hide();
+                            $('#msg-div').hide();
                         }, 2000);
                     </script>                
         <?php
                 } else if($pgMsg == 2) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Update Event');
+                        $('#msg-modal-title-text').text('Update User');
                         $('#event-form-modal-msg').modal('show');
-                        $('#upd-msg-div').show();
+                        $('#msg-div').text('User Updated Successfully.');
+                        $('#msg-div').show();
                         setTimeout(function() { 
                             $('#event-form-modal-msg').modal('hide');
-                            $('#upd-msg-div').hide();
+                            $('#msg-div').hide();
                         }, 2000);
                     </script>      
         <?php
                 } else if($pgMsg == 3) {
         ?>          
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Delete Event');
+                        $('#msg-modal-title-text').text('Delete User');
                         $('#event-form-modal-msg').modal('show');
-                        $('#del-msg-div').show();
+                        $('#msg-div').text('User Deleted Successfully.');
+                        $('#msg-div').show();
                         setTimeout(function() { 
                             $('#event-form-modal-msg').modal('hide');
-                            $('#del-msg-div').hide();
+                            $('#msg-div').hide();
                         }, 2000);
                     </script>  
         <?php            
                 } else if($pgMsg == 4) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Create Event');
+                        $('#msg-modal-title-text').text('Create User');
                         $('#event-form-modal-msg').modal('show');
-                        $('#add-uniq-msg-div').show();
-                        $('#upd-uniq-msg-div').hide();
-                        setTimeout(function() { 
-                            $('#add-uniq-msg-div').modal('hide');
-                            $('#add-msg-div').hide();
+                        $('#msg-div').text('User With Mobile Number Already Exist.');
+                        $('#msg-div').show();
+                        setTimeout(function() {
+                            $('#event-form-modal-msg').modal('hide');
+                            $('#msg-div').hide();
                         }, 2000);
                     </script>  
         <?php            
                 }  else if($pgMsg == 5) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Update Event');
+                        $('#msg-modal-title-text').text('Update User');
                         $('#event-form-modal-msg').modal('show');
-                        $('#upd-uniq-msg-div').show();
-                        $('#add-uniq-msg-div').hide();
-                        setTimeout(function() { 
-                            $('#upd-uniq-msg-div').modal('hide');
-                            $('#add-msg-div').hide();
+                        $('#msg-div').text('User With Mobile Number Already Exist.');
+                        $('#msg-div').show();
+                        setTimeout(function() {
+                            $('#event-form-modal-msg').modal('hide');
+                            $('#msg-div').hide();
                         }, 2000);
                     </script>  
         <?php            
                 }
             }
-        ?> 
-
-
-
-
-
-
-
-
-      
+        ?>

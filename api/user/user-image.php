@@ -20,7 +20,7 @@
     //Upload Location
     $upload_location = "";
     if($hostName == "localhost") {
-        $upload_location = "/var/www/html/sportifyv2/admin/uploads/users/";
+        $upload_location = "/var/www/html/bookmysporto/admin/uploads/users/";
     } else {
         $upload_location = "/var/www/html/bookmysporto.com/public_html/admin/uploads/users/";
     }
@@ -90,13 +90,9 @@
                          }
                     }
 
-                    /*print"<pre>";
-                    print_r($errorArray);
-                    exit;*/
-
                     echo json_encode($errorArray);
                     die;
-                }                
+                }       
             }else $response->create(201, "Invalid Api Token", null);
         }else $response->create(201, "No Api Token Found", null);
     }else $response->create(201, "Invalid Request Method", null);

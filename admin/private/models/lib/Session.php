@@ -2,7 +2,7 @@
 
 class Session{
 
-    const PROJECT = "bootic";
+    const PROJECT = "bookmysporto_";
 
     public static function set_session_arr($arr){
         $_SESSION[self::PROJECT . key($arr)] = $arr[key($arr)];

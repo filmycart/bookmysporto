@@ -1,4 +1,4 @@
-<?php 
+/<?php 
   require("common/php/php-register-head.php"); 
 ?>
 <body class="hold-transition register-page">

@@ -7,14 +7,15 @@
 		define("DB_SERVER", "localhost"); // Server Name
 		define("DB_USER", "root"); // Database User
 		define("DB_PASS", "Nachiyar*1984"); // Database Password
-		define("DB_NAME", "sportifyv2"); // Database Name
+		define("DB_NAME", "bookmysporto"); // Database Name
 	} else {
 		define("DB_SERVER", "localhost"); // Server Name
 		define("DB_USER", "root"); // Database User
 		define("DB_PASS", "Nachiyar*1984"); // Database Password
-		define("DB_NAME", "sportifyv2"); // Database Name
+		define("DB_NAME", "bookmysporto"); // Database Name
 	}
 
+	define("PROJECT", "Bookmysporto_"); 
 	define("UPLOADED_FOLDER", "uploads");    // Image/Video Upload Folder
 	define("UPLOADED_THUMB_FOLDER", "thumb");   // Thumb Image Upload Folder
 	define("API_PAGINATION", 8);    // 5 items in the api
@@ -97,5 +98,7 @@
 	require_once('models/City.php');
 	require_once('models/State.php');
 	require_once('models/Contact.php');
+	require_once('models/User.php');
+	require_once('models/User_Type.php');	
 	require_once('vendor/autoload.php');
 ?>

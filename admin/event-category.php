@@ -89,7 +89,7 @@
                 </div>
               </div>
               <div class="modal fade" id="event-type-form-modal-msg">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="msg-modal-title-text"></span></h4>
@@ -110,7 +110,7 @@
                 <!-- /.modal-dialog -->
               </div>
                <div class="modal fade" id="del-event-form-modal">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="del-modal-title-text"></span></h4>
@@ -619,7 +619,7 @@
                                 var hostname = location.hostname;
                                 var viewEventCategoryImageLink = "";
                                 if(hostname == "localhost"){
-                                    viewEventCategoryImageLink = "<a href='http://localhost/sportifyv2/admin/uploads/event_category/"+respArr.categoryImageName+"' target='_blank'>"+respArr.categoryImageName+"</a>";
+                                    viewEventCategoryImageLink = "<a href='http://localhost/bookmysporto/admin/uploads/event_category/"+respArr.categoryImageName+"' target='_blank'>"+respArr.categoryImageName+"</a>";
                                 } else {
                                     viewEventCategoryImageLink = "<a href='https://bookmysporto.com/admin/uploads/event_category/"+respArr.categoryImageName+"' target='_blank'>"+respArr.categoryImageName+"</a>";
                                 }

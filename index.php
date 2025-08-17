@@ -46,7 +46,7 @@
         $siteDescription = $configArray['description'];
     }
 
-    $templateName = 'dreamsports';
+    $templateName = 'bookmysporto';
     if((isset($configArray['frontend_template'])) && (!empty($configArray['frontend_template']))) {
         $templateName = $configArray['frontend_template'];  
     }

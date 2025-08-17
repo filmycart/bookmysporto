@@ -33,7 +33,7 @@
                 $joinColumn['join_column_name3'] = "city_id";
                 $joinColumn['join_column_name4'] = "venue";
                 $joinColumn['join_column_city_state_country_id'] = "id";
-
+                
                 $all_events = (array) $events->where(["event.admin_id" => 1])->allWithJoin($column, $joinColumn);
             
                 $eventsArray = array();
@@ -53,9 +53,9 @@
                         $eventsArray[$key]['cityName'] = $eventVal->cityName;
 
                         $eventStatus = "In-Active";
-                        if($evenTypeVal->eventStatus == 1){
+                        if($eventVal->eventStatus == 1){
                             $eventStatus = "Active";
-                        } elseif($evenTypeVal->eventStatus == 2){
+                        } elseif($eventVal->eventStatus == 2){
                             $eventStatus = "In-Active";
                         }
 

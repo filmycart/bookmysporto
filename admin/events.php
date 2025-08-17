@@ -219,7 +219,7 @@
                 </div>
               </div>
               <div class="modal fade" id="event-form-modal-msg">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="msg-modal-title-text"></span></h4>
@@ -240,7 +240,7 @@
                 <!-- /.modal-dialog -->
               </div>
                <div class="modal fade" id="del-event-form-modal">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title"><span id="del-modal-title-text"></span></h4>
@@ -370,7 +370,7 @@
                                             <input type="text" id="eventEndDate" name="eventEndDate" class="form-control datetimepicker-input" data-target="#eventEndDate" />
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
                                         <div id="typeSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
@@ -588,8 +588,6 @@
                                     if(!empty($categoryTitleArray)) {
                                         $categoryTitleStr = implode(",",$categoryTitleArray);
                                     }
-
-                                    $current_category .= "<div style='border:0px solid red;float:left;width:26%;'><a href='" . $cat_param . "'>" . $categoryTitleStr . "</a></div>";
                                 ?>
                                 <td>    
                                     <?php echo $categoryTitleStr; ?>
@@ -624,7 +622,7 @@
                                     <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
                                 </td>
                                 <td style="width:100px;">
-                                    <!-- <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','<?php echo $item->category_id; ?>','<?php echo $item->sub_category_id; ?>','<?php echo $item->type_id; ?>','<?php echo $item->category_type_id; ?>')"><i class="fa fa-credit-card" aria-hidden="true"></i></a> -->
+                                    <!-- <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#event-booking-form-modal" onclick="addEventBooking('booking','<?php echo $item->id; ?>','','','','')"><i class="fa fa-credit-card" aria-hidden="true"></i></a> -->
                                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-event-form-modal" onclick="viewEvent('view','<?php echo $item->eventId; ?>')"><i class="ion-eye"></i></a>
                                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-form-modal" onclick="addEditEvent('edit','<?php echo $item->eventId; ?>','<?php echo $item->eventVenue; ?>','<?php echo $item->eventCategoryId; ?>','<?php echo $item->eventSubCategoryId; ?>','<?php echo $item->eventTypeId; ?>','<?php echo $item->eventCategoryTypeId; ?>')"><i class="ion-compose"></i></a>
                                     <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-event-form-modal" onclick="deleteEvent('delete','<?php echo $item->eventId; ?>','<?php echo $item->eventVenue; ?>','<?php echo $item->eventAdminId; ?>')"><i class="ion-trash-a"></i></a>
@@ -1020,7 +1018,7 @@
                             var hostname = location.hostname;
                             var viewEventImageLink = "";
                             if(hostname == "localhost"){
-                                viewEventImageLink = "<a href='http://localhost/sportifyv2/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
+                                viewEventImageLink = "<a href='http://localhost/bookmysporto/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
                             } else {
                                 viewEventImageLink = "<a href='https://bookmysporto.com/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
                             }

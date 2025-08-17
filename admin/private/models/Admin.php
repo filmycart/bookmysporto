@@ -6,6 +6,7 @@ class Admin extends Util{
     public $username;
     public $email;
     public $password;
+    public $status;
 
     public function save(){
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
@@ -22,12 +23,6 @@ class Admin extends Util{
         $admin_frm_db = $this->where(["username" => $this->username])->one();
 
         //password_hash($admin->password, PASSWORD_BCRYPT);
-
-        /*print"<pre>";
-        //print_r($admin_frm_db->password);
-        print_r(password_hash($this->password, PASSWORD_BCRYPT));
-        //print_r($this->password);
-        exit;*/
 
         if(!empty($admin_frm_db)) {
             if(password_verify($this->password, $admin_frm_db->password)) {

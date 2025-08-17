@@ -14,7 +14,7 @@
 	$baseUrl = "";
 	$settingsUrl = "";
 	if($hostName == "localhost") {
-		$baseUrl = "://localhost/sportifyv2/";
+		$baseUrl = "://localhost/bookmysporto/";
 		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
 	} else {
 		$baseUrl = "://bookmysporto.com/";
@@ -26,6 +26,7 @@
 
 	$adminImageUploadPath = "uploads/";
 	$eventAdminImageUploadPath = $adminImageUploadPath."events/"; 
+	$userAdminImageUploadPath = $adminImageUploadPath."users/"; 
 	$eventSubCatAdminImageUploadPath = $adminImageUploadPath."event_subcategory/"; 
 	$eventFrontEndImageUploadPath = "././admin/".$adminImageUploadPath."events/"; 
 	
@@ -126,7 +127,7 @@
 	        'connection' => [
 	            'default' => [
 	                'host' => 'localhost',
-	                'dbname' => 'shopifyv2',
+	                'dbname' => 'bookmysporto',
 	                'username' => 'root',
 	                'password' => 'Nachiyar*1984'
 	            ]

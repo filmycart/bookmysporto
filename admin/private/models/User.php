@@ -4,17 +4,22 @@ class User extends Util{
 
     public $id;
     public $username;
+    public $name;    
+    public $mobile;
     public $email;
     public $password;
     public $image;
     public $type;
     public $is_coach;
     public $social_id;
+    public $oauth_provider;
+    public $oauth_uid;
     public $verification_token;
     public $status = 0;
     public $image_name = "profile_default.jpg";
     public $image_resolution = "500:500";
     public $admin_id;
+    public $created;
 
     public function save(){
         $this->verification_token = Helper::unique_numeric_code(4);
@@ -60,5 +65,4 @@ class User extends Util{
         $new_user->type = $this->type;
         return $new_user;
     }
-
 }
