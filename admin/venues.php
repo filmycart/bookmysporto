@@ -559,8 +559,8 @@
                                     <td>
                                         <?php 
                                             $address = "";
-                                            if((isset($item->venuAddress)) && (!empty($item->venuAddress))){
-                                                $address = $item->venuAddress;
+                                            if((isset($item->venueAddress)) && (!empty($item->venueAddress))){
+                                                $address = $item->venueAddress;
                                             }     
                                         ?>
                                         <?php echo $address; ?>
