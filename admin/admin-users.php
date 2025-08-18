@@ -633,7 +633,6 @@
                                 $("#adminUserEmail").val(respArr.email);
                                 //$("#adminUserPassword").text(respArr.password);
 
-                                //console.log("adminAction",adminAction);
                                 var adminStatus = "In-Active";
                                 if(respArr.status){
                                     if(respArr.status == 1){

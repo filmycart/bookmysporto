@@ -5,21 +5,146 @@
     $message = Session::get_temp_session(new Message());
     $admin = Session::get_session(new Admin());
 
-    $url_current = "admin-users.php?";
+    $sort_by_array["created"] = "Date";
+    $sort_by_array["title"] = "Title";
+    $sort_by_array["current_price"] = "Selling Price";
+    $sort_by_array["purchase_price"] = "Purchase Price";
+    $sort_by_array["sub_category_id"] = "Sub Category";
+    $sort_by_array["featured"] = "Featured";
+    $sort_by_array["status"] = "Status";
+
+    $sort_type_array["DESC"] = "Desc";
+    $sort_type_array["ASC"] = "Asc";
+
+    $sort_by = $sort_type = $search = "";
+    $url_current = "admin-user-roles.php?";
+    $all_user_permission = array();
 
     if(!empty($admin)) {
-        $adminUsers = new Admin();     
-        $all_users = (array) $adminUsers->all();
+        $adminUserPermission = new Admin_User_Permission();
+        $all_user_permission = (array) $adminUserPermission->all();
+
+        $all_products = new Product();
+        $pagination = "";
+        $pagination_msg = "";
+
+        if(Helper::is_get()){
+            $page = Helper::get_val("page");
+            $search = Helper::get_val("search");
+            $sort_by = Helper::get_val("sort_by");
+            $sort_type = Helper::get_val("sort_type");;
+            $sub_category_id = Helper::get_val("sub_category_id");
+            
+            if($search){
+                if($sub_category_id){
+                    $url_for_pagination = $url_current . "sub_category_id=" . $sub_category_id . "&&";
+                    $item_count = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])
+                        ->like(["title" => $search])->search()->count();
+                }else{
+                    $url_for_pagination = $url_current;
+                    $item_count = $all_products->where(["admin_id" => $admin->id])->like(["title" => $search])->search()->count();
+                }
+
+                if($item_count < 1) $pagination_msg = "Nothing Found.";
+
+                $pagination = new Pagination($item_count, BACKEND_PAGINATION, $page, $url_for_pagination);
+                if($page){
+                    if(($page > $pagination->get_page_count()) || ($page < 1)) $pagination_msg = "Nothing Found.";
+                }else {
+                    $page = 1;
+                    $pagination->set_page($page);
+                }
+
+                $start = ($page - 1) * BACKEND_PAGINATION;
+
+                if($sub_category_id){
+                    if($sort_by && $sort_type){
+                        $all_products = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])
+                            ->like(["title" => $search])->like(["tags" => $search])->search()
+                            ->orderBy($sort_by)->orderType($sort_type)
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }else{
+                        $all_products = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])
+                            ->like(["title" => $search])->like(["tags" => $search])->search()
+                            ->orderBy("created")->orderType("DESC")
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }
+                }else{
+                    if($sort_by && $sort_type){
+                        $all_products = $all_products->where(["admin_id" => $admin->id])
+                            ->like(["title" => $search])->like(["tags" => $search])->search()
+                            ->orderBy($sort_by)->orderType($sort_type)
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }else{
+                        $all_products = $all_products->where(["admin_id" => $admin->id])
+                            ->like(["title" => $search])->like(["tags" => $search])->search()
+                            ->orderBy("created")->orderType("DESC")
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }
+                }
+
+            }else{
+                if($sub_category_id){
+                    $url_for_pagination = $url_current . "sub_category_id=" . $sub_category_id . "&&";
+                    $item_count = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])->count();
+                }else{
+                    $url_for_pagination = $url_current;
+                    $item_count = $all_products->where(["admin_id" => $admin->id])->count();
+                }
+                
+                $item_count = $all_products->where(["admin_id" => $admin->id])->count();
+                if($item_count < 1) $pagination_msg = "Nothing Found.";
+                
+                $pagination = new Pagination($item_count, BACKEND_PAGINATION, $page, $url_for_pagination);
+                if($page) {
+                    if(($page > $pagination->get_page_count()) || ($page < 1)) $pagination_msg = "Nothing Found.";
+                }else {
+                    $page = 1;
+                    $pagination->set_page($page);
+                }
+
+                $start = ($page - 1) * BACKEND_PAGINATION;
+
+                if($sub_category_id){
+                    if($sort_by && $sort_type){
+                        $all_products = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])
+                            ->orderBy($sort_by)->orderType($sort_type)
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }else{
+                        $all_products = $all_products->where(["admin_id" => $admin->id])->andWhere(["sub_category_id" => $sub_category_id])
+                            ->orderBy("created")->orderType("DESC")
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }
+                }else{
+                    if($sort_by && $sort_type){
+                        $all_products = $all_products->where(["admin_id" => $admin->id])
+                            ->orderBy($sort_by)->orderType($sort_type)
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }else{
+                        $all_products = $all_products->where(["admin_id" => $admin->id])
+                            ->orderBy("created")->orderType("DESC")
+                            ->limit($start, BACKEND_PAGINATION)->all();
+                    }
+                }
+            }
+        }
+
+        $panel_setting = new Setting();
+        $panel_setting = $panel_setting->where(["admin_id"=> $admin->id])->one();
+
+        $all_sub_categories = new Event_SubCategory();
+        $all_sub_categories = $all_sub_categories->where(["admin_id" => $admin->id])->all();
+        $sub_categories_assoc = [];
+        foreach ($all_sub_categories as $item){
+            $sub_categories_assoc[$item->id] = $item->title;
+        }
     }else {
         Helper::redirect_to("login.php");
     }
 
-    /*$memcache = new Memcache;
-    $memcache->connect('localhost', 11211) or die ("Could not connect");*/
-
     $delMsg = '';
     if((isset($_GET['delmsg'])) && (!empty($_GET['delmsg']))) {
-        $delMsg = 'Admin Deleted Successfully.';
+        $delMsg = 'Admin User Permissions Deleted Successfully.';
     }
 ?>
 <link rel="stylesheet" href="./plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -40,7 +165,7 @@
           <div class="col-sm-12">
             <ol class="breadcrumb float-sm-left">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">Admin Users</li>
+              <li class="breadcrumb-item active">Admin User Permissions</li>
             </ol>
           </div>
         </div>
@@ -56,18 +181,16 @@
               <div class="card-header">
                 <div style="width:100%;float:left;">
                     <div style="width:30%;float:left;">
-                        <h3 class="card-title">Admin Users</h3>
+                        <h3 class="card-title">Admin User Permissions</h3>
                     </div>  
-                    <div style="width:15%;float:right;"> 
-                        <a href="#" data-toggle="modal" data-target="#admin-form-modal" class="btn btn-primary btn-sm" onclick="addEditAdmin('create','','','','','','')">Add Admin Users</a>
+                    <div style="width:19%;float:right;">
+                        <a href="#" data-toggle="modal" data-target="#usr-permission-form-modal" class="btn btn-primary btn-sm" onclick="addEditUserPermission('create','','','','','','')">
+                            Add Admin User Permission
+                        </a>
                     </div>
                 </div>
               </div>
-
-                  <!-- $('#msg-modal-title-text').text('Create Event');
-                        $('#modal-msg').modal('show');
-                        $('#msg-div').show(); -->
-              <div class="modal fade" id="modal-msg">
+              <div class="modal fade" id="event-form-modal-msg">
                 <div class="modal-dialog modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -102,7 +225,7 @@
                 <!-- /.modal-dialog -->
               </div>
               <!-- /.modal -->
-              <div class="modal fade" id="admin-form-modal">
+              <div class="modal fade" id="usr-permission-form-modal">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -144,6 +267,7 @@
                                  float:left;
                                  width:1%;
                             }
+
                             .bootstrap-select > .dropdown-toggle {
                                 height: 38px ;
                             }
@@ -172,55 +296,43 @@
                                 color:red;
                             }
                         </style>
-                        <form id="adminForm" name="adminForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/admin_users.php">
-                            <input type="hidden" id="adminUserId" name="adminUserId" value="" />
-                            <input type="hidden" id="adminAction" name="adminAction" value="" />
+                        <form id="adminUserPermissionRoleForm" name="adminUserPermissionForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/admin_user_permission.php">
+                            <input type="hidden" id="userPermissionId" name="userPermissionId" value="" />
+                            <input type="hidden" id="userPermissionAction" name="userPermissionAction" value="" />
                             <div id="eventSucResponseDiv" style="color:green;"></div>
                             <div id="eventErrResponseDiv" style="color:green;"></div>
                             <div class="eventFormMainDiv" id="modal-div">
                                 <div class="eventFormRow">
                                     <div class="eventFormCol">
-                                        <label>User Name</label>
+                                        <label>Name</label>
                                         <span class="required-field">*</span>
                                         <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="adminUserName" name="adminUserName" class="form-control" data-target="#adminUserName" />
+                                            <input type="text" id="userPermissionName" name="userPermissionName" class="form-control" data-target="#userPermissionName" />
                                         </div>
                                     </div>
                                     <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
-                                        <label>E-Mail</label>
+                                        <label>Status</label>
                                         <span class="required-field">*</span>
-                                        <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="adminUserEmail" name="adminUserEmail" class="form-control" data-target="#adminUserEmail" />
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <input class="form-check-input" type="radio" value="1" id="userPermissionStatusActive" name="userPermissionStatusActive">
+                                                        <label class="form-check-label">Active</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <input class="form-check-input" type="radio" value="2" id="userPermissionStatusInActive" name="userPermissionStatusInActive">
+                                                        <label class="form-check-label">In-Active</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="eventFormRow">
-                                    <div class="eventFormCol">
-                                        <label>Password</label>
-                                        <span class="required-field">*</span>
-                                        <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="adminUserPassword" name="adminUserPassword" class="form-control" data-target="#adminUserPassword" />
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <!-- <div class="eventFormRow">
-                                    <div class="eventFormCol">
-                                        <div id="evenFileSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div id="eventImagePreview"></div>
-                                        <div id="eventImageError" style="color:red;"></div>
-                                        <div class="form-group" id="eventFileLabelDiv">
-                                            <label>Image</label>
-                                        </div>
-                                        <div class="form-group" id="eventFileDiv">
-                                            <input name="eventFile" id="eventFile" type="file" multiple />
-                                            <input type="hidden" name="eventFileHidden" id="eventFileHidden" />
-                                        </div>
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="modal-footer right-content-between">
-                                <button type="submit" id="adminUserSubmit" name="adminUserSubmit" class="btn btn-primary">Save</button>
+                                <button type="submit" id="userPermissionSubmit" name="userPermissionSubmit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
@@ -229,11 +341,11 @@
                 </div>
                 <!-- /.modal-dialog -->
               </div>
-              <div class="modal fade" id="view-admin-modal">
+              <div class="modal fade" id="view-usr-permission-form-modal">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title"><span id="view-admin-modal-title-text"></span></h4>
+                      <h4 class="modal-title"><span id="view-user-permission-title-text"></span></h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -244,57 +356,25 @@
                                 <div class="eventFormCol">
                                     <label>ID</label>
                                     <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserId" name="viewAdminUserId" data-target="#viewAdminUserId"></span>
+                                        <span id="viewUserPermissionId" name="viewUserPermissionId" data-target="#viewUserPermissionId"></span>
                                     </div>
                                 </div>
                                 <div class="eventFormSpacerDiv">&nbsp;</div>
                                 <div class="eventFormCol">
-                                    <label>User Name</label>
+                                    <label>Name</label>
                                     <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserName" name="viewAdminUserName" data-target="#viewAdminUserName"></span>
+                                        <span id="viewUserPermissionName" name="viewUserPermissionName" data-target="#viewUserPermissionName"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="eventFormRow">
                                 <div class="eventFormCol">
-                                    <label>E-Mail</label>
-                                    <span class="required-field">*</span>
-                                    <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserEmail" name="viewAdminUserEmail" data-target="#viewAdminUserEmail"></span>
-                                    </div>
-                                </div>
-                                <div class="eventFormSpacerDiv">&nbsp;</div>
-                                <div class="eventFormCol">
                                     <label>Status</label>
                                     <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserStatus" name="viewAdminUserStatus"></span>
+                                        <span id="viewUserPermissionStatus" name="viewUserPermissionStatus"></span>
                                     </div>
                                 </div>
-                                <!-- <div class="eventFormSpacerDiv">&nbsp;</div>
-                                <div class="eventFormCol">
-                                    <label>Password</label>
-                                    <span class="required-field">*</span>
-                                    <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserPassword" name="viewAdminUserPassword" data-target="#viewAdminUserPassword"></span>
-                                    </div>
-                                </div> -->
-                            </div>
-                            <!-- <div class="eventFormRow">
-                                <div class="eventFormCol">
-                                    <label>Image</label>
-                                    <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserImage" name="viewAdminUserImage" data-target="#viewAdminUserImage"></span>
-                                    </div>
-                                </div>
-                                <div class="eventFormSpacerDiv">&nbsp;</div>
-                                <div class="eventFormCol">
-                                    <label>Status</label>
-                                    <span class="required-field">*</span>
-                                    <div class="form-group" data-target-input="nearest">
-                                        <span id="viewAdminUserStatus" name="viewAdminUserStatus"></span>
-                                    </div>
-                                </div>
-                            </div>   -->                          
+                            </div>                            
                         </div>
                     </div>
                   </div>
@@ -304,66 +384,45 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="eventsList" class="table table-bordered table-striped">
+                <table id="rolesList" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User Name</th>
-                        <th>E-Mail</th>
+                        <th>Name</th>
                         <th>Status</th>
                         <th class="width20">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                        /*print"<pre>";
-                        print_r($_SESSION['bookmysporto_id']);
-                        exit;*/
-
-                        /*echo $_SESSION['bookmysporto_id'];
-                        exit;*/
-
-                        if(count($all_users) > 0){
-                            foreach ($all_users as $item){
-                                if($item->id != 1){
-                                    //if($_SESSION['bookmysporto_id'] == $item->id){                                    
+                        if(count($all_user_permission) > 0){
+                            foreach ($all_user_permission as $item){
                     ?>
-                                      <tr>
-                                        <td>
-                                            <?php echo $item->id; ?>
-                                        </td>
-                                        <td>
-                                            <a href="#" data-toggle="modal" data-target="#view-admin-modal" onclick="viewAdmin('view','<?php echo $item->id; ?>')"><?php echo $item->username; ?></a>
-                                        </td>
-                                        <td>
-                                            <?php
-                                                $adminUserEmail = "";
-                                                if((isset($item->email)) && (!empty($item->email))){
-                                                    $adminUserEmail = $item->email;
-                                                }     
-                                            ?>
-                                            <?php echo $adminUserEmail; ?>
-                                        </td>
-                                        <td>
-                                            <?php 
-                                                $status_class = "";
-                                                $status = '<span class="badge badge-secondary">In-Active</span>';
-                                                if($item->status == 1){
-                                                    $status_class = "active";
-                                                    $status = '<span class="badge badge-success">Active</span>';
-                                                }
-                                            ?>
-                                            <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
-                                        </td>
-                                        <td style="width:100px;">
-                                            <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-admin-modal" onclick="viewAdmin('view','<?php echo $item->id; ?>')"><i class="ion-eye"></i></a>
-                                            <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#admin-form-modal" onclick="addEditAdmin('edit','<?php echo $item->id; ?>')"><i class="ion-compose"></i></a>
-                                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-admin-form-modal" onclick="deleteAdmin('delete','<?php echo $item->id; ?>')"><i class="ion-trash-a"></i></a>
-                                        </td>
-                                      </tr>
-                  <?php
-                                //}
-                            }
+                              <tr>
+                                <td>
+                                    <?php echo $item->id; ?>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#view-usr-permission-form-modal" onclick="viewUserPermission('view','<?php echo $item->id; ?>')"><?php echo $item->name; ?></a>
+                                </td>
+                                <td>
+                                    <?php
+                                        $status_class = "";
+                                        $status = '<span class="badge badge-secondary">In-Active</span>';
+                                        if($item->status == 1){
+                                            $status_class = "active";
+                                            $status = '<span class="badge badge-success">Active</span>';
+                                        }
+                                    ?>
+                                    <span class="table-status <?php echo $status_class; ?>"><?php echo $status; ?></span>
+                                </td>
+                                <td style="width:100px;">
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#view-usr-permission-form-modal" onclick="viewUserPermission('view','<?php echo $item->id; ?>')"><i class="ion-eye"></i></a>
+                                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#usr-permission-form-modal" onclick="addEditUserPermission('edit','<?php echo $item->id; ?>')"><i class="ion-compose"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#del-usr-permission-form-modal" onclick="deleteUserPermission('delete','<?php echo $item->id; ?>')"><i class="ion-trash-a"></i></a>
+                                </td>
+                              </tr>
+                  <?php 
                         }
                     }    
                   ?>
@@ -371,10 +430,9 @@
                   <tfoot>
                     <tr>
                         <th>ID</th>
-                        <th>User Name</th>
-                        <th>E-Mail</th>
+                        <th>Name</th>
                         <th>Status</th>
-                        <th class="width20">Action</th>
+                        <th>Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -412,41 +470,17 @@
         <script src="../admin/dist/js/adminlte.min.js"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="../admin/dist/js/demo.js"></script>
-        <!-- Page specific script -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../admin/dist/css/richtext.min.css">
-        <script src="../admin/dist/js/jquery.richtext.js"></script> -->
         <script>
             jQuery.noConflict();
             (function( $ ) {
               $(function() {
-                /*$('.content').richText({
-                    useTabForNext: true,
-                    maxlength: 1000,
-                    maxlengthIncludeHTML: true
-                });*/
-
-                /*$('.content2').richText({
-                    useTabForNext: true
-                });*/
-
                 // More code using $ as alias to jQuery
-                $("#eventsList").DataTable({
+                $("#rolesList").DataTable({
                     "responsive": true, "lengthChange": false, "autoWidth": false,
                     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                     "order":  [[0, 'desc']],
                     "columnDefs": [{ "orderable": false, "targets": [6,7] }]
                 }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-                $('#example2').DataTable({
-                  "paging": true,
-                  "lengthChange": false,
-                  "searching": false,
-                  "ordering": true,
-                  "info": true,
-                  "autoWidth": false,
-                  "responsive": true,
-                });
               });
             })(jQuery);
         </script>
@@ -456,245 +490,99 @@
         <!-- jquery-validation -->
         <script src="../admin/plugins/jquery-validation/jquery.validate.min.js"></script>
         <script src="../admin/plugins/jquery-validation/additional-methods.min.js"></script>
-        <!-- date-range-picker -->
-        <!-- <script src="../admin/plugins/daterangepicker/daterangepicker.js"></script>
-        <script type="text/javascript">
-            $(function () {
-                $('#eventStartDate').datetimepicker({ icons: { time: 'far fa-clock' } });
-                $('#eventEndDate').datetimepicker({ icons: { time: 'far fa-clock' } });
-            });
-        </script> -->
         <script>
-            $('#msg-div').hide();
-  
-            function removeA(arr, eventFileName) {
-                const myArray = arr.split(",");
-                position = myArray.indexOf(eventFileName);
-                delete myArray[position];
-                return myArray;
+            $('#msg-div').hide();               
+            function deleteUserPermission(userPermissionAction, userPermissionId) {
+                window.location.href='private/controllers/admin_user_permission.php?userPermissionAction='+userPermissionAction+'&userPermissionId='+userPermissionId;
             }
 
-            function delEventImage(eventFileName, respArray) {
-
-                $('#eventImagePreview').html('');
-
-                respArr = removeA(respArray, eventFileName);
-                respArray1 = "'"+respArr+"'";
-
-                var formdata = new FormData(); 
-    
-                formdata.append("eventAction", "deleteEventCatImg");
-                formdata.append("eventFileName", eventFileName);
-    
-                var respArray = new Array();
-                var respFileNameArray = new Array();
-                var respFileName = "";
-
-                $.ajax({
-                    url: "./private/controllers/event.php", 
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: formdata,
-                    dataType: 'json',                         
-                    type: 'POST',
-                    success: function(php_script_response) {
-
-                        var fileCount = respArr.length;
-
-                        for (var index = 0; index < fileCount; index++) {
-                            var src = "'"+respArr[index]+"'";
-                            var src1 = respArr[index];
-                            if((src != undefined) && (src1 != undefined)) {
-                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
-                                $('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+'><i class="ion-trash-a"><i></a></div>');
-                                respFileNameArray[index] = src1;
-                            }
-                        }  
-
-                        respFileName = respFileNameArray.toString();
-
-                        $('#eventFileHidden').val(respFileName);                
-                    }
-                });
-            }
-
-            $('#eventFileDel').click(function(e) {
-                console.log("delete file");
-            });
-
-            $('#eventFile').change(function(e) {
-
-                $('#eventImagePreview').html('');
-                $('#eventImageError').html('');
-
-                var fileData = $('#eventFile').prop('files')[0];   
-                var formdata = new FormData(); 
-
-                // Read selected files
-                var totalfiles = document.getElementById('eventFile').files.length;
-                var eventTitle = $('#eventTitle').val();
-                for (var index = 0; index < totalfiles; index++) {
-                    formdata.append("files[]", document.getElementById('eventFile').files[index]);
-                }   
-
-                if (formdata) {
-                    formdata.append("eventAction", "upload");
-                    formdata.append("eventTitle", eventTitle);
-                }
-
-                var respArray = new Array();
-                var errorRespArray = new Array();
-                var respFileNameArray = new Array();
-                var respFileName = "";
-                $.ajax({
-                    url: "./private/controllers/event.php", 
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: formdata,
-                    dataType: 'json',                         
-                    type: 'POST',
-                    success: function(php_script_response) {
-                        respArray = php_script_response['eventImage'];
-                        errorRespArray = php_script_response['eventImageInvalid'];
-                        respArray1 = "'"+php_script_response['eventImage']+"'";
-                        
-                        if(respArray) {
-                            var fileCount = respArray.length;
-
-                            for (var index = 0; index < fileCount; index++) {
-                                var src = "'"+respArray[index]+"'";
-                                var src1 = respArray[index];
-                                var delEventImage = 'onclick="delEventImage('+src+','+respArray1+')"';
-
-                                $('#eventImagePreview').append('<div><a href ="uploads/events/'+src1+'" target="_blank" class="deleteEventImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delEventImage+'><i class="ion-trash-a"><i></a></div>');
-                                respFileNameArray[index] = src1;
-                            }   
-
-                            respFileName = respFileNameArray.toString();
-
-                            $('#eventFileHidden').val(respFileName);
-                        } else if(errorRespArray) {
-                            $('#eventImageError').append(errorRespArray);
-                        }
-                    }
-                 });      
-            });
-
-            function deleteAdmin(adminAction, adminId) {
-                window.location.href='private/controllers/admin_users.php?aUsrAction='+adminAction+'&aUsrId='+adminId;
-            }
-
-            function addEditAdmin(adminAction, adminId) {
-                /*if(adminAction == "edit") {
-                    adminImage(adminId);
-                }
-                */
-
-                $("#adminUserId").val('');
-                $("#adminUserName").val('');
-                $("#adminUserEmail").val('');
+            function addEditUserPermission(userPermissionAction, userPermissionId) {
+                $("#userPermissionId").val('');
+                $("#userPermissionName").val('');
 
                 var formData = {};
-                if(adminAction == "create") {
-                    //$("#adminAction").val(adminAction);
-                    $('#modal-title-text').text('Add Admin User');
-                    $("#adminAction").val('add');
-                } else if(adminAction == "edit") {
-                    //$("#adminAction").val(adminAction);
-                    $('#modal-title-text').text('Update Admin User');
-                    $("#adminAction").val('update');
+                if(userPermissionAction == "create") {
+                    $('#modal-title-text').text('Add Admin User Permission');
+                    $("#userPermissionAction").val('add');
+                    $("#userPermissionStatusActive").prop( "checked", true );
+                } else if(userPermissionAction == "edit") {
+                    $("#userPermissionAction").val('update');
+                    $('#modal-title-text').text('Update Admin User Permission');
                     formData = {
-                        "aUsrId": adminId,
-                        "aUsrAction": adminAction
+                        "userPermissionId": userPermissionId,
+                        "userPermissionAction": userPermissionAction
                     };
-                } else if(adminAction == "delete") {
+                } else if(userPermissionAction == "delete") {
                     formData = {
-                        "aUsrId": adminId,
-                        "aUsrAction": adminAction
+                        "userPermissionId": userPermissionId,
+                        "userPermissionAction": userPermissionAction
                     };
                 }           
 
-                if(adminAction == "edit") {
+                if(userPermissionAction == "edit") {
                     $.ajax({
-                        url: "./private/controllers/admin_users.php",
+                        url: "./private/controllers/admin_user_permission.php",
                         cache: false,
                         type: "GET",
                         datatype:"JSON",
                         data: formData,
                         success: function(html) {
                             respArr = JSON.parse(html);
-                            console.log("respArr",respArr.id);
+                            if(userPermissionAction == "edit") {
+                                $("#userPermissionId").val(respArr.id);
+                                $("#userPermissionAction").val('update');
+                                $("#userPermissionName").val(respArr.name);
 
-                            if(adminAction == "edit") {
-                                $("#adminUserId").val(respArr.id);
-                                $("#adminUserName").val(respArr.username);
-                                $("#adminUserEmail").val(respArr.email);
-                                //$("#adminUserPassword").text(respArr.password);
-
-                                //console.log("adminAction",adminAction);
-                                var adminStatus = "In-Active";
-                                if(respArr.status){
-                                    if(respArr.status == 1){
-                                        adminStatus = "Active"
-                                    } else if(respArr.status == 2){
-                                        adminStatus = "In-Active"
-                                    }
+                                if(respArr.status == 1) {
+                                    $("#userPermissionStatusActive").prop( "checked", true );
+                                    $("#userPermissionStatusInActive").prop( "checked", false );
+                                } else if(respArr.status == 2) {
+                                    $("#userPermissionStatusActive").prop( "checked", false );
+                                    $("#userPermissionStatusInActive").prop( "checked", true );
+                                } else {
+                                    $("#userPermissionStatusActive").prop( "checked", false );
+                                    $("#userPermissionStatusInActive").prop( "checked", true );
                                 }
-
-                                $("#adminUserStatus").html(respArr.adminStatus);
                             }                    
                         }
                     });
                 } 
             }
 
-            function viewAdmin(adminAction, adminId) {
+            function viewUserPermission(userPermissionAction, userPermissionId) {
 
-                $('#view-admin-modal-title-text').text('View Admin User');
+                $('#view-user-permission-title-text').text('View User Permission');
 
                 var formData = {};
-                if(adminAction == "view") {
+                if(userPermissionAction == "view") {
                     formData = {
-                        "aUsrId": adminId,
-                        "aUsrAction": adminAction
+                        "userPermissionId": userPermissionId,
+                        "userPermissionAction": userPermissionAction
                     };
                 
                     $.ajax({
-                        url: "../admin/private/controllers/admin_users.php",
+                        url: "../admin/private/controllers/admin_user_permission.php",
                         cache: false,
                         type: "GET",
                         datatype:"JSON",
                         data: formData,
                         success: function(html) {
                             respArr = JSON.parse(html);
-                            $("#viewAdminUserId").text(respArr.id);
-                            $("#viewAdminUserName").text(respArr.username);
-                            $("#viewAdminUserEmail").html(respArr.email);
-                            //$("#viewAdminUserPassword").text(respArr.password);
-
-                            var adminStatus = "In-Active";
-                            if(respArr.status){
-                                if(respArr.status == 1){
-                                    adminStatus = "Active"
-                                } else if(respArr.status == 2){
-                                    adminStatus = "In-Active"
+                            $("#viewUserPermissionId").text(respArr.id);
+                            $("#viewUserPermissionName").text(respArr.name);
+                            
+                            var userPermissionStatus = "";
+                            if(respArr.status) {
+                                if(respArr.status == "1") {
+                                    userPermissionStatus = "Active";
+                                } else if(respArr.status == "2") {
+                                    userPermissionStatus = "In-Active";
                                 }
-                            }
-
-                            $("#viewAdminUserStatus").text(adminStatus);
-
-                            /*var viewEventImage = "";
-                            var hostname = location.hostname;
-                            var viewEventImageLink = "";
-                            if(hostname == "localhost"){
-                                viewEventImageLink = "<a href='http://localhost/bookmysporto/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
                             } else {
-                                viewEventImageLink = "<a href='https://bookmysporto.com/admin/uploads/events/"+respArr.eventImageName+"' target='_blank'>"+respArr.eventImageName+"</a>";
+                                 userPermissionStatus = "In-Active";
                             }
 
-                            $("#viewEventImage").html(viewEventImageLink);*/
+                            $("#viewUserPermissionStatus").html(userPermissionStatus);                            
                         }
                     });
                 }
@@ -703,35 +591,26 @@
             jQuery.noConflict();
             (function( $ ) {
                 $(function () {
-                    $('#adminForm').validate({
+                    $('#adminUserPermissionRoleForm').validate({
                         rules: {
-                            adminUserName: {
+                            userPermissionName: {
                                 required: true,
                                 minlength: 5,
-                                maxlength: 50
+                                maxlength: 20
                             },
-                            adminUserEmail: {
-                                required: true,
-                                email: true
-                            }/*,
-                            adminUserPassword: {
+                            userPermissionStatus: {
                                 required: true
-                            }*/
+                            }
                         },
                         messages: {
-                            adminUserName: {
-                                required: "User Name should not be empty.",
-                                minlength: "User Name be minimum of 10 characters.",
-                                maxlength: "User Name should not be beyond 20 characters."
+                            userPermissionName: {
+                                required: "User Permission should not be empty.",
+                                minlength: "User Permission should be minimum of 5 characters.",
+                                maxlength: "User Permission should not be beyond 20 characters."
                             },
-                            adminUserEmail: {
-                                required: "E-Mail should not be empty."
-                            }/*,
-                            adminUserPassword: {
-                                required: "Password should not be empty.",
-                                minlength: "Password be minimum of 10 characters.",
-                                maxlength: "Password should not be beyond 30 characters."
-                            }*/                   
+                            userPermissionStatus: {
+                                required: "User Permission status should be selected."
+                            }                                   
                         },
                         errorElement: 'span',
                         errorClass: "has-error",
@@ -759,12 +638,12 @@
                 if($pgMsg == 1) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Create Admin User');
-                        $('#msg-div').text('Admin User Created Successfully.');
-                        $('#modal-msg').modal('show');                        
+                        $('#msg-modal-title-text').text('Create Admin User Permission');
+                        $('#event-form-modal-msg').modal('show');
+                        $('#msg-div').html('Admin User Permission Created successfully.');
                         $('#msg-div').show();
                         setTimeout(function() {
-                            $('#modal-msg').modal('hide');
+                            $('#event-form-modal-msg').modal('hide');
                             $('#msg-div').hide();
                         }, 2000);
                     </script>                
@@ -772,12 +651,12 @@
                 } else if($pgMsg == 2) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Update Admin User');
-                        $('#msg-div').text('Admin User Updated Successfully.');
-                        $('#modal-msg').modal('show');
+                        $('#msg-modal-title-text').text('Update Admin User Permission');
+                        $('#event-form-modal-msg').modal('show');
+                        $('#msg-div').html('Admin User Permission updated successfully.');
                         $('#msg-div').show();
                         setTimeout(function() { 
-                            $('#modal-msg').modal('hide');
+                            $('#event-form-modal-msg').modal('hide');
                             $('#msg-div').hide();
                         }, 2000);
                     </script>      
@@ -785,12 +664,12 @@
                 } else if($pgMsg == 3) {
         ?>          
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Delete Admin User');
-                        $('#msg-div').text('Admin User Deleted Successfully.');
-                        $('#modal-msg').modal('show');
+                        $('#msg-modal-title-text').text('Delete Admin User Permission');
+                        $('#event-form-modal-msg').modal('show');
+                        $('#msg-div').html('Admin User Permission delete successfully.');
                         $('#msg-div').show();
                         setTimeout(function() { 
-                            $('#modal-msg').modal('hide');
+                            $('#event-form-modal-msg').modal('hide');
                             $('#msg-div').hide();
                         }, 2000);
                     </script>  
@@ -798,12 +677,11 @@
                 } else if($pgMsg == 4) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Create Admin User');
-                        $('#msg-div').text('Admin User Name Already Exist.');
-                        $('#modal-msg').modal('show');
+                        $('#msg-modal-title-text').text('Create Admin User Permission');
+                        $('#event-form-modal-msg').modal('show');
+                        $('#msg-div').html('Admin User Permission Already exist.');
                         $('#msg-div').show();
                         setTimeout(function() { 
-                            $('#modal-msg').modal('hide');
                             $('#msg-div').hide();
                         }, 2000);
                     </script>  
@@ -811,12 +689,11 @@
                 }  else if($pgMsg == 5) {
         ?>
                     <script type="text/javascript">
-                        $('#msg-modal-title-text').text('Update Admin User');
-                        $('#msg-div').text('Admin User Name Already Exist.');
-                        $('#modal-msg').modal('show');
-                        $('#msg-div').show();
+                        $('#msg-modal-title-text').text('Update Event');
+                        $('#event-form-modal-msg').modal('show');
+                        $('#msg-div').html('Admin User Permission Already exist.');
+                        $('#msg-div').hide();
                         setTimeout(function() { 
-                            $('#modal-msg').modal('hide');
                             $('#msg-div').hide();
                         }, 2000);
                     </script>  

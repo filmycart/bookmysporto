@@ -99,6 +99,8 @@
 	require_once('models/State.php');
 	require_once('models/Contact.php');
 	require_once('models/User.php');
-	require_once('models/User_Type.php');	
+	require_once('models/User_Type.php');
+	require_once('models/Admin_User_Roles.php');
+	require_once('models/Admin_User_Permission.php');	
 	require_once('vendor/autoload.php');
 ?>

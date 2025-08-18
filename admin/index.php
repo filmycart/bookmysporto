@@ -26,26 +26,22 @@
   }
 
   $userCount = new User();
-  $all_players = (array) $userCount->where(["admin_id" => $admin->id])->all();
+  $all_users = (array) $userCount->all();
 
   $userCount = 0;
-  if(!empty($all_players)) {
-    $userCount = count($all_players);
+  if(!empty($all_users)) {
+    $userCount = count($all_users);
   }  
 ?>
 <?php require("common/php/php-head.php"); ?>
 <body class="hold-transition sidebar-mini layout-fixed">
-
 <div class="wrapper">
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
   </div>
-
  <?php require("common/php/header.php"); ?>
-
   <?php require("common/php/sidebar.php"); ?>
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -91,7 +87,7 @@
               <div class="icon">
                 <i class="ion ion-location"></i>
               </div>
-              <a href="venue.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="venues.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -217,6 +213,30 @@
   <!-- /.content-wrapper -->
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-  <?php require("common/php/php-footer.php"); ?>
+<?php require("common/php/php-footer.php"); ?>
+<script>
+   /*$.get("https://api.myip.com/", function (data) {
+      // There are 3 values only returned handle them as needed
+      console.log(data.ip); // Visitors IP Address
+      console.log(data.country); // Country Name in English
+      console.log(data.cc); // Country Code
+   }, "json");*/
+/*
+   var formData = new Object();
 
+   $.ajax({
+        url: "https://api.myip.com",
+        cache: false,
+        type: "GET",
+        datatype:"JSON",
+        data: formData,
+        success: function(html) {
+                           
+        }
+    });*/
+</script>
+<?php
+/*  $ipdata = file_get_contents("https://api.myip.com/");
+  echo $ipdata;*/
+?>
   
