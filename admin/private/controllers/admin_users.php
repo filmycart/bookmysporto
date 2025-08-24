@@ -123,8 +123,9 @@
                     Helper::redirect_to("../../admin-users.php?msg=4");
                 } else {
                     $adminUser->username = trim($_POST['adminUserName']);
-                    $adminUser->email = trim($_POST['adminUserEmail']);                    
-                    //$adminUser->password = trim($_POST['adminUserPassword']);
+                    $adminUser->email = trim($_POST['adminUserEmail']);
+                    $adminUser->role_id = trim($_POST['adminUserRole']);
+                    $adminUser->status = $_POST['adminUserStatus'];                            
                     //$adminUser->image_name = $_POST['eventFileHidden'];
                   
                     $errors = $adminUser->get_errors();
@@ -161,7 +162,8 @@
                     $adminUser->id = $pgAuId;
                     $adminUser->username = trim($_POST['adminUserName']);
                     $adminUser->email = trim($_POST['adminUserEmail']);
-                    //$adminUser->password = trim($_POST['adminUserPassword']);
+                    $adminUser->role_id = trim($_POST['adminUserRole']);
+                    $adminUser->status = $_POST['adminUserStatus'];
                     //$adminUser->image_name = $_POST['eventFileHidden'];
 
                     $errors = $adminUser->get_errors();

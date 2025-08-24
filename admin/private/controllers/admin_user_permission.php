@@ -2,34 +2,20 @@
 <?php
     $admin = Session::get_session(new Admin());
 
-    $viewUserPermission = new Admin_User_Permission();
-    $viewUserPermissionArray = array();
+    $pgUserRoleId = "";
+    $pgUserPermId = "";
+    //$pgUserRolePermAction = "";
 
-    $delUserPermissionMsg = "";
-    $pgUserPermissionId = "";
-    $pgUserPermissionAction = "";
-    if((isset($_GET["userPermissionId"])) && (!empty($_GET["userPermissionId"]))) {
-        $pgUserPermissionId = $_GET['userPermissionId'];
-    } elseif((isset($_POST["userPermissionId"])) && (!empty($_POST["userPermissionId"]))) {
-        $pgUserPermissionId = $_POST['userPermissionId'];
+    if((isset($_GET["userRoleId"])) && (!empty($_GET["userRoleId"]))) {
+        $pgUserRoleId = $_GET['userRoleId'];
+    } elseif((isset($_POST["userRoleId"])) && (!empty($_POST["userRoleId"]))) {
+        $pgUserRoleId = $_POST['userRoleId'];
     }
 
-    if((isset($_GET["userPermissionAction"])) && (!empty($_GET["userPermissionAction"]))) {
-        $pgUserPermissionAction = $_GET['userPermissionAction'];
-    } elseif((isset($_POST["userPermissionAction"])) && (!empty($_POST["userPermissionAction"]))) {
-        $pgUserPermissionAction = $_POST['userPermissionAction'];
-    }
-
-    if((Helper::is_get()) && (!empty($pgUserPermissionId)) && ($pgUserPermissionAction == "view")) {
-        $viewUserPermission->id = $pgUserPermissionId;
-        $viewUserPermissionArray = (array) $viewUserPermission->where(["id" => $viewUserPermission->id])->andwhere(["admin_id" => $admin->id])->one();
-        echo json_encode($viewUserPermissionArray);
-        exit;
-    } else if((Helper::is_get()) && (!empty($pgUserPermissionId)) && ($pgUserPermissionAction == "edit")) {
-        $viewUserPermission->id = $pgUserPermissionId;
-        $viewUserPermissionArray = (array) $viewUserPermission->where(["id" => $viewUserPermission->id])->andwhere(["admin_id" => $admin->id])->one();
-        echo json_encode($viewUserPermissionArray);
-        exit;
+    if((isset($_GET["userPermId"])) && (!empty($_GET["userPermId"]))) {
+        $pgUserPermId = $_GET['userPermId'];
+    } elseif((isset($_POST["userPermId"])) && (!empty($_POST["userPermId"]))) {
+        $pgUserPermId = $_POST['userPermId'];
     }
 
     if(empty($admin)){
@@ -37,31 +23,30 @@
     }else{
         $errors = new Errors();
         $message = new Message();
-        $adminPermission = new Admin_User_Permission();
+        $adminUserRolePermission = new Admin_User_Role_Permissions();
 
         if (Helper::is_post()) {
-            if((empty($pgUserPermissionId)) && ($pgUserPermissionAction == "add")) {
+            if((!empty($pgUserRoleId)) && (!empty($pgUserPermId))) {
+                $viewAdminRolePermission = new Admin_User_Role_Permissions();
+                $viewAdminRolePermissionArray = (array) $viewAdminRolePermission->where(["role_id" => $pgUserRoleId])->one();
 
-                $viewAdminPermission = new Admin_User_Permission();
-                $viewAdminPermission->name = trim($_POST['userPermissionName']);
-                $viewAdminPermissionArray = (array) $viewAdminPermission->where(["name" => $viewAdminPermission->name])->one();
+                if((isset($viewAdminRolePermissionArray)) && (!empty($viewAdminRolePermissionArray))) {
+                    $delAdminUserRolePermission = new Admin_User_Role_Permissions();                    
+                    if($delAdminUserRolePermission->where(["role_id" => $pgUserRoleId])->delete()) {
 
-                if((isset($viewAdminPermissionArray['id'])) && (!empty($viewAdminPermissionArray['id']))) {
-                    Helper::redirect_to("../../admin-user-permission.php?msg=4");
-                } else {
-                    $adminPermission->name = trim($_POST['userPermissionName']);
-                    $adminPermission->status = (isset($_POST['userPermissionStatus'])) ? 1 : 1;
-                    $adminPermission->admin_id = $admin->id;
+                        $adminUserRolePermission->role_id = trim($_POST['adminUserName']);
+                        $adminUserRolePermission->email = trim($_POST['adminUserEmail']);
+                      
+                        $errors = $adminUserRolePermission->get_errors();
 
-                    $errors = $adminPermission->get_errors();
-
-                    if($errors->is_empty()) {
                         if($errors->is_empty()) {
-                            $id = $adminPermission->save();
-                            $has_error_creation = false;
+                            if($errors->is_empty()) {
+                                $id = $adminUserRolePermission->save();
+                                $has_error_creation = false;
 
-                            Helper::redirect_to("../../admin-user-permission.php?msg=1");
-                            exit;
+                                Helper::redirect_to("../../admin-user-roles.php?msg=1");
+                                exit;
+                            }
                         }
                     }
                 }
@@ -73,51 +58,7 @@
                     Session::set_session($errors);
                     Helper::redirect_to("../../".ADMIN_FOLER_NAME."/admin-user-permission.php");
                 }
-            } elseif((!empty($pgUserPermissionId)) && ($pgUserPermissionAction == "update")) {
-                $viewAdminPermission = new Admin_User_Roles();
-                $viewAdminPermission->name = trim($_POST['userPermissionName']);
-                $viewAdminPermission->id = $pgUserPermissionId;
-                $viewAdminRoleArray = (array) $viewAdminPermission->where(["name" => $viewAdminPermission->name])->not(["id" => $viewAdminPermission->id])->one();
-
-                if((isset($viewAdminRoleArray['id'])) && (!empty($viewAdminRoleArray['id']))) {
-                    Helper::redirect_to("../../admin-user-permission.php?msg=5");
-                    exit;
-                } else {
-                    $adminPermission->id = $pgUserPermissionId;
-                    $adminPermission->name = trim($_POST['userPermissionName']);
-                    $adminPermission->status = (isset($_POST['userPermissionStatus'])) ? 1 : 1;
-                    $adminPermission->admin_id = $admin->id;
-
-                    $errors = $adminPermission->get_errors();
-                    if($errors->is_empty()){
-                        if($adminPermission->where(["id"=>$adminPermission->id])->andWhere(["admin_id" => $admin->id])->update()){
-                            Helper::redirect_to("../../admin-user-permission.php?msg=2");
-                            exit;
-                        }
-                    }
-                }
             }
-        } elseif((!empty($pgUserPermissionId)) && ($pgUserPermissionAction == "delete")) {
-            $adminPermission->id = $pgUserPermissionId;
-            $adminPermission->admin_id = $admin->id;
-
-            if(!empty($adminPermission->id)) {
-                $usr_permission_from_db = new Admin_User_Permission();
-                $usr_permission_from_db = $usr_permission_from_db->where(["id" => $adminPermission->id])->andWhere(["admin_id" => $adminPermission->admin_id])->one();
-
-                if($usr_permission_from_db) {
-                    if($usr_permission_from_db->where(["id" => $usr_permission_from_db->id])->delete()) {
-                        $delUsrPermissionMsg = 1;
-                        $message->set_message($delUsrPermissionMsg);
-                    }else $errors->add_error("Error Occurred While Deleting");
-                } else {
-                    $errors->add_error("Invalid User Role");
-                }
-
-            }else  $errors->add_error("Invalid Parameters.");
-
-            Helper::redirect_to("../../admin-user-permission.php?msg=3");
-            exit;
         }
     }
 ?>

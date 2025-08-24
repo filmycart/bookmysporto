@@ -299,6 +299,7 @@
                                  float:left;
                                  width:1%;
                             }
+                            
                             .bootstrap-select > .dropdown-toggle {
                                 height: 38px ;
                             }

@@ -102,5 +102,6 @@
 	require_once('models/User_Type.php');
 	require_once('models/Admin_User_Roles.php');
 	require_once('models/Admin_User_Permission.php');	
+	require_once('models/Admin_User_Role_Permissions.php');
 	require_once('vendor/autoload.php');
 ?>

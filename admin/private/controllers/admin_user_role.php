@@ -38,6 +38,7 @@
         $errors = new Errors();
         $message = new Message();
         $adminRole = new Admin_User_Roles();
+        $adminUserRolePermission = new Admin_User_Role_Permissions();
 
         if (Helper::is_post()) {
             if((empty($pgUserRoleId)) && ($pgUserRoleAction == "add")) {
@@ -57,10 +58,53 @@
                     if($errors->is_empty()) {
                         if($errors->is_empty()) {
                             $id = $adminRole->save();
-                            $has_error_creation = false;
+                            if((!empty($id)) && ((isset($_POST['userRolePermission'])) && (!empty($_POST['userRolePermission'])))) {
+                                $viewAdminRolePermission = new Admin_User_Role_Permissions();
+                                $viewAdminRolePermissionArray = (array) $viewAdminRolePermission->where(["role_id" => $id])->one();
+                            
+                                if((isset($viewAdminRolePermissionArray)) && (!empty($viewAdminRolePermissionArray))) {
 
-                            Helper::redirect_to("../../admin-user-roles.php?msg=1");
-                            exit;
+                                    $delAdminUserRolePermission = new Admin_User_Role_Permissions();                    
+                                    
+                                    if($delAdminUserRolePermission->where(["role_id" => $pgUserRoleId])->delete()) {
+                                        foreach($_POST['userRolePermission'] as $userRolePermissionVal) {
+                                            $adminUserRolePermission->role_id = $id;
+                                            $adminUserRolePermission->permission_id = $userRolePermissionVal;
+                                            $adminUserRolePermission->save();
+                                        }
+                                      
+                                        $errors = $adminUserRolePermission->get_errors();
+
+                                        if($errors->is_empty()) {
+                                            if($errors->is_empty()) {
+                                                //$id = $adminUserRolePermission->save();
+                                                $has_error_creation = false;
+
+                                                Helper::redirect_to("../../admin-user-roles.php?msg=1");
+                                                exit;
+                                            }
+                                        }
+                                    }
+                                } else {                                    
+                                    foreach($_POST['userRolePermission'] as $userRolePermissionVal) {
+                                        $adminUserRolePermission->role_id = $id;
+                                        $adminUserRolePermission->permission_id = $userRolePermissionVal;
+                                        $adminUserRolePermission->save();
+                                    }
+                                  
+                                    $errors = $adminUserRolePermission->get_errors();
+
+                                    if($errors->is_empty()) {
+                                        if($errors->is_empty()) {
+                                            //$id = $adminUserRolePermission->save();
+                                            $has_error_creation = false;
+
+                                            Helper::redirect_to("../../admin-user-roles.php?msg=1");
+                                            exit;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -90,6 +134,55 @@
                     $errors = $adminRole->get_errors();
                     if($errors->is_empty()){
                         if($adminRole->where(["id"=>$adminRole->id])->andWhere(["admin_id" => $admin->id])->update()){
+
+                            if((!empty($pgUserRoleId)) && ((isset($_POST['userRolePermission'])) && (!empty($_POST['userRolePermission'])))) {
+                                $viewAdminRolePermission = new Admin_User_Role_Permissions();
+                                $viewAdminRolePermissionArray = (array) $viewAdminRolePermission->where(["role_id" => $pgUserRoleId])->one();
+                            
+                                if((isset($viewAdminRolePermissionArray)) && (!empty($viewAdminRolePermissionArray))) {
+
+                                    $delAdminUserRolePermission = new Admin_User_Role_Permissions();                    
+                                    
+                                    if($delAdminUserRolePermission->where(["role_id" => $pgUserRoleId])->delete()) {
+                                        foreach($_POST['userRolePermission'] as $userRolePermissionVal) {
+                                            $adminUserRolePermission->role_id = $pgUserRoleId;
+                                            $adminUserRolePermission->permission_id = $userRolePermissionVal;
+                                            $adminUserRolePermission->save();
+                                        }
+                                      
+                                        /*$errors = $adminUserRolePermission->get_errors();
+
+                                        if($errors->is_empty()) {
+                                            if($errors->is_empty()) {
+                                                //$id = $adminUserRolePermission->save();
+                                                $has_error_creation = false;
+
+                                                Helper::redirect_to("../../admin-user-roles.php?msg=1");
+                                                exit;
+                                            }
+                                        }*/
+                                    }
+                                } else {
+                                    foreach($_POST['userRolePermission'] as $userRolePermissionVal) {
+                                        $adminUserRolePermission->role_id = $pgUserRoleId;
+                                        $adminUserRolePermission->permission_id = $userRolePermissionVal;
+                                        $adminUserRolePermission->save();
+                                    }
+                                  
+                                    /*$errors = $adminUserRolePermission->get_errors();
+
+                                    if($errors->is_empty()) {
+                                        if($errors->is_empty()) {
+                                            //$id = $adminUserRolePermission->save();
+                                            $has_error_creation = false;
+
+                                            Helper::redirect_to("../../admin-user-roles.php?msg=1");
+                                            exit;
+                                        }
+                                    }*/
+                                }
+                            }                            
+
                             Helper::redirect_to("../../admin-user-roles.php?msg=2");
                             exit;
                         }

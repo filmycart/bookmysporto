@@ -58,15 +58,11 @@
                     <div style="width:30%;float:left;">
                         <h3 class="card-title">Admin Users</h3>
                     </div>  
-                    <div style="width:15%;float:right;"> 
+                    <div style="width:13%;float:right;"> 
                         <a href="#" data-toggle="modal" data-target="#admin-form-modal" class="btn btn-primary btn-sm" onclick="addEditAdmin('create','','','','','','')">Add Admin Users</a>
                     </div>
                 </div>
               </div>
-
-                  <!-- $('#msg-modal-title-text').text('Create Event');
-                        $('#modal-msg').modal('show');
-                        $('#msg-div').show(); -->
               <div class="modal fade" id="modal-msg">
                 <div class="modal-dialog modal-md">
                   <div class="modal-content">
@@ -195,29 +191,35 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="eventFormRow">
+                                <div class="eventFormRow">
                                     <div class="eventFormCol">
-                                        <label>Password</label>
+                                        <div id="adminUserRoleSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                        <div class="form-group">
+                                            <label>Role</label>
+                                            <span class="required-field">*</span>
+                                            <div id="adminUserRoleDiv"></div>
+                                        </div>
+                                    </div>
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>                               
+                                    <div class="eventFormCol">
+                                        <label>Status</label>
                                         <span class="required-field">*</span>
-                                        <div class="form-group" data-target-input="nearest">
-                                            <input type="text" id="adminUserPassword" name="adminUserPassword" class="form-control" data-target="#adminUserPassword" />
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <input class="form-check-input status-active" type="radio" value="1" id="adminUserStatus" name="adminUserStatus">
+                                                        <label class="form-check-label">Active</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <input class="form-check-input status-inactive" type="radio" value="2" id="adminUserStatus" name="adminUserStatus">
+                                                        <label class="form-check-label">In-Active</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div> -->
-                                <!-- <div class="eventFormRow">
-                                    <div class="eventFormCol">
-                                        <div id="evenFileSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
-                                        <div id="eventImagePreview"></div>
-                                        <div id="eventImageError" style="color:red;"></div>
-                                        <div class="form-group" id="eventFileLabelDiv">
-                                            <label>Image</label>
-                                        </div>
-                                        <div class="form-group" id="eventFileDiv">
-                                            <input name="eventFile" id="eventFile" type="file" multiple />
-                                            <input type="hidden" name="eventFileHidden" id="eventFileHidden" />
-                                        </div>
-                                    </div>
-                                </div> -->
+                                </div>                                
                             </div>
                             <div class="modal-footer right-content-between">
                                 <button type="submit" id="adminUserSubmit" name="adminUserSubmit" class="btn btn-primary">Save</button>
@@ -326,7 +328,7 @@
                         if(count($all_users) > 0){
                             foreach ($all_users as $item){
                                 if($item->id != 1){
-                                    //if($_SESSION['bookmysporto_id'] == $item->id){                                    
+                                    //if($_SESSION['bookmysporto_id'] == $item->id){                                
                     ?>
                                       <tr>
                                         <td>
@@ -587,10 +589,13 @@
             }
 
             function addEditAdmin(adminAction, adminId) {
+
+                $('input[type="radio"][name="adminUserStatus"][value="1"]').prop('checked', false);
+                $('input[type="radio"][name="adminUserStatus"][value="2"]').prop('checked', false);
+
                 /*if(adminAction == "edit") {
                     adminImage(adminId);
-                }
-                */
+                }*/
 
                 $("#adminUserId").val('');
                 $("#adminUserName").val('');
@@ -598,11 +603,11 @@
 
                 var formData = {};
                 if(adminAction == "create") {
-                    //$("#adminAction").val(adminAction);
                     $('#modal-title-text').text('Add Admin User');
                     $("#adminAction").val('add');
+                    $('input[type="radio"][name="adminUserStatus"][value="1"]').prop('checked', true);
+                    adminUserRoleFunc(adminId);
                 } else if(adminAction == "edit") {
-                    //$("#adminAction").val(adminAction);
                     $('#modal-title-text').text('Update Admin User');
                     $("#adminAction").val('update');
                     formData = {
@@ -625,24 +630,21 @@
                         data: formData,
                         success: function(html) {
                             respArr = JSON.parse(html);
-                            console.log("respArr",respArr.id);
 
                             if(adminAction == "edit") {
                                 $("#adminUserId").val(respArr.id);
                                 $("#adminUserName").val(respArr.username);
                                 $("#adminUserEmail").val(respArr.email);
-                                //$("#adminUserPassword").text(respArr.password);
 
-                                var adminStatus = "In-Active";
+                                adminUserRoleFunc(respArr.role_id);
+
                                 if(respArr.status){
-                                    if(respArr.status == 1){
-                                        adminStatus = "Active"
-                                    } else if(respArr.status == 2){
-                                        adminStatus = "In-Active"
+                                    if(respArr.status == 1) {
+                                        $('input[type="radio"][name="adminUserStatus"][value="1"]').prop('checked', true);
+                                    } else if(respArr.status == 2) {
+                                        $('input[type="radio"][name="adminUserStatus"][value="2"]').prop('checked', true);
                                     }
                                 }
-
-                                $("#adminUserStatus").html(respArr.adminStatus);
                             }                    
                         }
                     });
@@ -712,10 +714,10 @@
                             adminUserEmail: {
                                 required: true,
                                 email: true
-                            }/*,
-                            adminUserPassword: {
+                            },
+                            adminUserRole: {
                                 required: true
-                            }*/
+                            }
                         },
                         messages: {
                             adminUserName: {
@@ -725,12 +727,10 @@
                             },
                             adminUserEmail: {
                                 required: "E-Mail should not be empty."
-                            }/*,
-                            adminUserPassword: {
-                                required: "Password should not be empty.",
-                                minlength: "Password be minimum of 10 characters.",
-                                maxlength: "Password should not be beyond 30 characters."
-                            }*/                   
+                            },
+                            adminUserRole: {
+                                required: "Select User role."
+                            }                   
                         },
                         errorElement: 'span',
                         errorClass: "has-error",

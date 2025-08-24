@@ -1,3 +1,39 @@
+function adminUserRoleFunc(userRoleId) {
+    $.ajax({
+        url: "admin_user_roles_selectbox.php",
+        cache: false,
+        type: "POST",
+        data: {userRoleId : userRoleId},
+        beforeSend: function() {
+            $('#adminUserRoleSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#adminUserRoleSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#adminUserRoleDiv").html(html);
+        }
+    });
+}
+
+function adminUserPermissionFunc(userRoleId) {
+    $.ajax({
+        url: "admin_user_permission_checkbox.php",
+        cache: false,
+        type: "POST",
+        data: {userRoleId : userRoleId},
+        beforeSend: function() {
+            $('#adminUserPermissionSpinnerDiv').show();
+        },
+        complete: function(){
+            $('#adminUserPermissionSpinnerDiv').hide();
+        },
+        success: function(html){
+            $("#adminUserPermissionDiv").html(html);
+        }
+    });
+}
+
 function userTypeFunc(userTypeId) {
     $.ajax({
         url: "user_type.php",

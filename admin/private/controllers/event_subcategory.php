@@ -182,7 +182,7 @@
                     $updEventSubCategory->title = trim($_POST['eventSubCategoryTitle']);
                     $updEventSubCategory->price = trim($_POST['eventSubCategoryPrice']);
                     $updEventSubCategory->category_id = trim($_POST['eventCategoryHidden']);
-                    $updEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);                    
+                    $updEventSubCategory->image_name = trim($_POST['eventSubCategoryFileHidden']);               
                     $updEventSubCategory->status = (isset($_POST['eventSubCategoryStatus'])) ? 1 : 1;
                     $updEventSubCategory->admin_id = $admin->id;
 

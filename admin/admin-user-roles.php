@@ -330,6 +330,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="eventFormRow">
+                                    <label>Permission</label>
+                                    <div id="adminUserPermissionSpinnerDiv"><img src="./assets/images/spinner.png" class="spinner"></div>
+                                    <div id="adminUserPermissionDiv"></div>
+                                </div>
                             </div>
                             <div class="modal-footer right-content-between">
                                 <button type="submit" id="userRoleSubmit" name="userRoleSubmit" class="btn btn-primary">Save</button>
@@ -500,6 +505,8 @@
                 $("#userRoleId").val('');
                 $("#userRoleName").val('');
 
+                $("#adminUserPermissionSpinnerDiv").hide();
+
                 var formData = {};
                 if(userRoleAction == "create") {
                     $("#userRoleStatusActive").prop( "checked", true );
@@ -517,7 +524,9 @@
                         "userRoleId": userRoleId,
                         "userRoleAction": userRoleAction
                     };
-                }           
+                }
+
+                adminUserPermissionFunc(userRoleId);    
 
                 if(userRoleAction == "edit") {
                     $.ajax({

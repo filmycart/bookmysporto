@@ -6,6 +6,7 @@ class Admin extends Util{
     public $username;
     public $email;
     public $password;
+    public $role_id;
     public $status;
 
     public function save(){
