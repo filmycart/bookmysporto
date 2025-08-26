@@ -24,6 +24,10 @@
         $adminUserPermission = new Admin_User_Permission();
         $all_user_permission = (array) $adminUserPermission->all();
 
+        /*print"<pre>";
+        print_r($all_user_permission);
+        exit;*/
+
         $all_products = new Product();
         $pagination = "";
         $pagination_msg = "";
@@ -296,7 +300,7 @@
                                 color:red;
                             }
                         </style>
-                        <form id="adminUserPermissionRoleForm" name="adminUserPermissionForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/admin_user_permission.php">
+                        <form id="adminUserPermissionForm" name="adminUserPermissionForm" method="POST" enctype="multipart/form-data" action="../admin/private/controllers/admin_user_permission.php">
                             <input type="hidden" id="userPermissionId" name="userPermissionId" value="" />
                             <input type="hidden" id="userPermissionAction" name="userPermissionAction" value="" />
                             <div id="eventSucResponseDiv" style="color:green;"></div>
@@ -318,11 +322,11 @@
                                             <div class="form-check">
                                                 <div class="row">
                                                     <div class="col-sm-3">
-                                                        <input class="form-check-input" type="radio" value="1" id="userPermissionStatusActive" name="userPermissionStatusActive">
+                                                        <input class="form-check-input" type="radio" value="1" id="userPermissionStatus" name="userPermissionStatus">
                                                         <label class="form-check-label">Active</label>
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <input class="form-check-input" type="radio" value="2" id="userPermissionStatusInActive" name="userPermissionStatusInActive">
+                                                        <input class="form-check-input" type="radio" value="2" id="userPermissionStatus" name="userPermissionStatus">
                                                         <label class="form-check-label">In-Active</label>
                                                     </div>
                                                 </div>
@@ -403,7 +407,8 @@
                                     <?php echo $item->id; ?>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-usr-permission-form-modal" onclick="viewUserPermission('view','<?php echo $item->id; ?>')"><?php echo $item->name; ?></a>
+                                    <a href="#" data-toggle="modal" data-target="#view-usr-permission-form-modal" onclick="viewUserPermission('view','<?php echo $item->id; ?>')"><?php echo $item->name; ?>
+                                    </a>
                                 </td>
                                 <td>
                                     <?php
@@ -500,11 +505,14 @@
                 $("#userPermissionId").val('');
                 $("#userPermissionName").val('');
 
+                $('input[type="radio"][name="userPermissionStatus"][value="1"]').prop('checked', false);
+                $('input[type="radio"][name="userPermissionStatus"][value="2"]').prop('checked', false);
+
                 var formData = {};
                 if(userPermissionAction == "create") {
                     $('#modal-title-text').text('Add Admin User Permission');
                     $("#userPermissionAction").val('add');
-                    $("#userPermissionStatusActive").prop( "checked", true );
+                    $('input[type="radio"][name="userPermissionStatus"][value="1"]').prop('checked', true);
                 } else if(userPermissionAction == "edit") {
                     $("#userPermissionAction").val('update');
                     $('#modal-title-text').text('Update Admin User Permission');
@@ -533,15 +541,12 @@
                                 $("#userPermissionAction").val('update');
                                 $("#userPermissionName").val(respArr.name);
 
-                                if(respArr.status == 1) {
-                                    $("#userPermissionStatusActive").prop( "checked", true );
-                                    $("#userPermissionStatusInActive").prop( "checked", false );
-                                } else if(respArr.status == 2) {
-                                    $("#userPermissionStatusActive").prop( "checked", false );
-                                    $("#userPermissionStatusInActive").prop( "checked", true );
-                                } else {
-                                    $("#userPermissionStatusActive").prop( "checked", false );
-                                    $("#userPermissionStatusInActive").prop( "checked", true );
+                                if(respArr.status) {
+                                    if(respArr.status == 1) {
+                                        $('input[type="radio"][name="userPermissionStatus"][value="1"]').prop('checked', true);
+                                    } else if(respArr.status == 2) {
+                                        $('input[type="radio"][name="userPermissionStatus"][value="2"]').prop('checked', true);
+                                    }
                                 }
                             }                    
                         }
@@ -591,26 +596,26 @@
             jQuery.noConflict();
             (function( $ ) {
                 $(function () {
-                    $('#adminUserPermissionRoleForm').validate({
+                    $('#adminUserPermissionForm').validate({
                         rules: {
                             userPermissionName: {
                                 required: true,
                                 minlength: 5,
                                 maxlength: 20
-                            },
+                            }/*,
                             userPermissionStatus: {
                                 required: true
-                            }
+                            }*/
                         },
                         messages: {
                             userPermissionName: {
                                 required: "User Permission should not be empty.",
                                 minlength: "User Permission should be minimum of 5 characters.",
                                 maxlength: "User Permission should not be beyond 20 characters."
-                            },
+                            }/*,
                             userPermissionStatus: {
                                 required: "User Permission status should be selected."
-                            }                                   
+                            }   */                                
                         },
                         errorElement: 'span',
                         errorClass: "has-error",

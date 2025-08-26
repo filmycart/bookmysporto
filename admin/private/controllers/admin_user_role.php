@@ -85,7 +85,7 @@
                                             }
                                         }
                                     }
-                                } else {                                    
+                                } else {                             
                                     foreach($_POST['userRolePermission'] as $userRolePermissionVal) {
                                         $adminUserRolePermission->role_id = $id;
                                         $adminUserRolePermission->permission_id = $userRolePermissionVal;

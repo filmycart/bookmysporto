@@ -200,7 +200,7 @@
                                             <div id="adminUserRoleDiv"></div>
                                         </div>
                                     </div>
-                                    <div class="eventFormSpacerDiv">&nbsp;</div>                               
+                                    <div class="eventFormSpacerDiv">&nbsp;</div>
                                     <div class="eventFormCol">
                                         <label>Status</label>
                                         <span class="required-field">*</span>

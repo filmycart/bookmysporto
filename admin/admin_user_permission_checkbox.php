@@ -20,7 +20,7 @@
     $allAdminUserPermission = (array) $adminUserPermission->orderBy($sort_by)->orderType($sort_type)->where(["status" => 1])->all();
 
     $checkedPermArray = array();
-    if(!empty($allAdminUserRolePermission)){
+    if(!empty($allAdminUserRolePermission)) {
         foreach($allAdminUserRolePermission as $allAdminUserRolePermVal) {
             $checkedPermArray[] = $allAdminUserRolePermVal->permission_id;
         }
