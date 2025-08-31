@@ -1,21 +1,11 @@
-		<!-- Footer -->
+<!-- Footer -->
 		<footer class="footer">
 			<div class="container">
 				<!-- Footer Join -->
 				<div class="footer-join">
 					<h2>We Welcome Your Passion And Expertise</h2>
 					<p class="sub-title">Join our empowering sports community today and grow with us.</p>
-					<?php
-                        if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
-                    ?>
-                            <a href="index.php?pg-nm=my-profile" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> My Profile</a>
-                    <?php        
-                        } else {
-                    ?>
-                            <a href="#" onclick="registerForm()" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
-                    <?php
-                        }
-                    ?>
+					<a href="register.html" class="btn btn-primary"><i class="feather-user-plus"></i> Join With Us</a>
 				</div>
 				<!-- /Footer Join -->
 			
@@ -28,12 +18,12 @@
 								<h4 class="footer-title">Contact us</h4>
 								<div class="footer-address-blk">
 									<div class="footer-call">
-										<!--<span>Toll free Customer Care</span>-->
-										<p>+918105460391</p>
+										<span>Toll free Customer Care</span>
+										<p>+017 123 456 78</p>
 									</div>
 									<div class="footer-call">
-										<!--<span>Need Live Suppot</span>-->
-										<p>contact@filmycart.in</p>
+										<span>Need Live Suppot</span>
+										<p>dreamsports@example.com</p>
 									</div>
 								</div>
 								<div class="social-icon">
@@ -61,17 +51,20 @@
 								<h4 class="footer-title">Quick Links</h4>
 								<ul>
 									<li>
-										<a href="index.php?pg-nm=about-us">About us</a>
+										<a href="about-us.html">About us</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=contact-us">Contact us</a>
+										<a href="services.html">Services</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=services">Services</a>
+										<a href="events.html">Events</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=events">Events</a>
-									</li>									
+										<a href="blog-grid.html">Blogs</a>
+									</li>
+									<li>
+										<a href="contact-us.html">Contact us</a>
+									</li>
 								</ul>
 							</div>
 							<!-- /Footer Widget -->
@@ -82,19 +75,26 @@
 								<h4 class="footer-title">Support</h4>
 								<ul>
 									<li>
-										<a href="index.php?pg-nm=faq">Faq</a>
+										<a href="contact-us.html">Contact Us</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=privacy-policy">Privacy Policy</a>
+										<a href="faq.html">Faq</a>
 									</li>
 									<li>
-										<a href="index.php?pg-nm=terms-of-service">Terms & Conditions</a>
+										<a href="privacy-policy.html">Privacy Policy</a>
+									</li>
+									<li>
+										<a href="terms-condition.html">Terms & Conditions</a>
+									</li>
+									<li>
+										<a href="pricing.html">Pricing</a>
 									</li>
 								</ul>
 							</div>
 							<!-- /Footer Widget -->
 						</div>
-						<!--<div class="col-lg-2 col-md-6">
+						<div class="col-lg-2 col-md-6">
+							<!-- Footer Widget -->
 							<div class="footer-widget footer-menu">
 								<h4 class="footer-title">Other Links</h4>
 								<ul>
@@ -115,8 +115,10 @@
 									</li>
 								</ul>
 							</div>
+							<!-- /Footer Widget -->
 						</div>
 						<div class="col-lg-2 col-md-6">
+							<!-- Footer Widget -->
 							<div class="footer-widget footer-menu">
 								<h4 class="footer-title">Our Locations</h4>
 								<ul>
@@ -137,20 +139,23 @@
 									</li>
 								</ul>
 							</div>
+							<!-- /Footer Widget -->
 						</div>
 						<div class="col-lg-2 col-md-6">
+							<!-- Footer Widget -->
 							<div class="footer-widget footer-menu">
 								<h4 class="footer-title">Download</h4>
 								<ul>
 									<li>
-										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/icon-apple.svg" alt="Icon"></a>
+										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/icon-apple.svg" alt="Apple"></a>
 									</li>
 									<li>
-										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/google-icon.svg" alt="Icon"></a>
+										<a href="#"><img src="<?=$frontendAssetUrl?>assets/img/icons/google-icon.svg" alt="Google"></a>
 									</li>
 								</ul>
 							</div>
-						</div>-->
+							<!-- /Footer Widget -->
+						</div>
 					</div>
 				</div>
 				<!-- /Footer Top -->
@@ -164,12 +169,12 @@
 						<div class="row align-items-center">
 							<div class="col-md-6">
 								<div class="copyright-text">
-									<p class="mb-0">&copy; 2025 Bookmysporto - All rights reserved.</p>
+									<p class="mb-0">&copy; 2023 DreamSports  - All rights reserved.</p>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<!-- Copyright Menu -->
-								<!-- <div class="dropdown-blk">
+								<div class="dropdown-blk">
 									<ul class="navbar-nav selection-list">
 										<li class="nav-item dropdown">
 											<div class="lang-select">
@@ -191,7 +196,7 @@
 											</div>	
 										</li>
 									</ul>
-								</div> -->
+								</div>
 								<!-- /Copyright Menu -->
 							</div>
 						</div>
@@ -203,6 +208,9 @@
 			
 		</footer>
 		<!-- /Footer -->
+
+		
+
 	</div>
 	<!-- /Main Wrapper -->
 
@@ -226,5 +234,6 @@
 
 	<!-- Custom JS -->
 	<script src="<?=$frontendAssetUrl?>assets/js/script.js"></script>
+
 </body>
 </html>

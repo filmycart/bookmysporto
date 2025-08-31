@@ -158,10 +158,43 @@
                     $addEventSubCategory->admin_id = $admin->id;
 
                     $errors = $addEventSubCategory->get_errors();
+                    
+                    $updCategoryArray = array();
 
                     if($errors->is_empty()) {
                         if($errors->is_empty()) {
                             $id = $addEventSubCategory->save();
+
+                            if((!empty($id)) && ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))) {
+
+                                $updCategoryArray = explode(",",$_POST['eventCategoryHidden']);
+
+                                $viewEventSubcatCatId = new Event_Subcategory_Cat_Id();
+
+                                $viewEventSubcatCatIdArray = (array) $viewEventSubcatCatId->where(["sub_cat_id" => $id])->one();
+                            
+                                if((isset($viewEventSubcatCatIdArray)) && (!empty($viewEventSubcatCatIdArray))) {
+
+                                    $delEventSubcatCatId = new Event_Subcategory_Cat_Id();      
+                                    
+                                    if($delEventSubcatCatId->where(["sub_cat_id" => $id])->delete()) {
+                                        foreach($updCategoryArray as $updCategoryArrayVal) {                                            
+                                            $updEventSubcatCatId = new Event_Subcategory_Cat_Id();
+                                            $updEventSubcatCatId->sub_cat_id = $id;
+                                            $updEventSubcatCatId->cat_id = $updCategoryArrayVal;
+                                            $updEventSubcatCatId->save();
+                                        }
+                                    }
+                                } else {
+                                    foreach($updCategoryArray as $updCategoryArrayVal) {                                        
+                                        $updEventSubcatCatId = new Event_Subcategory_Cat_Id();
+                                        $updEventSubcatCatId->sub_cat_id = $id;
+                                        $updEventSubcatCatId->cat_id = $updCategoryArrayVal;
+                                        $updEventSubcatCatId->save();
+                                    }
+                                }
+                            }
+
                             $has_error_creation = false;
                             Helper::redirect_to("../../event-subcategory.php?msg=1");
                             exit;
@@ -188,8 +221,42 @@
 
                     $errors = $updEventSubCategory->get_errors();
 
-                    if($errors->is_empty()){
+                    if($errors->is_empty()) {
+                        
+                        $updCategoryArray = array();
+                        
                         if($updEventSubCategory->where(["id"=>$updEventSubCategory->id])->andWhere(["admin_id" => $updEventSubCategory->admin_id])->update()){
+
+                            if((!empty($pgEventSubCategoryId)) && ((isset($_POST['eventCategoryHidden'])) && (!empty($_POST['eventCategoryHidden'])))) {
+
+                                $updCategoryArray = explode(",",$_POST['eventCategoryHidden']);
+
+                                $viewEventSubcatCatId = new Event_Subcategory_Cat_Id();
+
+                                $viewEventSubcatCatIdArray = (array) $viewEventSubcatCatId->where(["sub_cat_id" => $pgEventSubCategoryId])->one();
+                            
+                                if((isset($viewEventSubcatCatIdArray)) && (!empty($viewEventSubcatCatIdArray))) {
+
+                                    $delEventSubcatCatId = new Event_Subcategory_Cat_Id();      
+                                    
+                                    if($delEventSubcatCatId->where(["sub_cat_id" => $pgEventSubCategoryId])->delete()) {
+                                        foreach($updCategoryArray as $updCategoryArrayVal) {                                            
+                                            $updEventSubcatCatId = new Event_Subcategory_Cat_Id();
+                                            $updEventSubcatCatId->sub_cat_id = $pgEventSubCategoryId;
+                                            $updEventSubcatCatId->cat_id = $updCategoryArrayVal;
+                                            $updEventSubcatCatId->save();
+                                        }
+                                    }
+                                } else {
+                                    foreach($updCategoryArray as $updCategoryArrayVal) {                                        
+                                        $updEventSubcatCatId = new Event_Subcategory_Cat_Id();
+                                        $updEventSubcatCatId->sub_cat_id = $pgEventSubCategoryId;
+                                        $updEventSubcatCatId->cat_id = $updCategoryArrayVal;
+                                        $updEventSubcatCatId->save();
+                                    }
+                                }
+                            }
+
                             Helper::redirect_to("../../event-subcategory.php?msg=2");
                             exit;
                         }

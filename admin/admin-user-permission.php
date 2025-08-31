@@ -24,10 +24,6 @@
         $adminUserPermission = new Admin_User_Permission();
         $all_user_permission = (array) $adminUserPermission->all();
 
-        /*print"<pre>";
-        print_r($all_user_permission);
-        exit;*/
-
         $all_products = new Product();
         $pagination = "";
         $pagination_msg = "";

@@ -85,7 +85,7 @@
                         <h3 class="card-title">Event Sub Category</h3>
                     </div>  
                     <div style="width:17%;float:right;">  
-                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventSubCategory('create','20','171')">Add Event Sub Category</a>
+                        <a href="#" data-toggle="modal" data-target="#event-form-modal" class="btn btn-primary btn-sm" onclick="addEditEventSubCategory('create','','')">Add Event Sub Category</a>
                     </div>
                 </div>
               </div>
@@ -740,6 +740,9 @@
                                 minlength: 5,
                                 maxlength: 50
                             },
+                            eventCategory: {
+                                required: true
+                            },
                             eventSubCategoryPrice: {
                                 required: true,
                                 minlength: 1,
@@ -755,6 +758,9 @@
                                 required: "Event Sub Category Title should not be empty.",
                                 minlength: "Event Sub Category Title should be minimum of 5 characters.",
                                 maxlength: "Event Sub Category Title should not be beyond 20 characters."
+                            },
+                            eventCategory: {
+                                required: "Event Sub Category Category should be selected."
                             },
                             eventSubCategoryPrice: {
                                 required: "Event Sub Category Price should not be empty.",

@@ -11,13 +11,11 @@
 	<meta name="description" content="<?=($siteDescription)?$siteDescription:''?><?=($siteDescription)?$siteDescription:''?>">
 	<meta name="keywords" content="<?=($siteKeyword)?$siteKeyword:''?>">
 	<meta name="author" content="<?=($siteAuthor)?$siteAuthor:''?>">
-
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@bookmysporto">
 	<meta name="twitter:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta name="twitter:image" content="<?=$frontendAssetUrl?>assets/img/meta-image.jpg">
 	<meta name="twitter:image:alt" content="<?=($siteTitle)?$siteTitle:''?>">
-
 	<meta property="og:url" content="https://www.bookmysporto.com">
 	<meta property="og:title" content="<?=($siteTitle)?$siteTitle:''?> - <?=($siteSubTitle)?$siteSubTitle:''?>">
 	<meta property="og:description" content="<?=($siteDescription)?$siteDescription:''?>">

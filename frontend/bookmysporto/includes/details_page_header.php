@@ -130,6 +130,41 @@
 							</li>		
 							<li <?=$pgAboutActive?>><a href="index.php?pg-nm=about-us">About Us</a></li>
 							<li <?=$pgContactActive?>><a href="index.php?pg-nm=contact-us">Contact Us</a></li>
+                            <!-- <li class="nav-item dropdown noti-nav">
+                                <a href="listing-grid.html" class="dropdown-toggle nav-link position-relative" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-cart-shopping"></i><span class="alert-bg"></span>
+                                </a>
+                                <div class="dropdown-menu notifications dropdown-menu-end">
+                                    <div id="shopping-cart">
+                                        <table class="tbl-cart" cellpadding="10" cellspacing="1">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th class='text-right' width="10%">Price</th>
+                                                    <th class='text-right' width="5%">Quantity</th>
+                                                    <th class='text-right' width="10%">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cartTableBody">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td class="text-right">Total:</td>
+                                                    <td id="itemCount" class="text-right" colspan="2"></td>
+                                                    <td id="totalAmount" class="text-right"></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>                                    
+                                </div>
+                            </li> -->
+                            <style>
+                                #shopping-cart {
+                                    border-top: #79b946 0px solid !i; 
+                                    margin-bottom: 30px;
+                                }
+                            </style>    
+
                             <?php
                                 if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))) {
                             ?>

@@ -549,6 +549,7 @@
                 var errorRespArray = new Array();
                 var respFileNameArray = new Array();
                 var respFileName = "";
+                
                 $.ajax({
                     url: "./private/controllers/event.php", 
                     cache: false,
@@ -638,7 +639,7 @@
 
                                 adminUserRoleFunc(respArr.role_id);
 
-                                if(respArr.status){
+                                if(respArr.status) {
                                     if(respArr.status == 1) {
                                         $('input[type="radio"][name="adminUserStatus"][value="1"]').prop('checked', true);
                                     } else if(respArr.status == 2) {

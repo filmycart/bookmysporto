@@ -4,7 +4,7 @@
 			$curlEvent = curl_init();
 
 			$pgEventId = "";
-		    if((isset($_GET["id"])) && (!empty($_GET["id"]))) {
+		    if((isset($_GET['id'])) && (!empty($_GET['id']))) {
 		        $pgEventId = $_GET['id'];
 		    }
 
@@ -49,6 +49,11 @@
 		    	$eventDetailData = $eventDetailsResponseArr['data'];
 		    }
 
+		    $pgVenueId = "";
+		    if((isset($eventDetailData['venueId'])) && (!empty($eventDetailData['venueId']))) {
+		        $pgVenueId = $eventDetailData['venueId'];
+		    }
+
 			$eventImage = "";
 			if((isset($eventDetailData['eventImage'])) && (!empty($eventDetailData['eventImage']))) {
 				$eventImage = $eventDetailData['eventImage'];
@@ -62,28 +67,28 @@
 		        font-size: xx-large;
 		    }     
 
-		    .txt-heading{
+		    .txt-heading {
 		    	padding: 5px 10px;
 		    	font-size:1.1em;
 		    	font-weight:bold;
 		    	color:#999;
 		    }
 			
-			a.btnRemoveAction{
+			a.btnRemoveAction {
 				color:#D60202;
 				border:0;
 				padding:2px 10px;
 				font-size:0.9em;
 			}
 
-			a.btnRemoveAction:visited{
+			a.btnRemoveAction:visited {
 				color:#D60202;
 				border:0;
 				padding:2px 10px;
 				font-size:0.9em;
 			}
 
-			#btnEmpty{
+			#btnEmpty {
 				background-color:#D60202;
 				border:0;
 				padding:1px 10px;
@@ -94,7 +99,7 @@
 				text-decoration:none;
 			}
 
-			.btnAddAction{
+			.btnAddAction {
 				background-color:#79b946;
 				border:0;
 				padding:3px 10px;
@@ -103,7 +108,7 @@
 				width:80px;
 			}
 
-			.btnAdded{
+			.btnAdded {
 				background-color:#CCC;
 				border:0;
 				padding:3px 10px;
@@ -117,7 +122,7 @@
 				margin-bottom:30px;
 			}
 
-			#shopping-cart .txt-heading{
+			#shopping-cart .txt-heading {
 				background-color: #D3F5B8;
 			}
 
@@ -131,21 +136,21 @@
 				margin-bottom:30px;
 			}
 
-			#product-grid .txt-heading{
+			#product-grid .txt-heading {
 				background-color: #FFD0A6;
 			}
 
 			.product-item {
 				float:left;
 				background:#F0F0F0;
-				margin:5px;
+				margin:0px;
 				padding:0px;
 				border-radius:5px;
 			}
 
-			.product-item div{
+			.product-item div {
 				text-align:center;
-				margin:10px;
+				margin:2px;
 			}
 
 			.product-price {
@@ -157,7 +162,7 @@
 				background-color:#FFF;
 			}
 
-			.clear-float{
+			.clear-float {
 				clear:both;
 				margin-bottom:40px;
 			}
@@ -166,12 +171,41 @@
 				cursor:pointer;
 			}
 		</style>	
-		<script type="text/javascript">	
+		<script type="text/javascript">
+
+			let cartItemsArray = new Array();
+
 			function checkUncheckSubcat(thisVal, sId) {
 
+				var eventCategory = $("#eventCategory").val();
+
+				var checkedVal = $("#eventSubCategory_"+sId);
+
+				if(checkedVal.is(':checked')) {
+					cartItemsArray.push(thisVal);
+				} else {
+					cartItemsArray = $.grep(cartItemsArray, function(value) {
+					    return value != thisVal;
+					});
+				}
+
+				$.ajax({
+			        url: "cart_items_src.php",
+			        cache: false,
+			        type: "POST",
+			        data: {cartItemsArray : cartItemsArray, "eventCategory" : eventCategory},
+			        success: function(html){
+			            resp = JSON.parse(html);
+
+			            $("#subtotal").val(resp.subTotal);
+			            $("#subtotal2").val(resp.subTotal);
+			            $("#subtotal-text").text('₹'+resp.subTotal);
+			        }
+			    });
 			}
 
 			function addToCart(element) {
+
 				var productParent = $(element).closest('div.product-item');
 
 				var price = $(productParent).find('.price span').text();
@@ -183,6 +217,7 @@
 					price: price,
 					quantity: quantity
 				};
+
 				var cartItemJSON = JSON.stringify(cartItem);
 
 				var cartArray = new Array();
@@ -190,10 +225,12 @@
 				if (sessionStorage.getItem('shopping-cart')) {
 					cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
 				}
+
 				cartArray.push(cartItemJSON);
 
 				var cartJSON = JSON.stringify(cartArray);
 				sessionStorage.setItem('shopping-cart', cartJSON);
+
 				showCartTable();
 			}
 
@@ -251,7 +288,7 @@
 								'<div class="price"><span>'+item.price+'</span></div>'+
 								'<div class="cart-action">'+
 									'<input type="hidden" class="product-quantity" name="quantity" value="1" size="1" disabled />'+
-									'<button type="submit" title="Add To Cart" class="add-to-cart" onClick="addToCart(this)"><i class="fa-solid fa-plus"></i></button>'+
+									''+
 								'</div>'+
 							'</div>';
 							"<tr>";
@@ -280,7 +317,15 @@
                 );
 
                 $.validator.addMethod(
-                    "attendePhoneNumber",
+                    "playerPhoneNumber",
+                    function(value, element) {
+                        return !/^\d{8}$|^\d{10}$/.test(value) ? false : true;
+                    },
+                    "Mobile number invalid"
+                );
+
+                $.validator.addMethod(
+                    "playerPartnerPhoneNumber",
                     function(value, element) {
                         return !/^\d{8}$|^\d{10}$/.test(value) ? false : true;
                     },
@@ -288,52 +333,72 @@
                 );
                 
                 //validate signup form on keyup and submit
-                $("#formEventBook").validate({
+                $("#formBooking").validate({
                     rules: {
-                        eventCategory: {
-                            required: true
-                        },
-                        eventSubCategory: {
-                            required: true
-                        },
-                        attendeName: {
+                        playerName: {
                             required: true,
-                            minlength: 5
+                            minlength: 5,
+                            maxlength: 25
                         },
-                        attendeAge: {
-                            required: true,
-                            minlength: 1,
-                            maxlength: 2,
-                            attendeAge: $("#attendeAge").val()
-                        },
-                        attendePhoneNumber: {
+                        playerPhoneNumber: {
                             required: true,
                             minlength: 10,
                             maxlength: 25,
-                            attendePhoneNumber: $("#attendePhoneNumber").val()
-                        }
+                            playerPhoneNumber: $("#playerPhoneNumber").val()
+                        },
+                        playerAge: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 2
+                        },
+                        playerPartnerName: {
+                            required: true,
+                            minlength: 5,
+                            maxlength: 25
+                        },
+                        playerPartnerPhoneNumber: {
+                            required: true,
+                            minlength: 10,
+                            maxlength: 25,
+                            playerPartnerPhoneNumber: $("#playerPartnerPhoneNumber").val()
+                        },
+                        playerPartnerAge: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 2
+                        },
                     },
                     messages: {
-                        eventCategory: {
-                            required: "Please select Category."
+                        playerName: {
+                            required: "Please enter your player name.",
+                            minlength: "Please enter minimum 5 character for player name.",
+                            maxlength: "Please enter minimum 25 character for player name."
                         },
-                        eventSubCategory: {
-                            required: "Please select Sub Category."
+                        playerPhoneNumber: {
+                            required: "Please enter your player phone number.",
+                            minlength: "Please enter minimum 10 character for player phone number.",
+                            maxlength: "Please enter minimum 25 character for player phone number."
                         },
-                        attendeName: {
-                            required: "Please enter your Name.",
-                            minlength: "Please enter minimum 5 character for Name."
+                        playerAge: {
+                            required: "Please enter your player age.",
+                            minlength: "Please enter minimum 1 character for player age.",
+                            maxlength: "Please enter minimum 2 character for player age."
                         },
-                        attendeAge: {
-                            required: "Please enter your Age.",
-                            minlength: "Please enter minimum 1 character for Age.",
-                            maxlength: "Please enter minimum 2 character for Age."
-                        },
-                        attendePhoneNumber: {
-                            required: "Please enter your Phone Number.",
-                            minlength: "Please enter minimum 10 character for Phone Number.",
-                            maxlength: "Please enter minimum 25 character for Phone Number."
-                        }              
+                        playerPartnerName: {
+                            required: "Please enter your partner player name.",
+                            minlength: "Please enter minimum 5 character for partner player name.",
+                            maxlength: "Please enter minimum 25 character for partner player name."
+                        },  
+                        playerPartnerPhoneNumber: {
+                            required: "Please enter your partner player phone number.",
+                            minlength: "Please enter minimum 10 character for partner player phone number.",
+                            maxlength: "Please enter minimum 25 character for partner player phone number."
+                        },          
+                        playerPartnerAge: {
+                            required: "Please enter your partner player age.",
+                            minlength: "Please enter minimum 1 character for partner player age.",
+                            maxlength: "Please enter minimum 2 character for partner player age."
+                        },                 
                     },
                     submitHandler: function(form) {
                         $.ajax({
@@ -341,19 +406,12 @@
                             url: "./api/event/book_event.php",
                             data: $(form).serialize(),
                             success: function (resp) {
-                                /*if(resp.status_code == 200) {
-                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
-                                    $('#message').html(resp.message);
-                                } else if(resp.status_code == 201) {
-                                    $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
-                                    $('#err_message').html(resp.message);
-                                }
-
-                                $('#haveanaccount').hide();                                
-
-                                setTimeout(function () {
-                                    window.location.href='index.php';
-                                }, 1500);*/
+                            	addToCartMsgModal();
+                            	//if(resp.status_code == 200) {
+	                                setTimeout(function () {
+	                                   window.location.href='index.php?pg-nm=my-booking';
+	                                }, 1500);
+	                            //}
                             }
                         });
                         return false; // required to block normal submit since you used ajax
@@ -361,17 +419,51 @@
                 });
 			});			
 
-			function eventBookForm() {
+			function eventBookForm() {				
+				$("#eventCategory-error").hide();
+				$("#subtotal-error").hide();
+
 				$("#register-form-modal").modal('hide');
 				$('#login-form-modal').modal('hide');
-				$('#event-book-form-modal').modal('show');
-				$('#event-book-form-modal-title-text').text('Book');
+				$('#add-to-cart-modal').modal('show');
+				$('#add-to-cart-modal-title-text').text('Book Event');
 				eventCategorySelectBox();
-				eventSubCategorySelectBox();
+				eventSubCategoryCheckbBox();
+				$("#cartItemsSpinnerDiv").hide();
 			}
 
 			function eventBookFormClose() {
+				$("#add-to-cart-modal").modal('hide');
+			}
+
+			function eventBookForm2() {				
+				$("#eventCategory-error").hide();
+				$("#subtotal-error").hide();
+
+				$("#register-form-modal").modal('hide');
+				$('#login-form-modal').modal('hide');
+				$('#add-to-cart-modal').modal('hide');
+				$('#event-book-form-modal').modal('show');
+				$('#event-book-form-modal-title-text').text('Book Event');
+
+				var mixedDoublesarray = ['24','26','27'];
+				if(jQuery.inArray($('#eventCategory').val(), mixedDoublesarray) !== -1) {
+					$('#partner-player').show();					
+				} else {
+					$('#partner-player').hide();
+				}
+			}
+
+			function eventBookFormClose2() {
 				$("#event-book-form-modal").modal('hide');
+			}
+
+			function addToCartMsgModal() {
+				$("#register-form-modal").modal('hide');
+				$('#login-form-modal').modal('hide');
+				$('#add-to-cart-modal').modal('hide');
+				$('#event-book-form-modal').modal('hide');
+				$("#add-to-cart-msg-modal").modal('show');
 			}
 
 			function goToSection(sectionId) {
@@ -396,9 +488,9 @@
 			    });
 			}
 
-			function eventSubCategorySelectBox() {
+			function eventSubCategoryCheckbBox() {
 			    $.ajax({
-			        url: "api/category/sub_category.php",
+			        url: "api/category/sub_category_checkbox.php",
 			        cache: false,
 			        type: "POST",
 			        data: {},
@@ -448,6 +540,7 @@
 			}
 
 			function eventCategoryAddToCart() {
+
 				var getQueryParameter = getUrlVars();
 				var eid = getQueryParameter['eid'];
 
@@ -462,27 +555,62 @@
 			        complete: function(){
 			            $('#eventCategorySpinnerCart').hide();
 			        },
-			        success: function(html){
-			            //$("#eventCategoryDispCart").html(html);
-
-			            console.log("html",html);	
-
+			        success: function(html) {
 			            var product = JSON.parse(html);
-
-			            console.log("product",product);
-
 			            showProductGallery(product);
-
 			        }	        
 			    });
 			}
+
+			function validateAddToCart() {
+				var eventCategory = $("#eventCategory").val();
+				var subtotal = $("#subtotal").val();
+
+	            if (eventCategory == "") {
+	            	$("#eventCategory-error").show();
+	            } else {
+	            	$("#eventCategory-error").hide();
+	            }
+
+	            if ((subtotal == "") || (subtotal == 0)) {
+	            	$("#subtotal-error").show();
+	            } else {
+	            	$("#subtotal-error").hide();
+	            }	            
+
+	            if((eventCategory != "") && (subtotal != "")){
+	            	eventBookForm2();
+	            }
+			}
 		</script>	
 		<!-- /.modal -->
-		<div class="modal fade" id="event-book-form-modal">
+		<div class="modal fade" id="add-to-cart-msg-modal">
+		    <div class="modal-dialog modal-sm">
+		      	<div class="modal-content">
+			        <div class="modal-body">
+			            <div class="row">
+			                <div class="col-xl-6">
+			                    <h6 class="modal-title"><span id="add-to-cart-msg-modal-title-text"></span></h6>
+			                </div> 
+			                <div class="col-xl-12">
+			                	<div id="booking-suc-msg-div" style="color:green;">Event Booked Successfully.</div>
+			                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			                        <span aria-hidden="true">&times;</span>
+			                    </button>  -->  
+			                </div>   
+			            </div>
+		        	</div>                     
+		    	</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-to-cart-modal">
 		    <div class="modal-dialog modal-lg">
 		      	<div class="modal-content">
 			        <div class="modal-body">
-			        	<div class="row">
+			            <div class="row">
+			                <!-- <div class="col-xl-6">
+			                    <h6 class="modal-title"><span id="add-to-cart-modal-title-text"></span></h6>
+			                </div>  --> 
 			                <div class="col-xl-12">
 			                    <button type="button" class="close" onclick="eventBookFormClose()" data-dismiss="modal" aria-label="Close">
 			                        <span aria-hidden="true">&times;</span>
@@ -491,12 +619,20 @@
 			            </div>
 			            <div class="tab-content" id="myTabContent">
 			                <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
-			                    <form id="formEventBook" name="formEventBook" method="POST" enctype="multipart/form-data" action="./././api/event/book_event.php">
+			                    <form id="formAddToCart" name="formAddToCart" method="POST" enctype="multipart/form-data" action="./././api/event/book_event.php">
+			                    	<?php 
+			                    		$userId = "";
+			                    		if((isset($_SESSION['userId'])) && (!empty($_SESSION['userId']))){
+			                    			$userId = $_SESSION['userId'];
+			                    		}
+			                    	?>
 			                        <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+			                        <input type="hidden" id="subtotal" value="">
 	                                <div class="row">   
 			                            <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
 			                            	<div id="categorySpinnerDiv"><img src="./admin/assets/images/spinner.png" class="spinner"></div>
 			                                <div id="eventCategoryDiv"></div>
+			                                <label id="eventCategory-error" class="error" for="eventCategory">Please select Category.</label>
 			                            </div>
 			                        </div>
 			                        <div class="spacer-div"></div>
@@ -504,27 +640,88 @@
 			                            <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
 			                            	<div id="subCategorySpinnerDiv"><img src="./admin/assets/images/spinner.png" class="spinner"></div>
 			                                <div id="eventSubCategoryDiv"></div>
+			                                <label id="subtotal-error" class="error" for="subtotal">Please check any Sub Category.</label>
+			                                
 			                            </div>
 			                        </div>
 			                        <div class="spacer-div"></div>
-	                                <div class="row">   
-	                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
-	                                        <input type="text" class="form-control" name="attendeName" id="attendeName" placeholder="Enter Name">
-	                                    </div>
-	                                </div>  
-	                                <div class="spacer-div"></div>
-	                                <div class="row">   
-	                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
-	                                        <input type="text" class="form-control" name="attendeAge" id="attendeAge" placeholder="Enter Age">
-	                                    </div>
-	                                </div>
-	                                <div class="spacer-div"></div>
-	                                <div class="row">   
-	                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
-	                                        <input type="text" class="form-control" name="attendePhoneNumber" id="attendePhoneNumber" placeholder="Enter Phone Number">
-	                                    </div>
-	                                </div>   
-	                                <div class="spacer-div"></div>
+			                        <span id="subtotal-text"></span>
+			                        <div class="spacer-div"></div>
+			                        <div class="row">   
+			                            <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+			                                <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="button" onclick="validateAddToCart()">Next<i class="feather-arrow-right-circle ms-2"></i></button>
+			                            </div>
+			                        </div>                         
+			                    </form>
+			                </div>                            
+			            </div>
+		        	</div>                     
+		    	</div>
+			</div>
+		</div>
+		<div class="modal fade" id="event-book-form-modal">
+		    <div class="modal-dialog modal-lg">
+		      	<div class="modal-content">
+			        <div class="modal-body">
+			        	<div class="row">
+			                <!-- <div class="col-xl-6">
+			                    <h4 class="modal-title"><span id="event-book-form-modal-title-text"></span></h4>
+			                </div> -->
+			                <div class="col-xl-12">
+			                    <button type="button" class="close" onclick="eventBookFormClose2()" data-dismiss="modal" aria-label="Close">
+			                        <span aria-hidden="true">&times;</span>
+			                    </button>   
+			                </div>    
+			            </div>
+			            <div class="tab-content" id="myTabContent">
+			                <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+			                    <form id="formBooking" name="formBooking" method="POST" enctype="multipart/form-data" action="./././api/event/book_event.php">
+			                        <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+			                        <input type="hidden" class="form-control" name="eventId" id="eventId" value="<?=$pgEventId?>">
+			                        <input type="hidden" class="form-control" name="venueId" id="venueId" value="<?=$pgVenueId?>">
+			                        <input type="hidden" class="form-control" name="userId" id="userId" value="<?=$userId;?>">
+			                        <input type="hidden" name="subtotal2" id="subtotal2" value="">
+
+			                        <fieldset name="player" id="player">
+	                        			<div class="row">   
+		                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+		                                        <input type="text" id="playerName" name="playerName" class="form-control" placeholder="Enter Player Name" />
+		                                    </div>
+		                                </div>  
+		                                <div class="spacer-div"></div>
+		                                <div class="row">   
+		                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+		                                        <input type="text" id="playerPhoneNumber" name="playerPhoneNumber" class="form-control" placeholder="Enter Player Phone Number" />
+		                                    </div>
+		                                </div>  
+		                                <div class="spacer-div"></div>
+		                                <div class="row">   
+		                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+		                                        <input type="text" id="playerAge" name="playerAge" class="form-control" placeholder="Enter Player Age" />
+		                                    </div>
+		                                </div>  
+		                                <div class="spacer-div"></div>
+	                            	</fieldset>
+	                            	<fieldset name="partner-player" id="partner-player">
+		                                <div class="row">   
+		                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+		                                        <input type="text" id="playerPartnerName" name="playerPartnerName" class="form-control" placeholder="Enter Partner Player Name" />
+		                                    </div>
+		                                </div>  
+		                                <div class="spacer-div"></div>
+		                                <div class="row">   
+		                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+		                                        <input type="text" id="playerPartnerPhoneNumber" name="playerPartnerPhoneNumber" class="form-control" placeholder="Enter Partner Player Phone Number" />
+		                                    </div>
+		                                </div>  
+		                                <div class="spacer-div"></div>
+		                                <div class="row">   
+		                                    <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+		                                        <input type="text" id="playerPartnerAge" name="playerPartnerAge" class="form-control" placeholder="Enter Partner Player Age" />
+		                                    </div>
+		                                </div>  
+		                                <div class="spacer-div"></div>
+		                            </fieldset>
 			                        <div class="row">   
 			                            <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
 			                                <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Submit<i class="feather-arrow-right-circle ms-2"></i></button>
@@ -618,54 +815,12 @@
 							<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmssLDIr2k4I89ZsR3CjZDe0rQouWxFIs&callback=myMap"></script>
 						</div>						
 						<div class="clearfix">&nbsp;</div>
-						<div class="card corner-radius-10 coach-info justify-content-start align-items-start">
+						<!-- <div class="card corner-radius-10 coach-info justify-content-start align-items-start">
 							<div class="font-semibold text-md"><h6>Categories: </h6></div>
 							<div id="eventCategorySpinnerCart"><img src="./admin/assets/images/spinner.png" class="spinner"></div>
 			                <div id="eventCategoryDispCart"></div>
-			                <!-- <button type="button" id="add-to-cart-btn">Add to Cart</button> -->
-			                <!-- <button type="button" class="btn btn-primary btn-sm" name="add-to-cart" id="add-to-cart">
-								Add to Cart
-						    </button> -->
 						</div>
-						<div class="clearfix">&nbsp;</div>
-
-						<div class="container">
-							<!--  Shopping cart table wrapper  -->
-							<div id="shopping-cart">
-								<div class="txt-heading">
-									<h1>Shopping cart</h1>
-								</div>
-								<a onClick="emptyCart()" id="btnEmpty">Empty Cart</a>
-								<table class="tbl-cart" cellpadding="10" cellspacing="1">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th class='text-right' width="10%">Price</th>
-											<th class='text-right' width="5%">Quantity</th>
-											<th class='text-right' width="10%">Price</th>
-										</tr>
-									</thead>
-									<!--  Cart table to load data on "add to cart" action -->
-									<tbody id="cartTableBody">
-									</tbody>
-									<tfoot>
-										<tr>
-											<td class="text-right">Total:</td>
-											<td id="itemCount" class="text-right" colspan="2"></td>
-											<td id="totalAmount" class="text-right"></td>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-							<!-- Product gallery shell to load HTML from JavaScript code -->
-							<!-- <div id="product-grid">
-								<div class="txt-heading">
-									<h1>Products</h1>
-								</div>
-								<div id="product-item-container"></div>
-							</div> -->
-						</div>
-
+						<div class="clearfix">&nbsp;</div> -->
 					</aside>
 				</div>
 				<!-- /Row -->
@@ -675,4 +830,4 @@
 		<!-- /Page Content -->
 		<?php
 			include("includes/details_page_footer.php");
-		?>
+		?>		

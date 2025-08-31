@@ -277,9 +277,9 @@ form input {
     flex-wrap: wrap;
 }
 
-.row>* {
+/*.row>* {
    padding-left: calc(var(--bs-gutter-x) * 0);    
-}
+}*/
 
 form input {
     height: 35px;

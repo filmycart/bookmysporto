@@ -10,7 +10,7 @@
 		unset($_SESSION['verificationToken']);
 		unset($_SESSION['mobile']);
 
-		header("Location: ../../sportifyv2");
+		header("Location: ../../bookmysporto");
 
 	}else $response->create(201, "Invalid Request Method", null);
 

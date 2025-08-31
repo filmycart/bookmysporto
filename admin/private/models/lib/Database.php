@@ -373,10 +373,10 @@ abstract class Database{
         } elseif (!empty($this->by_date)){
             $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->by_date . $this->order_by . $this->limit;
         }else{
-            $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_child'];
-            $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name3']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name3']." = ".$joinColumn['join_table_name3'].".".$joinColumn['join_column_child'];
+            $joinSql = " LEFT JOIN ".$joinColumn['join_table_name2']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name1']." = ".$joinColumn['join_table_name2'].".".$joinColumn['join_column_city_state_country_id'];
+            $joinSql .= " LEFT JOIN ".$joinColumn['join_table_name3']." ON ".$joinColumn['join_table_name1'].".".$joinColumn['join_column_name2']." = ".$joinColumn['join_table_name3'].".".$joinColumn['join_column_city_state_country_id'];
 
-            $this->order_by = " ORDER BY ". $joinColumn['join_table_name1'].".".$joinColumn['join_column_child'];
+            $this->order_by = " ORDER BY ". $joinColumn['join_table_name1'].".".$joinColumn['join_column_city_state_country_id'];
             
             $this->joinSql = $joinSql;
 
@@ -386,7 +386,7 @@ abstract class Database{
                 $this->sql = "SELECT * FROM " . strtolower(get_called_class()) . $this->joinSql . $this->sql . $this->group_by . $this->order_by . $this->limit;
             }
         }
-        
+
         return $this->multiple_rows();
     }
 

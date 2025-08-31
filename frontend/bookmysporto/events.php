@@ -38,7 +38,7 @@
 		        $eventResponseArr = json_decode($eventesponse, true);
 		    }
 
-		    curl_close($curlVenue);
+		    curl_close($curlEvent);
 		?>
 		<!-- Breadcrumb -->
 		<div class="breadcrumb breadcrumb-list mb-0">
