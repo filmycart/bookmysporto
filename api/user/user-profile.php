@@ -13,7 +13,7 @@ if(Helper::is_post()) {
             $user_id = Helper::post_val("user_id");
             if($user_id) {
                 $user = new User();
-                $user = $user->where(["username"=>$user_id])->one();
+                $user = $user->where(["id"=>$user_id])->one();
                 if($user) {
                     $response->create(200, "Success", $user->to_valid_array());
                 }else $response->create(201, "Invalid User", null);

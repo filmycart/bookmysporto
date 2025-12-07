@@ -2,18 +2,18 @@
 			include("includes/page_header.php");
 			include("././validate_login.php");
 
-			/*$curlUserProfile = curl_init();
+			$curlUserProfile = curl_init();
 
 		    $userProfileUrl = "";
 		    if($hostName == "localhost") {
-		        $userProfileUrl = $requestScheme.'://localhost/sportifyv2/api/user/user-profile.php';
+		        $userProfileUrl = $requestScheme.'://localhost/bookmysporto/api/user/user-profile.php';
 		    } else {
 		        $userProfileUrl = $requestScheme.'://bookmysporto.com/api/user/user-profile.php';
 		    }
 
 		    $postValArray = array(
 		                            'api_token' => '123456789',
-		                            'user_id' => $_SESSION['userName']
+		                            'user_id' => $_SESSION['userId']
 		                        );
 
 		    curl_setopt_array($curlUserProfile, array(
@@ -38,7 +38,7 @@
 		        $userProfilePageArr = json_decode($responseUserProfile, true);
 		    }
 
-		    curl_close($curlUserProfile);*/
+		    curl_close($curlUserProfile);
 		?>
 		<!-- Breadcrumb -->
 		<section class="breadcrumb breadcrumb-list mb-0">
