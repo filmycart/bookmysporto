@@ -59,10 +59,6 @@
 			}
 			exit;*/
 
-			/*print"<pre>";
-			print_r($_POST);
-			exit;*/
-
 	        $setting = new Setting();
 	        $setting = $setting->where(["api_token" => $api_token])->one();
 
@@ -79,13 +75,22 @@
 						//if(strlen($user->mobile) > 10){
 							$user = $user->verify_login_mobile();
 
-							$_SESSION['userId'] = $user->id;
+							// Generate 6-digit OTP
+			                $otp = rand(100000, 999999);
+			                // OR 4-digit OTP
+			                //$otp = rand(1000, 9999);
+			                //echo "OTP: " . $otp;
+
+							$updated = new User();
+							$updated->signin_otp = $otp;
+							$updated->id = $user->id;
+							$updated->where(["id"=>$user->id])->update();
+
+							/*$_SESSION['userId'] = $user->id;
 							$_SESSION['userName'] = $user->username;
 							$_SESSION['userImage'] = $user->image;
 							$_SESSION['verificationToken'] = $user->verification_token;
-							$_SESSION['mobile'] = $user->mobile;
-
-							$curl = curl_init();
+							$_SESSION['mobile'] = $user->mobile;*/
 
 							if(!empty($user)) {
 								if($user->status > 0) {							
@@ -95,7 +100,7 @@
 									$response_user = $user->response()->to_valid_array();
 									$response_user["cart_count"] = $cart_count;
 
-                                	$response->create(200, "Logged In Successfully.", $user->response()->to_valid_array());
+                                	$response->create(200, "User Details Retrieved Successfully.", $user->response()->to_valid_array());
 
 								}else$response->create(201, "Please verify your phone umber.", null);
 							}else $response->create(201, "Phone number not registered.", null);

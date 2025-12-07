@@ -23,7 +23,7 @@ if(Helper::is_post()){
                 $user = new User();
                 $user->mobile = Helper::post_val("userPhoneNumber");
                 $user->username = Helper::post_val("userPhoneNumber");
-                $user->otp = $otp;
+                $user->signup_otp = $otp;
                 $user->name = Helper::post_val("userName");
                 $user->type = Helper::post_val("userType");
                 $user->image = Helper::post_val("userImageHidden");

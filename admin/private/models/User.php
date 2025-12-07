@@ -42,6 +42,7 @@ class User extends Util{
     }
 
     public function verify_login_mobile(){
+        
         $user_frm_db = $this->where(["status" => 1])->like(["mobile" => $this->mobile])->search()->one();
 
         if(!empty($user_frm_db)) {

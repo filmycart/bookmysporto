@@ -22,8 +22,8 @@
                     $user = new User();                
                         $user = $user->where(["id" => $pgUserId])->one();
                         if(!empty($user)){
-                            if((isset($user->otp)) && (!empty($user->otp))){
-                                if($user->otp == $_POST['userOtp']){
+                            if((isset($user->signup_otp)) && (!empty($user->signup_otp))){
+                                if($user->signup_otp == $_POST['signUpOtp']){
                                     $updated = new User();
                                     $updated->status = 1;
                                     $updated->id = $pgUserId;

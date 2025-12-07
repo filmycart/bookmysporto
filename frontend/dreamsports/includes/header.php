@@ -68,9 +68,14 @@
                 $userProfileUrl = $requestScheme.'://bookmysporto.com/api/user/user-profile.php';
             }
 
+            $userName = "";
+            if((isset($_SESSION['userName'])) && (!empty($_SESSION['userName']))) {
+                $userName = $_SESSION['userName'];
+            }
+
             $postValArray = array(
                                     'api_token' => '123456789',
-                                    'user_id' => $_SESSION['booticusername']
+                                    'user_id' => $userName
                                 );
 
             curl_setopt_array($curlUserProfile, array(
@@ -227,16 +232,28 @@
                 $('#register-modal-title-text').text('Register');
             }
 
-            function validateOpt(userId) {
+            function signupValidateOpt(userId) {
                 $("#login-form-modal").modal('hide');
                 $("#register-form-modal").modal('hide');
-                $('#validate-otp-form-modal').modal('show');
+                $('#signup-validate-otp-form-modal').modal('show');
                 $('#user_id').val(userId);                
                 $('#register-modal-title-text').text('Register');
             }
 
-            function validateOptFormClose() {
+            function signinValidateOpt(userId) {
+                $("#login-form-modal").modal('hide');
                 $("#register-form-modal").modal('hide');
+                $('#signin-validate-otp-form-modal').modal('show');
+                $('#login_user_id').val(userId);                
+                $('#register-modal-title-text').text('Register');
+            }
+
+            function validateOptFormClose() {
+                $("#signup-validate-otp-form-modal").modal('hide');
+            }
+
+            function validateLoginOptFormClose() {
+                $("#signin-validate-otp-form-modal").modal('hide');
             }
 
             function registerFormClose() {
@@ -245,7 +262,7 @@
 
             function loginForm() {
                 $("#register-form-modal").modal('hide');
-                $("#validate-otp-form-modal").modal('hide');
+                $("#signup-validate-otp-form-modal").modal('hide');
                 $('#login-form-modal').modal('show');
                 $('#login-modal-title-text').text('Login');
             }
@@ -437,22 +454,20 @@
                                 if(resp.status_code == 200) {
                                     $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
                                     $('#message').html(resp.message);
+
+                                    setTimeout(function () {                           
+                                        signupValidateOpt(resp.data.id);
+                                    }, 1500);
                                 } else if(resp.status_code == 201) {
                                     $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
                                     $('#err_message').html(resp.message);
+
+                                    setTimeout(function () {
+                                        window.location.href='index.php';
+                                    }, 1500);
                                 }
 
-                                $('#haveanaccount').hide();                         
-
-                                /*setTimeout(function () {
-                                    window.location.href='index.php';
-                                }, 1500);*/
-
-                                setTimeout(function () {
-                                    validateOpt(resp.data.id);
-                                }, 1500);
-
-                                
+                                $('#haveanaccount').hide();                 
                             }
                         });
                         return false; //required to block normal submit since you used ajax
@@ -484,34 +499,36 @@
                             data: $(form).serialize(),
                             success: function (resp) {
                                 if(resp.status_code == 200) {
-                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
-                                    $('#message').html(resp.message);
+                                    /*$(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
+                                    $('#message').html(resp.message);*/
+
+                                    signinValidateOpt(resp.data.id);
+
                                 } else if(resp.status_code == 201) {
                                     $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
                                     $('#err_message').html(resp.message);
+                                    setTimeout(function () {
+                                        window.location.href='index.php';    
+                                    }, 1500);
                                 }
 
-                                $('#haveanaccountlogin').hide();                                
-
-                                setTimeout(function () {
-                                    window.location.href='index.php?pg-nm=my-profile';
-                                }, 1500);                            
+                                $('#haveanaccountlogin').hide();                  
                             }
                         });
                         return false; // required to block normal submit since you used ajax
                     }
                 });
 
-                $("#userOtpForm").validate({
+                $("#signupOtpForm").validate({
                     rules: {
-                        userOtp: {
+                        signupOtp: {
                             required: true,
                             minlength: 6,
                             maxlength: 6
                         }
                     },
                     messages: {
-                        userOtp: {
+                        signupOtp: {
                             required: "Please enter Otp.",
                             minlength: "Please enter minimum 6 character for Otp.",
                             maxlength: "Please enter minimum 6 character for Otp."
@@ -522,7 +539,7 @@
                     submitHandler: function(form) {
                         $.ajax({
                             type: "POST",
-                            url: "./api/user/validate_otp.php",
+                            url: "./api/user/validate_signup_otp.php",
                             data: $(form).serialize(),
                             success: function (resp) {
                                 if(resp.status_code == 200) {
@@ -534,11 +551,11 @@
                                 }
 
                                 $('#haveanaccountlogin').hide();    
-                                $('#verifyUserOtpSuc').html(resp.message);    
-                                $('#verifyUserOtpSuc').show();                          
+                                $('#verifySignupOtpSuc').html(resp.message);    
+                                $('#verifySignupOtpSuc').show();                          
 
                                 setTimeout(function () {      
-                                    $('#verifyUserOtpSuc').hide();                                           
+                                    $('#verifySignupOtpSuc').hide();                                           
                                     //window.location.href='index.php?pg-nm=my-profile';
                                     loginForm();
                                 }, 1500);                            
@@ -547,6 +564,52 @@
                         return false; // required to block normal submit since you used ajax
                     }
                 });
+
+                $("#signInOtpForm").validate({
+                    rules: {
+                        signinOtp: {
+                            required: true,
+                            minlength: 6,
+                            maxlength: 6
+                        }
+                    },
+                    messages: {
+                        signinOtp: {
+                            required: "Please enter Otp.",
+                            minlength: "Please enter minimum 6 character for Otp.",
+                            maxlength: "Please enter minimum 6 character for Otp."
+                        }
+                    },
+                    // Make sure the form is submitted to the destination defined
+                    // in the "action" attribute of the form when valid
+                    submitHandler: function(form) {
+                        $.ajax({
+                            type: "POST",
+                            url: "./api/user/validate_signin_otp.php",
+                            data: $(form).serialize(),
+                            success: function (resp) {
+                                if(resp.status_code == 200) {
+                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
+                                    $('#message').html(resp.message);
+                                } else if(resp.status_code == 201) {
+                                    $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
+                                    $('#err_message').html(resp.message);
+                                }
+
+                                $('#haveanaccountlogin').hide();    
+                                $('#verifySigninOtpSuc').html(resp.message);    
+                                $('#verifySigninOtpSuc').show();                          
+
+                                setTimeout(function () {      
+                                    $('#verifySigninOtpSuc').hide();                                           
+                                    window.location.href='index.php?pg-nm=my-profile';
+                                    loginForm();
+                                }, 1500);                            
+                            }
+                        });
+                        return false; // required to block normal submit since you used ajax
+                    }
+                });                
             });
         </script>
         <div class="modal fade" id="register-form-modal">
@@ -636,7 +699,7 @@
                                     <input type="text" class="form-control" name="userPhoneNumber" id="userPhoneNumber" placeholder="Enter Phone Number">
                                 </div>
                             </div>    
-                            <div class="spacer-div"></div>        
+                            <div class="spacer-div"></div>
                             <div class="row">   
                                 <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
                                     <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Login<i class="feather-arrow-right-circle ms-2"></i></button>
@@ -657,7 +720,7 @@
     <!-- /.modal -->
     <!-- /.card-header -->
 
-    <div class="modal fade" id="validate-otp-form-modal">
+    <div class="modal fade" id="signup-validate-otp-form-modal">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-body">
@@ -670,13 +733,13 @@
                 </div>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
-                        <div class="bottom-text text-center" style="color:green;" id="verifyUserOtpSuc"></div>
-                        <form id="userOtpForm" name="userOtpForm" method="POST" enctype="multipart/form-data" action="./././api/user/validate_otp.php">
+                        <div class="bottom-text text-center" style="color:green;" id="verifySignupOtpSuc"></div>
+                        <form id="signUpOtpForm" name="signUpOtpForm" method="POST" enctype="multipart/form-data" action="./././api/user/validate_signup_otp.php">
                             <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
                             <input type="hidden" class="form-control" name="user_id" id="user_id" value="">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
-                                    <input type="text" class="form-control" name="userOtp" id="userOtp" placeholder="Enter Otp">
+                                    <input type="text" class="form-control" name="signUpOtp" id="signUpOtp" placeholder="Enter Otp">
                                 </div>
                             </div>
                             <div class="spacer-div"></div>
@@ -688,9 +751,6 @@
                         </form>
                     </div>                            
                 </div>
-                <!-- <div class="bottom-text text-center" id="haveanaccount">
-                    Have an account? <a href="#" onclick="loginForm()">Sign In!</a>
-                </div> -->
             </div>                    
         </div>
         <!-- /.modal-content -->
@@ -700,7 +760,45 @@
 <!-- /.modal -->
 <!-- /.card-header -->
 
-
+    <div class="modal fade" id="signin-validate-otp-form-modal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <button type="button" class="close" onclick="validateLoginOptFormClose()" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>   
+                    </div>    
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                        <div class="bottom-text text-center" style="color:green;" id="verifySignInOtpSuc"></div>
+                        <form id="signInOtpForm" name="signInOtpForm" method="POST" enctype="multipart/form-data" action="./././api/user/validate_signin_otp.php">
+                            <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+                            <input type="hidden" class="form-control" name="login_user_id" id="login_user_id" value="">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+                                    <input type="text" class="form-control" name="signInOtp" id="signInOtp" placeholder="Enter Otp">
+                                </div>
+                            </div>
+                            <div class="spacer-div"></div>
+                            <div class="row">   
+                                <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+                                    <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Verify Mobile Number<i class="feather-arrow-right-circle ms-2"></i></button>
+                                </div>
+                            </div>                      
+                        </form>
+                    </div>                            
+                </div>
+            </div>                    
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- /.card-header -->
 <?php
     $requestScheme = "";
     if((isset($_SERVER['REQUEST_SCHEME'])) && (!empty($_SERVER['REQUEST_SCHEME']))) {
