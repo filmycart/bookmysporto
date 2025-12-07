@@ -245,6 +245,7 @@
 
             function loginForm() {
                 $("#register-form-modal").modal('hide');
+                $("#validate-otp-form-modal").modal('hide');
                 $('#login-form-modal').modal('show');
                 $('#login-modal-title-text').text('Login');
             }
@@ -538,7 +539,8 @@
 
                                 setTimeout(function () {      
                                     $('#verifyUserOtpSuc').hide();                                           
-                                    window.location.href='index.php?pg-nm=my-profile';
+                                    //window.location.href='index.php?pg-nm=my-profile';
+                                    loginForm();
                                 }, 1500);                            
                             }
                         });

@@ -27,7 +27,7 @@
                                     $updated = new User();
                                     $updated->status = 1;
                                     $updated->id = $pgUserId;
-                                    if($updated->where(["id"=>$updated->id])->update()) $response->create(200, "User Mobile Number Verified Successfully", $updated->to_valid_array());
+                                    if($updated->where(["id"=>$updated->id])->update()) $response->create(200, "User Mobile Number Verified Successfully Yo Can Login with the mobile Number.", $updated->to_valid_array());
                                     else $response->create(201, "Something Went Wrong. Try Again.", null);
                                 }else $response->create(201, "Invalid Otp", null);
                             }
