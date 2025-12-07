@@ -67,7 +67,7 @@
 
             $postValArray = array(
                                     'api_token' => '123456789',
-                                    'user_id' => $_SESSION['userName']
+                                    'user_id' => $_SESSION['booticusername']
                                 );
 
             curl_setopt_array($curlUserProfile, array(

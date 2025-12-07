@@ -14,7 +14,7 @@
 	$baseUrl = "";
 	$settingsUrl = "";
 	if($hostName == "localhost") {
-		$baseUrl = "://localhost/sportifyv2/";
+		$baseUrl = "://localhost/bookmysporto/";
 		$settingsUrl = $requestScheme.$baseUrl.'api/settings/setting.php';
 	} else {
 		$baseUrl = "://bookmysporto.com/";
@@ -121,10 +121,15 @@
 	        'connection' => [
 	            'default' => [
 	                'host' => 'localhost',
-	                'dbname' => 'shopifyv2',
+	                'dbname' => 'sportifyv2',
 	                'username' => 'root',
 	                'password' => 'Nachiyar*1984'
 	            ]
 	        ]
 	    ]
 	];
+
+/*	print"<pre>";
+	print_r($siteConfig);
+	exit;
+*/

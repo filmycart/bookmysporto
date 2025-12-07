@@ -16,7 +16,7 @@
         $configArray = $config['config']['site_config'];  
     }
 
-    $frontendAssetUrl = '';
+    $frontendAssetUrl = 'frontend/dreamsports/';
     if((isset($configArray['frontend_asset_url'])) && (!empty($configArray['frontend_asset_url']))) {
         $frontendAssetUrl = $configArray['frontend_asset_url'];  
     }

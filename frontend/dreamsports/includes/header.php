@@ -63,14 +63,14 @@
 
             $userProfileUrl = "";
             if($hostName == "localhost") {
-                $userProfileUrl = $requestScheme.'://localhost/sportifyv2/api/user/user-profile.php';
+                $userProfileUrl = $requestScheme.'://localhost/bookmysporto/api/user/user-profile.php';
             } else {
                 $userProfileUrl = $requestScheme.'://bookmysporto.com/api/user/user-profile.php';
             }
 
             $postValArray = array(
                                     'api_token' => '123456789',
-                                    'user_id' => $_SESSION['userName']
+                                    'user_id' => $_SESSION['booticusername']
                                 );
 
             curl_setopt_array($curlUserProfile, array(
@@ -227,6 +227,18 @@
                 $('#register-modal-title-text').text('Register');
             }
 
+            function validateOpt(userId) {
+                $("#login-form-modal").modal('hide');
+                $("#register-form-modal").modal('hide');
+                $('#validate-otp-form-modal').modal('show');
+                $('#user_id').val(userId);                
+                $('#register-modal-title-text').text('Register');
+            }
+
+            function validateOptFormClose() {
+                $("#register-form-modal").modal('hide');
+            }
+
             function registerFormClose() {
                 $("#register-form-modal").modal('hide');
             }
@@ -367,7 +379,7 @@
 
                                     //$('#userImagePreview').append('<div><a href ="'+hostUrl+src1+'" target="_blank" class="deleteUserImage" id="'+src1+'">'+src1+'</a>&nbsp;<a href="#" '+delUserImage+'><i class="ion-trash-a"><i></a></div>');
                                     respFileNameArray[index] = src1;
-                                }   
+                                }  
 
                                 respFileName = respFileNameArray.toString();
 
@@ -429,14 +441,20 @@
                                     $('#err_message').html(resp.message);
                                 }
 
-                                $('#haveanaccount').hide();                                
+                                $('#haveanaccount').hide();                         
+
+                                /*setTimeout(function () {
+                                    window.location.href='index.php';
+                                }, 1500);*/
 
                                 setTimeout(function () {
-                                    window.location.href='index.php';
+                                    validateOpt(resp.data.id);
                                 }, 1500);
+
+                                
                             }
                         });
-                        return false; // required to block normal submit since you used ajax
+                        return false; //required to block normal submit since you used ajax
                     }
                 });
 
@@ -475,6 +493,51 @@
                                 $('#haveanaccountlogin').hide();                                
 
                                 setTimeout(function () {
+                                    window.location.href='index.php?pg-nm=my-profile';
+                                }, 1500);                            
+                            }
+                        });
+                        return false; // required to block normal submit since you used ajax
+                    }
+                });
+
+                $("#userOtpForm").validate({
+                    rules: {
+                        userOtp: {
+                            required: true,
+                            minlength: 6,
+                            maxlength: 6
+                        }
+                    },
+                    messages: {
+                        userOtp: {
+                            required: "Please enter Otp.",
+                            minlength: "Please enter minimum 6 character for Otp.",
+                            maxlength: "Please enter minimum 6 character for Otp."
+                        }
+                    },
+                    // Make sure the form is submitted to the destination defined
+                    // in the "action" attribute of the form when valid
+                    submitHandler: function(form) {
+                        $.ajax({
+                            type: "POST",
+                            url: "./api/user/validate_otp.php",
+                            data: $(form).serialize(),
+                            success: function (resp) {
+                                if(resp.status_code == 200) {
+                                    $(form).html("<div id='message' style='color:green;'></div><div class='row'>&nbsp;</div>");
+                                    $('#message').html(resp.message);
+                                } else if(resp.status_code == 201) {
+                                    $(form).html("<div id='err_message' style='color:red;'></div><div class='row'>&nbsp;</div>");
+                                    $('#err_message').html(resp.message);
+                                }
+
+                                $('#haveanaccountlogin').hide();    
+                                $('#verifyUserOtpSuc').html(resp.message);    
+                                $('#verifyUserOtpSuc').show();                          
+
+                                setTimeout(function () {      
+                                    $('#verifyUserOtpSuc').hide();                                           
                                     window.location.href='index.php?pg-nm=my-profile';
                                 }, 1500);                            
                             }
@@ -586,11 +649,56 @@
             </div>                     
         </div>
         <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- /.card-header -->
+
+    <div class="modal fade" id="validate-otp-form-modal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <button type="button" class="close" onclick="validateOptFormClose()" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>   
+                    </div>    
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                        <div class="bottom-text text-center" style="color:green;" id="verifyUserOtpSuc"></div>
+                        <form id="userOtpForm" name="userOtpForm" method="POST" enctype="multipart/form-data" action="./././api/user/validate_otp.php">
+                            <input type="hidden" class="form-control" name="api_token" id="api_token" value="123456789">
+                            <input type="hidden" class="form-control" name="user_id" id="user_id" value="">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+                                    <input type="text" class="form-control" name="userOtp" id="userOtp" placeholder="Enter Otp">
+                                </div>
+                            </div>
+                            <div class="spacer-div"></div>
+                            <div class="row">   
+                                <div class="col-sm-12 col-md-12 col-lg-12 left-padding">
+                                    <button class="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block" type="submit">Verify Mobile Number<i class="feather-arrow-right-circle ms-2"></i></button>
+                                </div>
+                            </div>                      
+                        </form>
+                    </div>                            
+                </div>
+                <!-- <div class="bottom-text text-center" id="haveanaccount">
+                    Have an account? <a href="#" onclick="loginForm()">Sign In!</a>
+                </div> -->
+            </div>                    
+        </div>
+        <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
 <!-- /.card-header -->
+
+
 <?php
     $requestScheme = "";
     if((isset($_SERVER['REQUEST_SCHEME'])) && (!empty($_SERVER['REQUEST_SCHEME']))) {

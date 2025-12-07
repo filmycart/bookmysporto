@@ -1,6 +1,10 @@
 <?php require_once('../../admin/private/init.php'); ?>
 <?php
 
+
+echo "here";
+exit;
+
 $response = new Response();
 $errors = new Errors();
 
@@ -40,6 +44,10 @@ if(Helper::is_post()){
         }else $response->create(201, "Invalid Api Token", null);
     }else $response->create(201, "No Api Token Found", null);
 }else $response->create(201, "Invalid Request Method", null);
+
+/*print"<pre>";
+print_r($response);
+exit;*/
 
 echo $response->print_response();
 

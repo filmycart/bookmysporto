@@ -13,9 +13,17 @@ if(Helper::is_post()){
 
         if(!empty($setting)) {
             if(isset($_POST["userName"]) && isset($_POST["userPhoneNumber"]) && isset($_POST["userType"])) {
+
+                // Generate 6-digit OTP
+                $otp = rand(100000, 999999);
+                // OR 4-digit OTP
+                //$otp = rand(1000, 9999);
+                //echo "OTP: " . $otp;
+
                 $user = new User();
                 $user->mobile = Helper::post_val("userPhoneNumber");
                 $user->username = Helper::post_val("userPhoneNumber");
+                $user->otp = $otp;
                 $user->name = Helper::post_val("userName");
                 $user->type = Helper::post_val("userType");
                 $user->image = Helper::post_val("userImageHidden");
@@ -27,9 +35,52 @@ if(Helper::is_post()){
                     if($errors->is_empty()){
                         $user_from_db = $user->where(["mobile" => $user->mobile])->one();
                         if(empty($user_from_db)){
-							$user->status = 1;
+							$user->status = 2;
                             $user->id = $user->save();
                             if(!empty($user->id)) {
+
+                                /*$curl = curl_init();
+                                curl_setopt_array($curl, array(
+                                    CURLOPT_URL => 'http://api.whatsms.in/api/sendMessage.php?token=FbwzifIpTw4NAiFE50UMv8AH3&deviceId=&msgType=text&message='.$otp.'&mobile='.$user->mobile.'&docUrl=',
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_ENCODING => '',
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 0,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                    CURLOPT_CUSTOMREQUEST => 'GET',*/
+                                    //CURLOPT_POSTFIELDS =>'{"messages":[{"destinations":[{"to":"41793026727"}],"from":"InfoSMS","text":"This is a sample message"}]}',
+                                    //CURLOPT_POSTFIELDS => '{"messages":[{"destinations":[{"to":"9944063620"}],"from":"9944063620","text":"12345"}]}',
+                                    /*CURLOPT_HTTPHEADER => array(
+                                        'Authorization: App ffb5ace6504e414f5c52c6f4576627ff-e7563b89-22e9-4ebd-8731-6cf7e0ee9ad1',
+                                        'Content-Type: application/json',
+                                        'Accept: application/json'
+                                     ),*/
+                                //));
+                                /*$smsresponse = curl_exec($curl);
+                                curl_close($curl);
+                                
+                                echo $smsresponse;
+                                exit;*/
+
+                                /* http://api.whatsms.in/api/sendMessage.php?token=FbwzifIpTw4NAiFE50UMv8AH3&deviceId=&msgType=text&message=Hello&mobile=919944063620&docUrl=*/
+
+                                /*
+                                #mobile    -> Mobile number of customer including country code like 9190000000000, or group id like 12333324444@g.us
+                                #message   -> Message
+                                #deviceId -> Device  Id , You will get this from your device list
+                                #docUrl    -> Image url or Pdf Url or Mp4 video url
+                                #msgType   -> Possible value img for image, pdf for pdf, mp4 for video
+                                #token     -> Api Token, It is available after login in account
+                                */
+
+                                // Output
+                                /*{"status":"SUCCESS","resText":"Message sent"}
+                                */
+                                /*
+                                #status  -> Recharge status (SUCCESS/FAILED)
+                                #resText -> Error code details
+                                */
 
                                 /*$curl = curl_init();
                                 curl_setopt_array($curl, array(
@@ -110,7 +161,7 @@ if(Helper::is_post()){
                                 curl_close($curl);
                                 //echo $smsresponse;*/
 
-                                $response->create(200, "Mobile Number Registered Successfully.", $user->response()->to_valid_array());
+                                $response->create(200, "Mobile Number Registered Successfully Otp Have been sent to your registere mobile number.", $user->response()->to_valid_array());
 
                             }else $response->create(201, "Something Went Wrong", null);
                         }else{
